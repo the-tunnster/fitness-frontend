@@ -1,0 +1,65 @@
+import streamlit
+
+from database.update import *
+from helpers.cache_manager import *
+from helpers.user_interface import *
+from helpers.user_authentication import *
+
+streamlit.set_page_config(
+    page_title="Profile Management",
+    page_icon="🏋️",
+    layout="wide",
+)
+
+if not streamlit.user.is_logged_in:
+    streamlit.switch_page("./Fitness Tracker.py")
+
+uiSetup()
+initSessionState()
+
+if streamlit.session_state["user_data"] is None:
+    user_data = getUser(str(streamlit.user.email))
+    streamlit.session_state["user_data"] = user_data
+else:
+    user_data = streamlit.session_state["user_data"]
+
+streamlit.markdown("""
+This is your user profile page. </br>
+
+Feel free to leave this values as they are, I chose averages as dummy values. </r>
+However, if you wish to update these, do try to have them as accurate as possible. </br>
+                   
+It is after all, all for the machine to learn from. Thank You!
+""", unsafe_allow_html=True)
+
+with streamlit.form("user_profile"):
+    gender_index = 0 if user_data.gender == "male" else 1
+    unit_preference_index = 0 if user_data.unitPreference == "metric" else 1
+
+    user_name = streamlit.text_input(label="user_name", value=user_data.username)
+    email_id = streamlit.text_input(label="email_id", value=user_data.email, disabled=True)
+    gender = streamlit.selectbox(label="gender", options=["male", "female"], index=gender_index)
+    date_of_birth = streamlit.date_input(label="date_of_birth", value=user_data.dateOfBirth)
+    height = streamlit.number_input(label="height", value=user_data.height)
+    weight = streamlit.number_input(label="weight", value=user_data.weight)
+    unit_preference = streamlit.selectbox(label="unit_preference", options=["metric", "freedom"], index=unit_preference_index)
+    id = streamlit.text_input(label="user_id", value=user_data.id, disabled=True)
+
+    submitted = streamlit.form_submit_button("Update Information")
+    if submitted:
+        updated_user = User(
+            username=user_name,
+            email=email_id,
+            gender=gender,
+            dateOfBirth=date_of_birth.isoformat(),
+            height=height,
+            weight=weight,
+            unitPreference=unit_preference,
+            id=None
+        )
+        result = updateUserProfile(updated_user, user_data.id)
+        if result == True:
+            streamlit.success("Updated user profile!")
+            streamlit.session_state["user_data"] = getUser(email_id)
+        else:
+            streamlit.error("Couldn't update profile...")
