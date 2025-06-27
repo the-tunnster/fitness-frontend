@@ -24,7 +24,7 @@ def getUser(emailID: str) -> User | None :
     return user
 
 @streamlit.cache_data
-def getExerciseList() -> list[Routine] | None :
+def getExerciseList() -> list[Exercise] | None :
     try:
         response = requests.get(f"http://localhost:8080/exercise/list")
         
@@ -96,9 +96,12 @@ def getRoutineData(user_id:str, routine_id: str) -> FullRoutine | None :
             params={"user_id": user_id, "routine_id": routine_id}
         )
 
+        json_data = response.json()
+        exercises = json_data.get("exercises", [])
+
         if response.status_code == 200:
-            routine = FullRoutine(**response.json())
-            routine.exercises = [RoutineExercise(**exercise) for exercise in routine.exercises]
+            routine = FullRoutine(**json_data)
+            routine.exercises = [RoutineExercise(**exercise) for exercise in exercises]
             return routine
 
         else:
