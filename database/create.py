@@ -29,6 +29,7 @@ def createDummyUserProfile(emailID: str, username: str) -> bool:
         
         else:
             print(f"Error: {response.status_code}, {response.text}")
+            return False
 
     except Exception as e:
         print(f"Exception: {e}")
@@ -47,6 +48,7 @@ def createUserRoutine(user: User, routine: FullRoutine) -> bool:
         
         else:
             print(f"Error: {response.status_code}, {response.text}")
+            return False
 
     except Exception as e:
         print(f"Exception: {e}")
