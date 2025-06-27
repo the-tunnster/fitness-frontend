@@ -26,9 +26,9 @@ if streamlit.session_state["user_data"] is None:
 
     if user_data is None:
         streamlit.info("This is your first time logging in.")
-        userID = createDummyUserProfile(str(streamlit.user.email), str(streamlit.user.given_name))
+        result = createDummyUserProfile(str(streamlit.user.email), str(streamlit.user.given_name))
 
-        if userID is not None:
+        if result:
             user_data = getUser(str(streamlit.user.email))
             streamlit.info("A dummy profile has ben created.")
 
