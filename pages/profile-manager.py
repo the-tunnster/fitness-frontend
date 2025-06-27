@@ -1,9 +1,10 @@
 import streamlit
 
+from database.read import *
 from database.update import *
+
 from helpers.cache_manager import *
 from helpers.user_interface import *
-from helpers.user_authentication import *
 
 streamlit.set_page_config(
     page_title="Profile Management",
@@ -18,10 +19,9 @@ uiSetup()
 initSessionState()
 
 if streamlit.session_state["user_data"] is None:
-    user_data = getUser(str(streamlit.user.email))
-    streamlit.session_state["user_data"] = user_data
-else:
-    user_data = streamlit.session_state["user_data"]
+    streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+
+user_data = streamlit.session_state["user_data"]
 
 streamlit.markdown("""
 This is your user profile page. </br>
@@ -34,6 +34,7 @@ It is after all, all for the machine to learn from. Thank You!
 
 with streamlit.form("user_profile"):
     gender_index = 0 if user_data.gender == "male" else 1
+    user_data.dateOfBirth = str(user_data.dateOfBirth)
     unit_preference_index = 0 if user_data.unitPreference == "metric" else 1
 
     user_name = streamlit.text_input(label="user_name", value=user_data.username)
@@ -48,8 +49,8 @@ with streamlit.form("user_profile"):
     submitted = streamlit.form_submit_button("Update Information")
     if submitted:
         updated_user = User(
-            username=user_name,
-            email=email_id,
+            username=str(user_name),
+            email=str(email_id),
             gender=gender,
             dateOfBirth=date_of_birth.isoformat(),
             height=height,
@@ -60,6 +61,6 @@ with streamlit.form("user_profile"):
         result = updateUserProfile(updated_user, user_data.id)
         if result == True:
             streamlit.success("Updated user profile!")
-            streamlit.session_state["user_data"] = getUser(email_id)
+            streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
         else:
             streamlit.error("Couldn't update profile...")
