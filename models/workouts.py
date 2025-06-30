@@ -10,7 +10,6 @@ class Workout:
 
 @dataclass
 class WorkoutSet:
-    sets: int
     reps: int
     weight: float
 

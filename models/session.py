@@ -3,7 +3,6 @@ from typing import Optional, List
 
 @dataclass
 class WorkoutSet:
-    sets: int
     reps: int
     weight: float
 
