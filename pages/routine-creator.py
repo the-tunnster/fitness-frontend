@@ -36,17 +36,22 @@ routine_creator_exercises = routine_creator_data["exercises"]
 
 streamlit.markdown("""
     # Let's Create a New Routine!  
-    Add a routine name and description, and build your workout from scratch.
+    Add a routine name and build your workout from scratch.
 """, unsafe_allow_html=True)
 
 # Input fields for routine name and description
 routine_creator_data["name"] = streamlit.text_input("Routine Name", value=routine_creator_data.get("name", ""))
-routine_creator_data["description"] = streamlit.text_area("Routine Description", value=routine_creator_data.get("description", ""), height=100)
 
 streamlit.divider()
 
+global_exercise_names: list[str] | None = None
 global_exercise_list = getExerciseList()
-global_exercise_names = [exercise.name for exercise in global_exercise_list]
+
+if global_exercise_list is not None:
+    global_exercise_names = [exercise.name for exercise in global_exercise_list]
+else:
+    global_exercise_list = []
+    global_exercise_names = []
 
 streamlit.caption("☑️ Tick exercises to delete, then press '🗑️ Delete Selected'")
 streamlit.divider()
@@ -62,7 +67,7 @@ with streamlit.form("routine_creator_form", clear_on_submit=False, border=False)
             col4.write("Reps")
 
         exercise["name"] = col1.selectbox(
-            "Exercise", options=global_exercise_names,
+            label="Exercise", options=global_exercise_names,
             index=global_exercise_names.index(exercise["name"]) if exercise["name"] in global_exercise_names else 0,
             key=f"name_creator_{i}", label_visibility="collapsed"
         )
@@ -107,7 +112,7 @@ with streamlit.form("routine_creator_form", clear_on_submit=False, border=False)
             names = [ex["name"] for ex in routine_creator_data["exercises"]]
             ids = getExerciseIDs(names)
 
-            new_exercises = []
+            new_exercises: List[RoutineExercise] = []
 
             for idx, ex in enumerate(routine_creator_data["exercises"]):
                 new_exercises.append(
@@ -115,7 +120,7 @@ with streamlit.form("routine_creator_form", clear_on_submit=False, border=False)
                         exercise_id=ids[idx],
                         name=ex["name"],
                         target_sets=ex["sets"],
-                        target_reps=[ex["reps"]]
+                        target_reps=ex["reps"]
                     )
                 )
 
@@ -123,10 +128,7 @@ with streamlit.form("routine_creator_form", clear_on_submit=False, border=False)
                 id=None,
                 user_id=user_data.id,
                 name=routine_creator_data["name"],
-                description=routine_creator_data["description"],
-                exercises=new_exercises,
-                created_at=datetime.now().isoformat(),
-                updated_at=datetime.now().isoformat()
+                exercises=new_exercises
             )
 
             result = createUserRoutine(user_data, new_routine)
