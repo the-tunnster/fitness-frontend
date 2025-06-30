@@ -1,4 +1,5 @@
 import time
+from typing import Any
 import streamlit
 
 from helpers.cache_manager import *
@@ -31,7 +32,7 @@ if streamlit.session_state["routine_editor_data"] is None:
 user_data = streamlit.session_state["user_data"]
 routine_editor_data = streamlit.session_state["routine_editor_data"]
 
-routine_editor_exercises = routine_editor_data["exercises"]
+routine_editor_exercises: list[dict[str, Any]] = streamlit.session_state["routine_editor_data"]["exercises"]
 
 streamlit.markdown("""
                    # Welcome to the Routine Editor.</br>
@@ -39,11 +40,17 @@ streamlit.markdown("""
                    Select a routine to get started.</br>
                    """, unsafe_allow_html=True)
 
+global_exercise_names: list[str] | None = None
 global_exercise_list = getExerciseList()
-global_exercise_names = [exercise.name for exercise in global_exercise_list]
+
+if global_exercise_list is not None:
+    global_exercise_names = [exercise.name for exercise in global_exercise_list]
+else:
+    global_exercise_list = []
+    global_exercise_names = []
 
 user_routines_list = getRoutinesList(user_id=user_data.id)
-if user_routines_list is None:
+if user_routines_list is None or user_routines_list == []:
     streamlit.info("You don't seem to have any routines set up. Please create one to access it here.")
     streamlit.stop()
     
@@ -52,27 +59,33 @@ user_routine_names = ["None"] + [routine.name for routine in user_routines_list]
 selected_routine_name = streamlit.selectbox("Select a routine", options=user_routine_names, index=0)
 
 if selected_routine_name == "None":
-    streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": selected_routine_name}
-    routine_editor_exercises = []
+    streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": "None"}
+    routine_editor_exercises = streamlit.session_state["routine_editor_data"]["exercises"]
     streamlit.stop()
 
 if streamlit.session_state["routine_editor_data"]["name"] != selected_routine_name:
     streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": selected_routine_name}
-    routine_editor_exercises = []
+    routine_editor_exercises = streamlit.session_state["routine_editor_data"]["exercises"]
 
 selected_routine_index = user_routine_names.index(selected_routine_name)
 selected_routine = user_routines_list[selected_routine_index - 1]
 
 full_user_routine = getRoutineData(user_data.id, selected_routine.id)
+if full_user_routine is None:
+    streamlit.error("Failed to load routine data. Please try again.")
+    streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": selected_routine_name}
+    routine_editor_exercises = streamlit.session_state["routine_editor_data"]["exercises"]
+    streamlit.stop()
 
-if routine_editor_exercises == []:
+if not routine_editor_exercises :
     for ex in full_user_routine.exercises:
         routine_editor_exercises.append({
             "name": ex.name,
             "sets": ex.target_sets,
-            "reps": ex.target_reps[0],
+            "reps": ex.target_reps,
             "remove": False,
         })
+    streamlit.session_state["routine_editor_data"]["exercises"] = routine_editor_exercises
 
 streamlit.caption("☑️ Tick exercises to delete, then press '🗑️ Delete Selected'")
 streamlit.divider()
@@ -129,7 +142,7 @@ with streamlit.form("routine_viewer", clear_on_submit=False, border=False):
         names = [ex["name"] for ex in routine_editor_data["exercises"]]
         ids = getExerciseIDs(names)
 
-        updated_exercises = []
+        updated_exercises: list[RoutineExercise] = []
 
         for idx, ex in enumerate(routine_editor_data["exercises"]):
             updated_exercises.append(
@@ -137,7 +150,7 @@ with streamlit.form("routine_viewer", clear_on_submit=False, border=False):
                     exercise_id=ids[idx],
                     name=ex["name"],
                     target_sets=ex["sets"],
-                    target_reps=[ex["reps"]]
+                    target_reps=ex["reps"]
                 )
             )
 
@@ -145,10 +158,7 @@ with streamlit.form("routine_viewer", clear_on_submit=False, border=False):
             id=full_user_routine.id,
             user_id=user_data.id,
             name=full_user_routine.name,
-            description=full_user_routine.description,
             exercises=updated_exercises,
-            created_at=full_user_routine.created_at,
-            updated_at=datetime.now().isoformat()
         )
 
         result = updateUserRoutine(user_data, updated_routine)
@@ -169,7 +179,8 @@ with streamlit.expander("⚠️ Delete This Routine", expanded=False):
 
             if result:
                 streamlit.success("Deleted Routine")
-                del streamlit.session_state["routine_editor_data"], routine_editor_data, routine_editor_exercises
+                clearSessionVariable("routine_editor_data")
+                routine_editor_data, routine_editor_exercises = [], []
                 time.sleep(4)
                 streamlit.rerun()
             else:
