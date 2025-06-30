@@ -125,7 +125,7 @@ with streamlit.form("routine_creator_form", clear_on_submit=False, border=False)
                 )
 
             new_routine = FullRoutine(
-                id=None,
+                id="",
                 user_id=user_data.id,
                 name=routine_creator_data["name"],
                 exercises=new_exercises
