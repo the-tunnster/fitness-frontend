@@ -1,39 +1,45 @@
 import requests
 import streamlit
 
+from config.urls import *
+
+from models import session
 from models.user import *
 from models.routines import *
 from models.exercise import *
-from models.workouts import *
+from models.session import *
 
 def getUser(emailID: str) -> User | None :
     try:
-        response = requests.request(
-            method="GET",
-            url="http://localhost:8080/me",
+        response = requests.get(
+            url=USER_URLS["me"],
             params={"email": emailID}
         )
 
+        response.raise_for_status()
+
         if response.json()["id"] == "000000000000000000000000":
             return None
+        
+        user = User(**response.json())
+        return user
+
     except:
         return None
 
-    user = User(**response.json())
-	
-    return user
+    
 
 @streamlit.cache_data
 def getExerciseList() -> list[Exercise] | None :
     try:
-        response = requests.get(f"http://localhost:8080/exercise/list")
+        response = requests.get(
+            url=EXERCISE_URLS["list"]
+        )
         
-        if response.status_code == 200:
-            exercises = [Exercise(**item) for item in response.json()]
-            return exercises
-        else:
-            print(f"Error: {response.status_code}, {response.text}")
-            return None
+        response.raise_for_status()
+
+        exercises = [Exercise(**item) for item in response.json()]
+        return exercises
 
     except Exception as e:
         print(f"Exception: {e}")
@@ -41,16 +47,14 @@ def getExerciseList() -> list[Exercise] | None :
     
 def getExerciseNames(exercise_ids: list[str]) -> list[str] | None:
     try:
-        params = [("exercise_id", eid) for eid in exercise_ids]
-        response = requests.get("http://localhost:8080/exercise/name", params=params)
+        response = requests.get(
+            url=EXERCISE_URLS["name"],
+            params=[("exercise_id", eid) for eid in exercise_ids]
+        )
 
-        print(f"Final URL: {response.url}")
+        response.raise_for_status()
 
-        if response.status_code == 200:
-            return response.json()
-        else:
-            print(f"Error: {response.status_code} — {response.text}")
-            return None
+        return response.json()
 
     except Exception as e:
         print(f"Exception: {e}")
@@ -58,14 +62,14 @@ def getExerciseNames(exercise_ids: list[str]) -> list[str] | None:
 
 def getExerciseIDs(exercise_names: list[str]) -> list[str] | None:
     try:
-        params = [("exercise_name", name) for name in exercise_names]
-        response = requests.get("http://localhost:8080/exercise/id", params=params)
+        response = requests.get(
+            url=EXERCISE_URLS["id"],
+            params=[("exercise_name", name) for name in exercise_names]
+        )
 
-        if response.status_code == 200:
-            return response.json()
-        else:
-            print(f"Error: {response.status_code} — {response.text}")
-            return None
+        response.raise_for_status()
+
+        return response.json()
 
     except Exception as e:
         print(f"Exception: {e}")
@@ -73,17 +77,15 @@ def getExerciseIDs(exercise_names: list[str]) -> list[str] | None:
 
 def getRoutinesList(user_id: str) -> list[Routine] | None :
     try:
-        response = requests.get(f"http://localhost:8080/routines/list", params={"user_id": user_id})
-        
-        if response.json() is None:
-            return None
+        response = requests.get(
+            url=ROUTINE_URLS["list"],
+            params={"user_id": user_id}
+        )
 
-        if response.status_code == 200:
-            routines = [Routine(**item) for item in response.json()]
-            return routines
-        else:
-            print(f"Error: {response.status_code}, {response.text}")
-            return None
+        response.raise_for_status()
+
+        routines = [Routine(**item) for item in response.json()]
+        return routines
 
     except Exception as e:
         print(f"Exception: {e}")
@@ -92,25 +94,37 @@ def getRoutinesList(user_id: str) -> list[Routine] | None :
 def getRoutineData(user_id:str, routine_id: str) -> FullRoutine | None :
     try:
         response = requests.get(
-            url="http://localhost:8080/routines/data",
+            url=ROUTINE_URLS["data"],
             params={"user_id": user_id, "routine_id": routine_id}
         )
 
         json_data = response.json()
         exercises = json_data.get("exercises", [])
 
-        if response.status_code == 200:
-            routine = FullRoutine(**json_data)
-            routine.exercises = [RoutineExercise(**exercise) for exercise in exercises]
-            return routine
+        response.raise_for_status()
 
-        else:
-            print(f"Error: {response.status_code} — {response.text}")
-            return None
+        routine = FullRoutine(**json_data)
+        routine.exercises = [RoutineExercise(**exercise) for exercise in exercises]
+        return routine
 
     except Exception as e:
         print(f"Exception while fetching routine: {e}")
         return None
 
-def getWorkoutSessionData(email_id: str) -> Workout | None :
-    return
+def getWorkoutSessionData(user_id: str) -> session.WorkoutSession | None :
+    try:
+        response = requests.get(
+            url=SESSION_URLS["data"],
+            params={"user_id": user_id}
+        )
+
+        response.raise_for_status()
+
+        json_data = response.json()
+
+        session = WorkoutSession(**json_data)
+        return session
+
+    except Exception as e:
+        print(f"Exception while fetching routine: {e}")
+        return None
