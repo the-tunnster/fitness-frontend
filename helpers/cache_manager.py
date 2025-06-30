@@ -15,3 +15,7 @@ def initSessionState():
 	
 	if "workout_session_data" not in streamlit.session_state:
 		streamlit.session_state["workout_session_data"] = None
+
+def clearSessionVariable(variable_name: str):
+	if variable_name in streamlit.session_state:
+		del streamlit.session_state[variable_name]
