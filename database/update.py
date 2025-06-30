@@ -1,5 +1,4 @@
 import requests
-from typing import Any
 from dataclasses import asdict
 
 from config.urls import *
@@ -29,10 +28,7 @@ def updateUserProfile(user: User, user_id: str) -> bool:
 
 def updateUserRoutine(user: User, routine: FullRoutine) -> bool:
     try:
-        payload: dict[str, Any] = {
-            "name": routine.name,
-            "exercises": [asdict(ex) for ex in routine.exercises]
-        }
+        payload = [asdict(ex) for ex in routine.exercises]
 
         response = requests.patch(
             url=ROUTINE_URLS["update"],
