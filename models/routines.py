@@ -1,22 +1,22 @@
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import List
 
 @dataclass
 class Routine:
-    user_id: Optional[str]
+    user_id: str
     name: str
-    id: Optional[str]
+    id: str
 
 @dataclass
 class RoutineExercise:
-    exercise_id: Optional[str]
+    exercise_id: str
     name: str
     target_sets: int
     target_reps: int
 
 @dataclass
 class FullRoutine:
-    id: Optional[str]
-    user_id: Optional[str]
+    id: str
+    user_id: str
     name: str
     exercises: List[RoutineExercise]
