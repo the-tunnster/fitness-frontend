@@ -18,7 +18,7 @@ initSessionState()
 streamlit.header("Welcome to the Workout Tracker")
 
 if not streamlit.user.is_logged_in:
-    streamlit.warning("You'll need to sign in to continue")
+    streamlit.warning("You'll need to log in to continue")
     streamlit.stop()
 
 if streamlit.session_state["user_data"] is None:
