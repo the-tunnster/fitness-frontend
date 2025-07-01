@@ -1,20 +1,19 @@
 import streamlit 
+from typing import List
 
-def initSessionState():
-	if "user_data" not in streamlit.session_state:
-		streamlit.session_state["user_data"] = None
-
-	if "popup_seen" not in streamlit.session_state:
-		streamlit.session_state["popup_seen"] = False
-
-	if "routine_editor_data" not in streamlit.session_state:
-		streamlit.session_state["routine_editor_data"] = None
-
-	if "routine_creator_data" not in streamlit.session_state:
-		streamlit.session_state["routine_creator_data"] = None
+def initSessionState(keys: List[str] = []):
+	if keys is []:
+		keys = [
+			"popup_seen",
+			"user_data",
+			"routine_creator_data", "routine_editor_data", 
+			"workout_session_data", "workout_status"
+		]
 	
-	if "workout_session_data" not in streamlit.session_state:
-		streamlit.session_state["workout_session_data"] = None
+	for key in keys:
+		if key not in streamlit.session_state:
+			streamlit.session_state[key] = None
+
 
 def clearSessionVariable(variable_name: str):
 	if variable_name in streamlit.session_state:
