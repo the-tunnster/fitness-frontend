@@ -17,7 +17,7 @@ def createDummyUserProfile(emailID: str, username: str) -> bool:
         height=175.0,
         weight=78.5,
         unitPreference="metric",
-        id=None
+        id="None"
     )
 
     try:
@@ -78,4 +78,22 @@ def createWorkoutSession(user_id: str, routine_id: str) -> bool:
 
     except Exception as e:
         print(f"Exception during workout session creation: {e}")
+        return False
+    
+def createWorkout(session_id: str) -> bool:
+    try:
+        response = requests.post(
+            url=WORKOUT_URLS["create"],
+            params={"session_id": session_id}
+        )
+
+        if response.status_code == 201:
+            print(f"Workout saved successfully! Workout ID: {response.json()}")
+            return True
+        else:
+            print(f"Error saving workout : {response.status_code}, {response.text}")
+            return False
+
+    except Exception as e:
+        print(f"Exception during workout saving: {e}")
         return False
