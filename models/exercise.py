@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import List
 
 @dataclass
 class Exercise:
@@ -10,4 +10,4 @@ class Exercise:
     tertiary_muscle: str
     variations: List[str]
     equipment: List[str]
-    id: Optional[str]
+    id: str
