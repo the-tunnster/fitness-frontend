@@ -6,13 +6,14 @@ BASE_URL = HOST+PORT
 USER_URLS = {
 	"me": BASE_URL + "/me",
 	"create": BASE_URL + "/user/create",
-	"update": BASE_URL + "/user/update"
+	"update": BASE_URL + "/user/update",
 }
 
 EXERCISE_URLS = {
 	"id": BASE_URL + "/exercise/id",
 	"name": BASE_URL + "/exercise/name",
 	"list": BASE_URL + "/exercise/list",
+	"data": BASE_URL + "/exercise/data",
 	"create": BASE_URL + "/exercise/create",
 	"update": BASE_URL + "/exercise/update",
 }
@@ -35,4 +36,5 @@ SESSION_URLS = {
 	"data": BASE_URL + "/session/data",
 	"create": BASE_URL + "/session/create",
 	"update": BASE_URL + "/session/update",
+	"delete": BASE_URL + "/session/delete",
 }
