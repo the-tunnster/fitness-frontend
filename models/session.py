@@ -11,7 +11,7 @@ class WorkoutExercise:
     sets: List[WorkoutSet]
     equipment: str
     variation: str
-    exercise_id: Optional[str]
+    exercise_id: str
 
 @dataclass
 class WorkoutSession:
