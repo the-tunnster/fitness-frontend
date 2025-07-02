@@ -2,12 +2,13 @@ import streamlit
 from typing import List
 
 def initSessionState(keys: List[str] = []):
-	if keys is []:
+	if keys == []:
 		keys = [
 			"popup_seen",
 			"user_data",
 			"routine_creator_data", "routine_editor_data", 
-			"workout_session_data", "workout_status"
+			"workout_session_data", "current_exercise_index", "add_exercise_dialog",
+			"workout_exercise_selection"
 		]
 	
 	for key in keys:
@@ -15,6 +16,7 @@ def initSessionState(keys: List[str] = []):
 			streamlit.session_state[key] = None
 
 
-def clearSessionVariable(variable_name: str):
-	if variable_name in streamlit.session_state:
-		del streamlit.session_state[variable_name]
+def clearSessionVariable(keys: List[str]):
+	for key in keys:
+		if key in streamlit.session_state:
+			del streamlit.session_state[key]
