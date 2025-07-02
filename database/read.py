@@ -26,9 +26,25 @@ def getUser(emailID: str) -> User | None :
 
     except:
         return None
-
     
+def getExerciseData(exerciseID: str) -> Exercise | None:
+    try:
+        response = requests.get(
+            url=EXERCISE_URLS["data"],
+            params={"exercise_id": exerciseID}
+        )
 
+        response.raise_for_status()
+
+        if response.json()["id"] == "000000000000000000000000":
+            return None
+        
+        exercise = Exercise(**response.json())
+        return exercise
+
+    except:
+        return None
+    
 @streamlit.cache_data
 def getExerciseList() -> list[Exercise] | None :
     try:
@@ -45,7 +61,7 @@ def getExerciseList() -> list[Exercise] | None :
         print(f"Exception: {e}")
         return None
     
-def getExerciseNames(exercise_ids: list[str]) -> list[str] | None:
+def getExerciseNames(exercise_ids: list[str]) -> list[str] :
     try:
         response = requests.get(
             url=EXERCISE_URLS["name"],
@@ -58,7 +74,7 @@ def getExerciseNames(exercise_ids: list[str]) -> list[str] | None:
 
     except Exception as e:
         print(f"Exception: {e}")
-        return None
+        return []
 
 def getExerciseIDs(exercise_names: list[str]) -> list[str]:
     try:
@@ -105,13 +121,14 @@ def getRoutineData(user_id:str, routine_id: str) -> FullRoutine | None :
 
         routine = FullRoutine(**json_data)
         routine.exercises = [RoutineExercise(**exercise) for exercise in exercises]
+
         return routine
 
     except Exception as e:
         print(f"Exception while fetching routine: {e}")
         return None
 
-def getWorkoutSessionData(user_id: str) -> session.WorkoutSession | None :
+def getWorkoutSessionData(user_id: str | None) -> session.WorkoutSession | None :
     try:
         response = requests.get(
             url=SESSION_URLS["data"],
@@ -120,9 +137,18 @@ def getWorkoutSessionData(user_id: str) -> session.WorkoutSession | None :
 
         response.raise_for_status()
 
+        if response.json()["id"] == "000000000000000000000000":
+            return None
+
         json_data = response.json()
+        exercises = json_data.get("exercises", [])
 
         session = WorkoutSession(**json_data)
+        session.exercises = [WorkoutExercise(**exercise) for exercise in exercises]
+
+        for exercise in session.exercises:
+            exercise.sets = [WorkoutSet(**ws) for ws in exercise.sets] # type: ignore
+
         return session
 
     except Exception as e:
