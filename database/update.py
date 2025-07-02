@@ -5,6 +5,7 @@ from config.urls import *
 
 from models.user import User
 from models.routines import FullRoutine
+from models.session import WorkoutSession
 
 def updateUserProfile(user: User, user_id: str) -> bool:
     try:
@@ -41,6 +42,28 @@ def updateUserRoutine(user: User, routine: FullRoutine) -> bool:
             return True
         else:
             print(f"Error updating user routine: Status Code {response.status_code}, Response: {response.text}")
+            return False
+
+    except Exception as e:
+        print(f"Exception: {e}")
+        return False
+    
+
+def updateWorkoutSession(session: WorkoutSession) -> bool:
+    try:
+        payload = [asdict(ex) for ex in session.exercises]
+
+        response = requests.patch(
+            url=SESSION_URLS["update"],
+            params={"session_id": session.id, "exercise_index": session.exercise_index},
+            json=payload
+        )
+
+        if response.status_code in (200, 204):  # 204 = No Content, 200 = OK
+            print(f"User session for ID {session.id} updated successfully.")
+            return True
+        else:
+            print(f"Error updating user session: Status Code {response.status_code}, Response: {response.text}")
             return False
 
     except Exception as e:
