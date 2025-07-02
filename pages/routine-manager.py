@@ -29,7 +29,7 @@ if streamlit.session_state["user_data"] is None:
 if streamlit.session_state["routine_editor_data"] is None:
     streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": "None"}
 
-user_data = streamlit.session_state["user_data"]
+user_data : User = streamlit.session_state["user_data"]
 routine_editor_data = streamlit.session_state["routine_editor_data"]
 
 routine_editor_exercises: list[dict[str, Any]] = streamlit.session_state["routine_editor_data"]["exercises"]
@@ -179,9 +179,9 @@ with streamlit.expander("⚠️ Delete This Routine", expanded=False):
 
             if result:
                 streamlit.success("Deleted Routine")
-                clearSessionVariable("routine_editor_data")
+                clearSessionVariable(["routine_editor_data"])
                 routine_editor_data, routine_editor_exercises = [], []
-                time.sleep(4)
+                time.sleep(2)
                 streamlit.rerun()
             else:
                 streamlit.error("That didn't work.")
