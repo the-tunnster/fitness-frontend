@@ -21,11 +21,11 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState()
 
-# Load user data
+user_data: User
+
 if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
 
-# Load or initialize routine_data
 if streamlit.session_state["routine_editor_data"] is None:
     streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": "None"}
 
