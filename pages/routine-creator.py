@@ -19,7 +19,8 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState()
 
-# Load user data
+user_data: User
+
 if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
 
