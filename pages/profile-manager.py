@@ -18,6 +18,8 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState()
 
+user_data: User
+
 if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
 
@@ -56,7 +58,7 @@ with streamlit.form("user_profile"):
             height=height,
             weight=weight,
             unitPreference=unit_preference,
-            id=None
+            id="None"
         )
         result = updateUserProfile(updated_user, user_data.id)
         if result == True:
