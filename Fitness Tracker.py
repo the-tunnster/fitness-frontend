@@ -34,14 +34,12 @@ if streamlit.session_state["user_data"] is None:
 
         else:
             streamlit.error("Couldn't create a new user")
+            streamlit.stop()
 
     else:
         streamlit.session_state["user_data"] = user_data
 
 streamlit.info("Welcome " + streamlit.session_state["user_data"].username + ".")
-
-if not streamlit.session_state["popup_seen"]:
-    popUpInfo()
 
 streamlit.markdown("""
                    
