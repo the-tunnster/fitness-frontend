@@ -47,7 +47,7 @@ def updateUserRoutine(user: User, routine: FullRoutine) -> bool:
     except Exception as e:
         print(f"Exception: {e}")
         return False
-    
+
 
 def updateWorkoutSession(session: WorkoutSession) -> bool:
     try:
@@ -68,4 +68,23 @@ def updateWorkoutSession(session: WorkoutSession) -> bool:
 
     except Exception as e:
         print(f"Exception: {e}")
+        return False
+    
+
+def updateHistory(user_id: str, workout_id:str) -> bool:
+    try:
+        response = requests.patch(
+            url=HISTORY_URLS["update"],
+            params={"user_id": user_id, "workout_id": workout_id}
+        )
+
+        if response.status_code in (200, 204):
+            print(f"History updated successfully! User ID: {response.json()}")
+            return True
+        else:
+            print(f"Error updating history files: {response.status_code}, {response.text}")
+            return False
+
+    except Exception as e:
+        print(f"Exception during history update: {e}")
         return False
