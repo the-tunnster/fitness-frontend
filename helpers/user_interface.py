@@ -59,6 +59,5 @@ def popUpInfo():
 					
 					""", unsafe_allow_html=True)
 	seen = streamlit.checkbox("Check this to stop seeing this for your session.")
-
-	if seen:
-		streamlit.session_state["popup_seen"] = True
+	if not seen:
+		streamlit.stop()
