@@ -11,6 +11,7 @@ streamlit.set_page_config(
     page_title="Routine Creator",
     page_icon=":material/add_notes:",
     layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 if not streamlit.user.is_logged_in:
@@ -35,10 +36,9 @@ user_data = streamlit.session_state["user_data"]
 routine_creator_data = streamlit.session_state["routine_creator_data"]
 routine_creator_exercises = routine_creator_data["exercises"]
 
-streamlit.markdown("""
-    # Let's Create a New Routine!  
-    Add a routine name and build your workout from scratch.
-""", unsafe_allow_html=True)
+streamlit.header("Create a New Routine.", anchor=False)
+
+streamlit.markdown(""" Add a routine name and build your workout from scratch. """, unsafe_allow_html=True)
 
 # Input fields for routine name and description
 routine_creator_data["name"] = streamlit.text_input("Routine Name", value=routine_creator_data.get("name", ""))

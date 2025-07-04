@@ -25,6 +25,8 @@ if streamlit.session_state["user_data"] is None:
 
 user_data = streamlit.session_state["user_data"]
 
+streamlit.header("User Profile.", anchor=False)
+
 streamlit.markdown("""
 This is your user profile page. </br>
 

@@ -52,7 +52,7 @@ else:
 if streamlit.session_state["add_exercise_dialog"] is None:
     streamlit.session_state["add_exercise_dialog"] = False
 
-streamlit.header("Workout Recorder")
+streamlit.header("Workout Recorder", anchor=False)
 
 
 @streamlit.dialog("Add an Exercise to your Workout")
@@ -269,7 +269,7 @@ if is_workout_active:
             streamlit.rerun()             
 
 else:
-    streamlit.subheader("Start a New Workout Session")
+    streamlit.write("Select a workout routine to get started.")
 
     user_routines = getRoutinesList(user_data.id) #type: ignore
     if user_routines is None or user_routines == []:
@@ -279,10 +279,11 @@ else:
     user_routine_names: List[str] = ["None"] + [routine.name for routine in user_routines]
 
     selected_routine_name: str = streamlit.selectbox(
-        "Select a routine",
+        label="Select a routine",
         options=user_routine_names,
         index=0,
-        key="start_routine_select"
+        key="start_routine_select",
+        label_visibility="collapsed"
     )
 
     start_workout_button_disabled = (selected_routine_name == "None")

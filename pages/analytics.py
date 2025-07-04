@@ -24,7 +24,7 @@ if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]
     
-streamlit.header("Analytics")
+streamlit.header("Workout Analytics", anchor=False)
 
 streamlit.write("Work in progress type shii")
 streamlit.write("May take a week or so, my bad g")

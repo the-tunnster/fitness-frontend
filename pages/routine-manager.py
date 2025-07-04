@@ -13,6 +13,7 @@ streamlit.set_page_config(
     page_title="Routine Manager",
     page_icon="🏋️",
     layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 if not streamlit.user.is_logged_in:
@@ -34,8 +35,9 @@ routine_editor_data = streamlit.session_state["routine_editor_data"]
 
 routine_editor_exercises: list[dict[str, Any]] = streamlit.session_state["routine_editor_data"]["exercises"]
 
+streamlit.header("Welcome to the Routine Editor.", anchor=False)
+
 streamlit.markdown("""
-                   # Welcome to the Routine Editor.</br>
                    You can modify your workout exercises here.</br>
                    Select a routine to get started.</br>
                    """, unsafe_allow_html=True)

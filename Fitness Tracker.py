@@ -10,12 +10,13 @@ streamlit.set_page_config(
     page_title="Workout Tracker",
     page_icon="🏋️",
     layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 uiSetup()
 initSessionState()
 
-streamlit.header("Welcome to the Workout Tracker")
+streamlit.header("Welcome to the Workout Tracker", anchor=False)
 
 if not streamlit.user.is_logged_in:
     streamlit.warning("You'll need to log in to continue")
