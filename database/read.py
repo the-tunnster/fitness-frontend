@@ -3,7 +3,6 @@ import streamlit
 
 from config.urls import *
 
-from models import session
 from models.user import *
 from models.routines import *
 from models.exercise import *
@@ -128,7 +127,7 @@ def getRoutineData(user_id:str, routine_id: str) -> FullRoutine | None :
         print(f"Exception while fetching routine: {e}")
         return None
 
-def getWorkoutSessionData(user_id: str | None) -> session.WorkoutSession | None :
+def getWorkoutSessionData(user_id: str | None) -> WorkoutSession | None :
     try:
         response = requests.get(
             url=SESSION_URLS["data"],
@@ -153,4 +152,44 @@ def getWorkoutSessionData(user_id: str | None) -> session.WorkoutSession | None 
 
     except Exception as e:
         print(f"Exception while fetching routine: {e}")
+        return None
+    
+def checkHistoryData(user_id: str | None) -> bool | None :
+    try:
+        response = requests.get(
+            url=HISTORY_URLS["check"],
+            params={"user_id": user_id}
+        )
+
+        response.raise_for_status()
+
+        if response.json() is True:
+            return True
+        else:
+            return False
+        
+    except Exception as e:
+        print(f"Exception while checking for history: {e}")
+        return None
+    
+def getHistoryData(user_id: str, exercise_id:str) -> ExerciseHistory | None :
+    try:
+        response = requests.get(
+            url=HISTORY_URLS["data"],
+            params={"user_id": user_id, "exercise_id": exercise_id}
+        )
+
+        response.raise_for_status()
+
+        json_data = response.json()
+        exercise_sets = json_data.get("exercise_sets", [])
+
+        exercise_history = ExerciseHistory(**json_data)
+        exercise_history.exercise_sets = [ExerciseSets(**exercise_set) for exercise_set in exercise_sets]
+
+        for exercise_set in exercise_history.exercise_sets:
+            exercise_set.sets = [WorkoutSet(**ws) for ws in exercise_set.sets] # type: ignore
+        
+    except Exception as e:
+        print(f"Exception while checking for history: {e}")
         return None
