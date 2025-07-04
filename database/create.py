@@ -80,7 +80,7 @@ def createWorkoutSession(user_id: str, routine_id: str) -> bool:
         print(f"Exception during workout session creation: {e}")
         return False
     
-def createWorkout(session_id: str) -> bool:
+def createWorkout(session_id: str) -> str | None:
     try:
         response = requests.post(
             url=WORKOUT_URLS["create"],
@@ -89,11 +89,29 @@ def createWorkout(session_id: str) -> bool:
 
         if response.status_code == 201:
             print(f"Workout saved successfully! Workout ID: {response.json()}")
-            return True
+            return response.json()
         else:
             print(f"Error saving workout : {response.status_code}, {response.text}")
-            return False
+            return None
 
     except Exception as e:
         print(f"Exception during workout saving: {e}")
+        return None
+    
+def createHistory(user_id: str) -> bool:
+    try:
+        response = requests.post(
+            url=HISTORY_URLS["create"],
+            params={"user_id": user_id}
+        )
+
+        if response.status_code == 201:
+            print(f"History created successfully! User ID: {response.json()}")
+            return True
+        else:
+            print(f"Error creating history files: {response.status_code}, {response.text}")
+            return False
+
+    except Exception as e:
+        print(f"Exception during history creation: {e}")
         return False
