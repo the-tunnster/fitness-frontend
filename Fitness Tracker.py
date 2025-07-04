@@ -30,6 +30,7 @@ if streamlit.session_state["user_data"] is None:
 
         if result:
             user_data = getUser(str(streamlit.user.email))
+            streamlit.session_state["user_data"] = user_data
             streamlit.info("A dummy profile has ben created.")
 
         else:
