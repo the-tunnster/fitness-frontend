@@ -4,7 +4,6 @@ from typing import List
 def initSessionState(keys: List[str] = []):
 	if keys == []:
 		keys = [
-			"popup_seen",
 			"user_data",
 			"routine_creator_data", "routine_editor_data", 
 			"workout_session_data", "current_exercise_index", "add_exercise_dialog",
