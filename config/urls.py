@@ -38,3 +38,10 @@ SESSION_URLS = {
 	"update": BASE_URL + "/session/update",
 	"delete": BASE_URL + "/session/delete",
 }
+
+HISTORY_URLS = {
+	"data": BASE_URL + "/history/data",
+	"check": BASE_URL + "/history/check",
+	"create": BASE_URL + "/history/create",
+	"update": BASE_URL + "/history/update",
+}
