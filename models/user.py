@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 @dataclass
 class User:
@@ -9,4 +10,4 @@ class User:
     height: float
     weight: float
     unitPreference: str
-    id: str
+    id: Optional[str]

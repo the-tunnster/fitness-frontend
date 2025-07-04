@@ -58,9 +58,9 @@ with streamlit.form("user_profile"):
             height=height,
             weight=weight,
             unitPreference=unit_preference,
-            id="None"
+            id=None
         )
-        result = updateUserProfile(updated_user, user_data.id)
+        result = updateUserProfile(updated_user, user_data.id) # type: ignore
         if result == True:
             streamlit.success("Updated user profile!")
             streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))

@@ -244,7 +244,7 @@ if is_workout_active:
                 streamlit.error("Couldn't clear session data.")
                 streamlit.stop()
             
-            updateHistory(user_data.id, workoutID)
+            updateHistory(user_data.id, workoutID) #type: ignore
 
             streamlit.success("Workout saved to disk. Re-directing!")
             clearSessionVariable(["workout_session_data", "current_exercise_index", "add_exercise_dialog", "workout_exercise_selection"])
@@ -271,7 +271,7 @@ if is_workout_active:
 else:
     streamlit.subheader("Start a New Workout Session")
 
-    user_routines = getRoutinesList(user_data.id)
+    user_routines = getRoutinesList(user_data.id) #type: ignore
     if user_routines is None or user_routines == []:
         streamlit.info("You don't seem to have any routines set up. Please create one to access it here.")
         streamlit.stop()
@@ -293,7 +293,7 @@ else:
 
             if selected_routine and selected_routine.id:
 
-                new_workout_session = createWorkoutSession(user_data.id, selected_routine.id)
+                new_workout_session = createWorkoutSession(user_data.id, selected_routine.id) #type: ignore
                 if new_workout_session:
                     streamlit.session_state["workout_session_data"] = getWorkoutSessionData(user_data.id)
                     streamlit.session_state["current_exercise_index"] = 0

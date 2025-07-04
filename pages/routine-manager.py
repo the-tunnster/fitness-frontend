@@ -49,7 +49,7 @@ else:
     global_exercise_list = []
     global_exercise_names = []
 
-user_routines_list = getRoutinesList(user_id=user_data.id)
+user_routines_list = getRoutinesList(user_id=user_data.id) #type: ignore
 if user_routines_list is None or user_routines_list == []:
     streamlit.info("You don't seem to have any routines set up. Please create one to access it here.")
     streamlit.stop()
@@ -70,7 +70,7 @@ if streamlit.session_state["routine_editor_data"]["name"] != selected_routine_na
 selected_routine_index = user_routine_names.index(selected_routine_name)
 selected_routine = user_routines_list[selected_routine_index - 1]
 
-full_user_routine = getRoutineData(user_data.id, selected_routine.id)
+full_user_routine = getRoutineData(user_data.id, selected_routine.id) #type: ignore
 if full_user_routine is None:
     streamlit.error("Failed to load routine data. Please try again.")
     streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": selected_routine_name}
@@ -156,7 +156,7 @@ with streamlit.form("routine_viewer", clear_on_submit=False, border=False):
 
         updated_routine = FullRoutine(
             id=full_user_routine.id,
-            user_id=user_data.id,
+            user_id=user_data.id, #type: ignore
             name=full_user_routine.name,
             exercises=updated_exercises,
         )
@@ -175,7 +175,7 @@ with streamlit.expander("⚠️ Delete This Routine", expanded=False):
 
     if confirm_delete:
         if streamlit.button("Delete Routine", type="primary"):
-            result = deleteRoutine(user_data.id, selected_routine.id)
+            result = deleteRoutine(user_data.id, selected_routine.id) #type: ignore
 
             if result:
                 streamlit.success("Deleted Routine")
