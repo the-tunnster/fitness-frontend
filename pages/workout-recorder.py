@@ -8,6 +8,8 @@ from database.create import *
 from database.delete import *
 from database.update import *
 
+from models.session import WorkoutSet
+
 streamlit.set_page_config(
     page_title="Workout Recorder",
     page_icon=":material/exercise:",
@@ -232,8 +234,8 @@ if is_workout_active:
                 streamlit.error("Something broke...")
                 streamlit.stop()
 
-            result = createWorkout(streamlit.session_state["workout_session_data"].id)
-            if not result:
+            workoutID = createWorkout(streamlit.session_state["workout_session_data"].id)
+            if workoutID is None:
                 streamlit.error("Couldn't save workout.")
                 streamlit.stop()
 
@@ -241,6 +243,8 @@ if is_workout_active:
             if not result:
                 streamlit.error("Couldn't clear session data.")
                 streamlit.stop()
+            
+            updateHistory(user_data.id, workoutID)
 
             streamlit.success("Workout saved to disk. Re-directing!")
             clearSessionVariable(["workout_session_data", "current_exercise_index", "add_exercise_dialog", "workout_exercise_selection"])
