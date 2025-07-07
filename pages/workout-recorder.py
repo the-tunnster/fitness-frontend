@@ -142,6 +142,7 @@ if is_workout_active:
     if current_exercise:
         with streamlit.form("exercise_recording_form", clear_on_submit=False):
             exercise_metadata = getExerciseData(current_exercise.exercise_id)
+            print(exercise_metadata)
 
             if exercise_metadata:
                 variation_options = exercise_metadata.variations
