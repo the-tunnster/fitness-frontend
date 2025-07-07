@@ -145,7 +145,7 @@ if is_workout_active:
             print(exercise_metadata)
 
             if exercise_metadata:
-                variation_options = exercise_metadata.variation
+                variation_options = exercise_metadata.variations
                 equipment_options = exercise_metadata.equipment
             else:
                 variation_options = ["None"]
