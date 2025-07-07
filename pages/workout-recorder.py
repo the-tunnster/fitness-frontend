@@ -144,8 +144,8 @@ if is_workout_active:
             exercise_metadata = getExerciseData(current_exercise.exercise_id)
 
             if exercise_metadata:
-                variation_options = exercise_metadata.variations or ["None"]
-                equipment_options = exercise_metadata.equipment or ["None"]
+                variation_options = exercise_metadata.variations
+                equipment_options = exercise_metadata.equipment
             else:
                 variation_options = ["None"]
                 equipment_options = ["None"]
