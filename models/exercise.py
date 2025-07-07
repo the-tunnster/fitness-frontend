@@ -8,7 +8,7 @@ class Exercise:
     primary_muscle: str
     secondary_muscle: str
     tertiary_muscle: str
-    variations: List[str]
+    variation: List[str]
     equipment: List[str]
     id: str
 
