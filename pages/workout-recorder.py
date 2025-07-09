@@ -166,7 +166,7 @@ if is_workout_active:
                     key=f"equipment_select_{current_exercise.exercise_id}"
                 )
 
-            streamlit.markdown("### Sets")
+            streamlit.subheader("Sets", anchor=False)
 
             col_header_reps, col_header_weight = streamlit.columns([1, 1])
             with col_header_reps: streamlit.write("Reps")
