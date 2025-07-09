@@ -29,6 +29,7 @@ ROUTINE_URLS = {
 WORKOUT_URLS = {
 	"list": BASE_URL + "/workouts/list",
 	"data": BASE_URL + "/workouts/data",
+	"count": BASE_URL + "/workouts/count",
 	"create": BASE_URL + "/workouts/create",
 }
 
@@ -41,7 +42,6 @@ SESSION_URLS = {
 
 HISTORY_URLS = {
 	"data": BASE_URL + "/history/data",
-	"check": BASE_URL + "/history/check",
 	"create": BASE_URL + "/history/create",
 	"update": BASE_URL + "/history/update",
 }

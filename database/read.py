@@ -155,23 +155,20 @@ def getWorkoutSessionData(user_id: str | None) -> WorkoutSession | None :
         print(f"Exception while fetching routine: {e}")
         return None
     
-def checkHistoryData(user_id: str | None) -> bool | None :
+def checkWorkoutCount(user_id: str | None) -> int :
     try:
         response = requests.get(
-            url=HISTORY_URLS["check"],
+            url=WORKOUT_URLS["count"],
             params={"user_id": user_id}
         )
 
         response.raise_for_status()
 
-        if response.json() is True:
-            return True
-        else:
-            return False
+        return response.json()
         
     except Exception as e:
-        print(f"Exception while checking for history: {e}")
-        return None
+        print(f"Exception while checking for workout: {e}")
+        return 0
     
 def getHistoryData(user_id: str, exercise_id:str) -> pandas.DataFrame | None :
     try:
