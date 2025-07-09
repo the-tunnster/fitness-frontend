@@ -189,6 +189,8 @@ def getHistoryData(user_id: str, exercise_id:str) -> ExerciseHistory | None :
 
         for exercise_set in exercise_history.exercise_sets:
             exercise_set.sets = [WorkoutSet(**ws) for ws in exercise_set.sets] # type: ignore
+
+        return exercise_history
         
     except Exception as e:
         print(f"Exception while checking for history: {e}")
