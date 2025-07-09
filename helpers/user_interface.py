@@ -13,8 +13,11 @@ def actualSidebar():
 		streamlit.page_link("pages/routine-creator.py", label="Create a New Routine", icon=":material/add_notes:")
 		streamlit.divider()
 		streamlit.page_link("pages/workout-recorder.py", label="Record a Workout", icon=":material/exercise:")
-		# streamlit.page_link("pages/analytics.py", label="Workout Analytics", icon=":material/table_chart_view:")
 		streamlit.divider()
+		streamlit.page_link("pages/analytics-workout.py", label="Post Workout Analytics", icon=":material/table_chart_view:")
+		streamlit.page_link("pages/analytics-historic.py", label="Historical Workout Analytics", icon=":material/table_chart_view:")
+		streamlit.divider()
+
 
 		if not streamlit.user.is_logged_in:
 			if streamlit.button("Login with Google", icon=":material/login:"):
