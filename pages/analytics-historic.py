@@ -91,26 +91,23 @@ fig.add_trace(go.Scatter(
 ))
 
 fig.update_layout(
-    title=f"Smoothed Progress for {selected_exercise_name}",
-    xaxis_title='Date',
-    yaxis_title='Max Weight (kg)',
+    yaxis_title='Max Weight',
     yaxis2=dict(
-        title='Volume Moved (kg)',
+        title='Volume Moved ',
         overlaying='y',
-        side='right',
+        side='left',
         showgrid=False,
         visible=True,
     ),
     template='simple_white',
     legend=dict(
-        orientation="h",
+        orientation="v",
         yanchor="bottom",
-        y=1.02,
+        y=1.1,
         xanchor="center",
         x=0.5
     ),
-    margin=dict(l=40, r=40, t=60, b=40),
-    height=550
+    margin=dict(l=0, r=0, t=0, b=0),
 )
 
 streamlit.plotly_chart(fig, use_container_width=True)
