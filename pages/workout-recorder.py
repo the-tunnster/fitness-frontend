@@ -140,7 +140,7 @@ if is_workout_active:
     current_exercise = workout_session_data.exercises[current_exercise_index]
     
     if current_exercise:
-        with streamlit.form("exercise_recording_form", clear_on_submit=False):
+        with streamlit.form("exercise_recording_form", clear_on_submit=False, enter_to_submit=False):
             exercise_metadata = getExerciseData(current_exercise.exercise_id)
 
             if exercise_metadata:
