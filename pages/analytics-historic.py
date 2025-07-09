@@ -188,7 +188,7 @@ fig.add_trace(go.Scatter(
 ))
 
 # --- STEP 5: Final Layout ---
-fig.upandasate_layout(
+fig.update_layout(
     title=f"Smoothed Progress for {selected_exercise_name}",
     xaxis_title='Date',
     yaxis_title='Max Weight (kg)',
