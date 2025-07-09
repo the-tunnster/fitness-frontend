@@ -1,3 +1,4 @@
+import pandas
 import requests
 import streamlit
 
@@ -172,7 +173,7 @@ def checkHistoryData(user_id: str | None) -> bool | None :
         print(f"Exception while checking for history: {e}")
         return None
     
-def getHistoryData(user_id: str, exercise_id:str) -> ExerciseHistory | None :
+def getHistoryData(user_id: str, exercise_id:str) -> pandas.DataFrame | None :
     try:
         response = requests.get(
             url=HISTORY_URLS["data"],
@@ -181,14 +182,7 @@ def getHistoryData(user_id: str, exercise_id:str) -> ExerciseHistory | None :
 
         response.raise_for_status()
 
-        json_data = response.json()
-        exercise_sets = json_data.get("exercise_sets", [])
-
-        exercise_history = ExerciseHistory(**json_data)
-        exercise_history.exercise_sets = [ExerciseSets(**exercise_set) for exercise_set in exercise_sets]
-
-        for exercise_set in exercise_history.exercise_sets:
-            exercise_set.sets = [WorkoutSet(**ws) for ws in exercise_set.sets] # type: ignore
+        exercise_history = pandas.DataFrame(response.json())
 
         return exercise_history
         
