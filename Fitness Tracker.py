@@ -7,7 +7,7 @@ from helpers.cache_manager import *
 from helpers.user_interface import *
 
 streamlit.set_page_config(
-    page_title="Workout Tracker",
+    page_title="Home Page",
     page_icon="🏋️",
     layout="wide",
     initial_sidebar_state="collapsed"
