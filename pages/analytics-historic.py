@@ -56,7 +56,16 @@ if selected_exercise_data is None:
     streamlit.stop()
 
 # --- Fetch processed history data ---
-historic_data = getHistoryData(user_data.id, selected_exercise_data.id)  # type: ignore
+workout_count = checkWorkoutCount(user_data.id)
+if workout_count < 15 :
+    streamlit.progress(
+        text="You need at least 15 workouts recorded.",
+        value=(1/15)*workout_count
+        )
+    streamlit.info("You don't have enough workouts to display any useful data. Here's mine instead.")
+    historic_data = getHistoryData('68674a2e19fc0c426e3ece85', selected_exercise_data.id)  # type: ignore
+else:
+    historic_data = getHistoryData(user_data.id, selected_exercise_data.id)  # type: ignore
 
 if historic_data is None:
     streamlit.info(f"No workout history found for '{selected_exercise_name}'.")
@@ -91,19 +100,42 @@ fig.add_trace(go.Scatter(
 ))
 
 fig.update_layout(
+    xaxis=dict(
+        fixedrange=True
+    ),
+    yaxis=dict(
+        fixedrange=True,
+        dtick=None,  # Auto-spacing to prevent overlap
+        gridcolor='rgba(0,0,0,0.1)',
+        ticks='inside',
+        tickfont=dict(size=10),  # Smaller font for mobile
+        tickmode='auto',  # Let Plotly choose optimal tick spacing
+        nticks=5  # Limit number of ticks to reduce crowding
+    ),
     yaxis2=dict(
         overlaying='y',
-        side='left',
+        side='left',  # Keep on left side for mobile
         showgrid=False,
-        visible=True,
+        fixedrange=True,
+        dtick=None,  # Auto-spacing to prevent overlap
+        ticks='inside',
+        tickcolor='rgba(0, 0, 0, 1)',
+        tickfont=dict(size=10),  # Smaller font for mobile
+        anchor='free',  # Allow positioning
+        position=1,  # Offset slightly from primary axis
+        tickmode='auto',  # Let Plotly choose optimal tick spacing
+        nticks=5  # Limit number of ticks to reduce crowding
     ),
     template='simple_white',
     legend=dict(
-        orientation="v",
+        orientation="h",
         yanchor="bottom",
         y=1.1,
         xanchor="center",
-        x=0.5
+        x=0.5,
+        itemsizing="constant",  # Keep legend items consistent size
+        itemwidth=30,  # Increase spacing between legend items
+        font=dict(size=12),  # Adjust font size if needed
     ),
     margin=dict(l=0, r=0, t=0, b=0),
 )
