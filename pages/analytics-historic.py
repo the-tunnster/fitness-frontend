@@ -91,9 +91,7 @@ fig.add_trace(go.Scatter(
 ))
 
 fig.update_layout(
-    yaxis_title='Max Weight',
     yaxis2=dict(
-        title='Volume Moved ',
         overlaying='y',
         side='left',
         showgrid=False,
