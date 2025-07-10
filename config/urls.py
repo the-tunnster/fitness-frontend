@@ -1,4 +1,4 @@
-HOST = "http://localhost"
+HOST = "http://database-vm"
 PORT = ":8080"
 
 BASE_URL = HOST+PORT
