@@ -1,6 +1,5 @@
 import streamlit
-import pandas
-import plotly.graph_objects as go
+import plotly.graph_objects as go                                                                                   # type:ignore
 
 from helpers.cache_manager import *
 from helpers.user_interface import *
@@ -31,12 +30,20 @@ if user_data is None:
         streamlit.error("User data could not be loaded. Please log in again.")
         streamlit.stop()
 
+workout_count = checkWorkoutCount(user_data.id)
+if workout_count < 15 :
+    streamlit.progress(
+        text="You need at least 15 workouts recorded.",
+        value=(1/15)*workout_count
+        )
+    streamlit.info("You don't have enough workouts to display any useful data. Here's mine instead.")
+
+
 # --- Load exercises ---
 global_exercise_list = getExerciseList()
 if not global_exercise_list:
     streamlit.info("No exercises found in your database. Please add exercises first.")
     streamlit.stop()
-
 global_exercise_names = [exercise.name for exercise in global_exercise_list]
 
 selected_exercise_name = streamlit.selectbox(
@@ -55,17 +62,12 @@ if selected_exercise_data is None:
     streamlit.error("Selected exercise data not found. This should not happen.")
     streamlit.stop()
 
+
 # --- Fetch processed history data ---
-workout_count = checkWorkoutCount(user_data.id)
 if workout_count < 15 :
-    streamlit.progress(
-        text="You need at least 15 workouts recorded.",
-        value=(1/15)*workout_count
-        )
-    streamlit.info("You don't have enough workouts to display any useful data. Here's mine instead.")
-    historic_data = getHistoryData('68674a2e19fc0c426e3ece85', selected_exercise_data.id)  # type: ignore
+    historic_data = getHistoryData('68674a2e19fc0c426e3ece85', selected_exercise_data.id)
 else:
-    historic_data = getHistoryData(user_data.id, selected_exercise_data.id)  # type: ignore
+    historic_data = getHistoryData(user_data.id, selected_exercise_data.id)
 
 if historic_data is None:
     streamlit.info(f"No workout history found for '{selected_exercise_name}'.")
@@ -75,11 +77,12 @@ if historic_data.empty:
     streamlit.info(f"No valid sets (reps > 0 and weight > 0) found for '{selected_exercise_name}'.")
     streamlit.stop()
 
+
 # --- Plotting ---
 fig = go.Figure()
 
-# Smoothed Max Weight
-fig.add_trace(go.Scatter( 
+# Max Weight (Primary Axis)
+fig.add_trace(go.Scatter(                                                                                           # type:ignore
     x=historic_data['date'],
     y=historic_data['interpolated_weight'],
     mode='lines',
@@ -89,7 +92,7 @@ fig.add_trace(go.Scatter(
 )) 
 
 # Volume Moved (Secondary Axis)
-fig.add_trace(go.Scatter(
+fig.add_trace(go.Scatter(                                                                                           # type:ignore
     x=historic_data[historic_data['volume'].notna()]['date'],
     y=historic_data[historic_data['volume'].notna()]['volume'],
     mode='lines',
@@ -99,7 +102,7 @@ fig.add_trace(go.Scatter(
     hovertemplate='%{x|%b %d, %Y}<br>Volume: %{y:.0f} kg',
 ))
 
-fig.update_layout(
+fig.update_layout(                                                                                                  # type:ignore
     xaxis=dict(
         fixedrange=True
     ),
@@ -108,23 +111,23 @@ fig.update_layout(
         dtick=None,  # Auto-spacing to prevent overlap
         gridcolor='rgba(0,0,0,0.1)',
         ticks='inside',
-        tickfont=dict(size=10),  # Smaller font for mobile
-        tickmode='auto',  # Let Plotly choose optimal tick spacing
-        nticks=5  # Limit number of ticks to reduce crowding
+        tickfont=dict(size=10),
+        tickmode='auto',  # Auto-choose tick spacing
+        nticks=5  # Limit number of ticks
     ),
     yaxis2=dict(
         overlaying='y',
-        side='left',  # Keep on left side for mobile
+        side='left',
         showgrid=False,
         fixedrange=True,
         dtick=None,  # Auto-spacing to prevent overlap
         ticks='inside',
         tickcolor='rgba(0, 0, 0, 1)',
-        tickfont=dict(size=10),  # Smaller font for mobile
-        anchor='free',  # Allow positioning
+        tickfont=dict(size=10),
+        anchor='free',
         position=1,  # Offset slightly from primary axis
-        tickmode='auto',  # Let Plotly choose optimal tick spacing
-        nticks=5  # Limit number of ticks to reduce crowding
+        tickmode='auto',  # Auto-choose optimal tick spacing
+        nticks=5  # Limit number of ticks
     ),
     template='simple_white',
     legend=dict(
@@ -133,11 +136,11 @@ fig.update_layout(
         y=1.1,
         xanchor="center",
         x=0.5,
-        itemsizing="constant",  # Keep legend items consistent size
+        itemsizing="constant",  # Keep legend items consistent
         itemwidth=30,  # Increase spacing between legend items
-        font=dict(size=12),  # Adjust font size if needed
+        font=dict(size=12),
     ),
     margin=dict(l=0, r=0, t=0, b=0),
 )
 
-streamlit.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+streamlit.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})                             # type:ignore
