@@ -170,7 +170,7 @@ def checkWorkoutCount(user_id: str | None) -> int :
         print(f"Exception while checking for workout: {e}")
         return 0
     
-def getHistoryData(user_id: str, exercise_id:str) -> pandas.DataFrame | None :
+def getHistoryData(user_id: str | None, exercise_id:str) -> pandas.DataFrame | None :
     try:
         response = requests.get(
             url=HISTORY_URLS["data"],
