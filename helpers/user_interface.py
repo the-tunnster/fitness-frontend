@@ -20,6 +20,7 @@ def actualSidebar():
 
 
 		if not streamlit.user.is_logged_in:
+			streamlit.warning("You'll need to log in to continue")
 			if streamlit.button("Login with Google", icon=":material/login:"):
 				streamlit.login()
 		else:
