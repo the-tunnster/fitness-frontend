@@ -22,6 +22,14 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState()
 
+streamlit.header("Routine Management.", anchor=False)
+
+streamlit.markdown("""
+This is where you'll manage existing routines and their set-ups.</br>
+                   
+Select a routine to get started.</br>
+""", unsafe_allow_html=True)
+
 user_data: User
 
 if streamlit.session_state["user_data"] is None:
@@ -35,13 +43,6 @@ routine_editor_data = streamlit.session_state["routine_editor_data"]
 
 routine_editor_exercises: list[dict[str, Any]] = streamlit.session_state["routine_editor_data"]["exercises"]
 
-streamlit.header("Welcome to the Routine Editor.", anchor=False)
-
-streamlit.markdown("""
-                   You can modify your workout exercises here.</br>
-                   Select a routine to get started.</br>
-                   """, unsafe_allow_html=True)
-
 global_exercise_names: list[str] | None = None
 global_exercise_list = getExerciseList()
 
@@ -51,14 +52,19 @@ else:
     global_exercise_list = []
     global_exercise_names = []
 
-user_routines_list = getRoutinesList(user_id=user_data.id) #type: ignore
+user_routines_list = getRoutinesList(user_id=user_data.id)
 if user_routines_list is None or user_routines_list == []:
     streamlit.info("You don't seem to have any routines set up. Please create one to access it here.")
     streamlit.stop()
     
 user_routine_names = ["None"] + [routine.name for routine in user_routines_list]
 
-selected_routine_name = streamlit.selectbox("Select a routine", options=user_routine_names, index=0)
+selected_routine_name = streamlit.selectbox(
+    label="Select a routine",
+    options=user_routine_names,
+    index=0,
+    label_visibility="collapsed"
+)
 
 if selected_routine_name == "None":
     streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": "None"}
@@ -72,7 +78,7 @@ if streamlit.session_state["routine_editor_data"]["name"] != selected_routine_na
 selected_routine_index = user_routine_names.index(selected_routine_name)
 selected_routine = user_routines_list[selected_routine_index - 1]
 
-full_user_routine = getRoutineData(user_data.id, selected_routine.id) #type: ignore
+full_user_routine = getRoutineData(user_data.id, selected_routine.id)
 if full_user_routine is None:
     streamlit.error("Failed to load routine data. Please try again.")
     streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": selected_routine_name}
@@ -89,7 +95,7 @@ if not routine_editor_exercises :
         })
     streamlit.session_state["routine_editor_data"]["exercises"] = routine_editor_exercises
 
-streamlit.caption("☑️ Tick exercises to delete, then press '🗑️ Delete Selected'")
+streamlit.caption("☑️ Select exercises to delete, then press '🗑️ Delete Selected' to remove them.")
 streamlit.divider()
 
 with streamlit.form("routine_viewer", clear_on_submit=False, border=False):
@@ -158,7 +164,7 @@ with streamlit.form("routine_viewer", clear_on_submit=False, border=False):
 
         updated_routine = FullRoutine(
             id=full_user_routine.id,
-            user_id=user_data.id, #type: ignore
+            user_id=user_data.id,                                                                                         #type: ignore
             name=full_user_routine.name,
             exercises=updated_exercises,
         )
@@ -177,7 +183,7 @@ with streamlit.expander("⚠️ Delete This Routine", expanded=False):
 
     if confirm_delete:
         if streamlit.button("Delete Routine", type="primary"):
-            result = deleteRoutine(user_data.id, selected_routine.id) #type: ignore
+            result = deleteRoutine(user_data.id, selected_routine.id)
 
             if result:
                 streamlit.success("Deleted Routine")
