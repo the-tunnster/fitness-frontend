@@ -62,7 +62,7 @@ def createUserRoutine(user: User, routine: FullRoutine) -> bool:
         print(f"Exception during routine creation: {e}")
         return False
     
-def createWorkoutSession(user_id: str, routine_id: str) -> bool:
+def createWorkoutSession(user_id: str | None, routine_id: str) -> bool:
     try:
         response = requests.post(
             url=SESSION_URLS["create"],

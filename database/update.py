@@ -71,7 +71,7 @@ def updateWorkoutSession(session: WorkoutSession) -> bool:
         return False
     
 
-def updateHistory(user_id: str, workout_id:str) -> bool:
+def updateHistory(user_id: str | None, workout_id:str) -> bool:
     try:
         response = requests.patch(
             url=HISTORY_URLS["update"],
