@@ -91,7 +91,7 @@ def getExerciseIDs(exercise_names: list[str]) -> list[str]:
         print(f"Exception: {e}")
         return []
 
-def getRoutinesList(user_id: str) -> list[Routine] | None :
+def getRoutinesList(user_id: str | None) -> list[Routine] | None :
     try:
         response = requests.get(
             url=ROUTINE_URLS["list"],
@@ -107,7 +107,7 @@ def getRoutinesList(user_id: str) -> list[Routine] | None :
         print(f"Exception: {e}")
         return None
 
-def getRoutineData(user_id:str, routine_id: str) -> FullRoutine | None :
+def getRoutineData(user_id:str | None, routine_id: str | None) -> FullRoutine | None :
     try:
         response = requests.get(
             url=ROUTINE_URLS["data"],
