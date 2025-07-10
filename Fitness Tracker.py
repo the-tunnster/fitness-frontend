@@ -8,7 +8,7 @@ from helpers.user_interface import *
 
 streamlit.set_page_config(
     page_title="Home Page",
-    page_icon=":material/fitness_centre:",
+    page_icon=":material/dumbbell:",
     layout="wide",
     initial_sidebar_state="expanded"
 )
