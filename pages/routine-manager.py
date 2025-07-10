@@ -20,7 +20,7 @@ if not streamlit.user.is_logged_in:
     streamlit.switch_page("./Fitness Tracker.py")
 
 uiSetup()
-initSessionState()
+initSessionState(["user_data", "routine_editor_data"])
 
 streamlit.header("Routine Management.", anchor=False)
 streamlit.markdown("""
