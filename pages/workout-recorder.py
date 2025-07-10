@@ -20,7 +20,9 @@ if not streamlit.user.is_logged_in:
     streamlit.switch_page("./Fitness Tracker.py")
 
 uiSetup()
-initSessionState()
+initSessionState(["user_data", "workout_session_data", "current_exercise_index", "add_exercise_dialog"])
+
+streamlit.header("Workout Recorder", anchor=False)
 
 user_data: User | None
 workout_session_data: WorkoutSession | None
@@ -51,9 +53,6 @@ else:
 
 if streamlit.session_state["add_exercise_dialog"] is None:
     streamlit.session_state["add_exercise_dialog"] = False
-
-streamlit.header("Workout Recorder", anchor=False)
-
 
 @streamlit.dialog("Add an Exercise to your Workout")
 def addExerciseDialog():
@@ -197,7 +196,7 @@ if is_workout_active:
 
             col_add_set, col_drop_set, col_update_info = streamlit.columns([1, 1, 1])
 
-            if col_add_set.form_submit_button("➕ Add a set", use_container_width=True):
+            if col_add_set.form_submit_button("Add Set", use_container_width=True, icon=":material/add:"):
                 current_exercise.sets.append(
                     WorkoutSet(reps=current_exercise.sets[0].reps if current_exercise.sets else 8, weight=0.0)
                 )
@@ -206,7 +205,7 @@ if is_workout_active:
                 else:
                     streamlit.error("Failed to update session information.")
 
-            if col_drop_set.form_submit_button("➖ Drop a set", use_container_width=True):
+            if col_drop_set.form_submit_button("Drop Set", use_container_width=True, icon=":material/delete:"):
                 if current_exercise.sets:
                     current_exercise.sets.pop() 
                     if updateWorkoutSession(streamlit.session_state["workout_session_data"]):
@@ -216,7 +215,7 @@ if is_workout_active:
                 else:
                     streamlit.warning("No sets to drop.")
 
-            if col_update_info.form_submit_button("💾 Update Information", use_container_width=True, type="primary"):
+            if col_update_info.form_submit_button("Update Data", use_container_width=True, icon=":material/upgrade:"):
                 if updateWorkoutSession(workout_session_data):
                     streamlit.rerun()
                 else:
@@ -226,7 +225,7 @@ if is_workout_active:
 
     col_end_workout, col_cancel_workout = streamlit.columns(2)
 
-    with col_end_workout.expander("✅ Finish Workout", expanded=False):
+    with col_end_workout.expander("Finish Workout", expanded=False, icon=":material/save:"):
         streamlit.warning("This will commit your routine to disk.")
         if streamlit.button("Confirm", key="finish-workout-btn"):
             result = updateWorkoutSession(streamlit.session_state["workout_session_data"])
@@ -244,14 +243,14 @@ if is_workout_active:
                 streamlit.error("Couldn't clear session data.")
                 streamlit.stop()
             
-            updateHistory(user_data.id, workoutID) #type: ignore
+            updateHistory(user_data.id, workoutID)
 
             streamlit.success("Workout saved to disk. Re-directing!")
             clearSessionVariable(["workout_session_data", "current_exercise_index", "add_exercise_dialog", "workout_exercise_selection"])
-            streamlit.switch_page("pages/analytics.py")
+            streamlit.switch_page("pages/analytics-workout.py")
 
 
-    with col_cancel_workout.expander("❌ Cancel Workout", expanded=False):
+    with col_cancel_workout.expander("Cancel Workout", expanded=False, icon=":material/cancel:"):
         streamlit.warning("This will erase your current progress.")
         if streamlit.button("Confirm", key="cancel-workout-btn"):
             result = updateWorkoutSession(streamlit.session_state["workout_session_data"])
@@ -271,7 +270,7 @@ if is_workout_active:
 else:
     streamlit.write("Select a workout routine to get started.")
 
-    user_routines = getRoutinesList(user_data.id) #type: ignore
+    user_routines = getRoutinesList(user_data.id)
     if user_routines is None or user_routines == []:
         streamlit.info("You don't seem to have any routines set up. Please create one to access it here.")
         streamlit.stop()
@@ -288,13 +287,13 @@ else:
 
     start_workout_button_disabled = (selected_routine_name == "None")
 
-    if streamlit.button("▶️ Start Workout", disabled=start_workout_button_disabled, use_container_width=True, type="primary"):
+    if streamlit.button("Start Workout", disabled=start_workout_button_disabled, use_container_width=True, type="primary", icon=":material/play_arrow:"):
         if selected_routine_name != "None":
             selected_routine: Routine = user_routines[user_routine_names.index(selected_routine_name) - 1]
 
             if selected_routine and selected_routine.id:
 
-                new_workout_session = createWorkoutSession(user_data.id, selected_routine.id) #type: ignore
+                new_workout_session = createWorkoutSession(user_data.id, selected_routine.id)
                 if new_workout_session:
                     streamlit.session_state["workout_session_data"] = getWorkoutSessionData(user_data.id)
                     streamlit.session_state["current_exercise_index"] = 0
