@@ -51,16 +51,3 @@ def hideSidebar():
 			[data-testid="stSidebarContent"] {	padding-top: 0px;	}
 		</style>
 						""", unsafe_allow_html=True)
-
-@streamlit.dialog("Just a heads up.")
-def popUpInfo():
-	streamlit.markdown("""
-					
-- The specific purpose of this app is to collect workout data, which is obviously personal data. </br>
-- I will be studying this data in order to train a Machine Learning model. I will also be masking the data before anything is studied or trained on, for everyone's privacy. </br>
-- If you have any concerns, do reach out to me and I'll do my best to clarify things. </br>
-					
-					""", unsafe_allow_html=True)
-	seen = streamlit.checkbox("Check this to stop seeing this for your session.")
-	if not seen:
-		streamlit.stop()
