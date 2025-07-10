@@ -23,7 +23,6 @@ uiSetup()
 initSessionState()
 
 streamlit.header("Routine Management.", anchor=False)
-
 streamlit.markdown("""
 This is where you'll manage existing routines and their set-ups.</br>
                    
