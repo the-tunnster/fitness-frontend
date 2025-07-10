@@ -16,7 +16,14 @@ if not streamlit.user.is_logged_in:
     streamlit.switch_page("./Fitness Tracker.py")
 
 uiSetup()
-initSessionState()
+initSessionState(["user_data"])
+
+streamlit.header("User Profile.", anchor=False)
+streamlit.markdown("""
+This is your user profile page. </br>
+Feel free to leave this values as they are, I chose averages as dummy values. </br>
+However, if you wish to update these, try to have them as accurate as possible. </br>
+""", unsafe_allow_html=True)
 
 user_data: User
 
@@ -24,17 +31,6 @@ if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
 
 user_data = streamlit.session_state["user_data"]
-
-streamlit.header("User Profile.", anchor=False)
-
-streamlit.markdown("""
-This is your user profile page. </br>
-
-Feel free to leave this values as they are, I chose averages as dummy values. </r>
-However, if you wish to update these, do try to have them as accurate as possible. </br>
-                   
-It is after all, all for the machine to learn from. Thank You!
-""", unsafe_allow_html=True)
 
 with streamlit.form("user_profile"):
     gender_index = 0 if user_data.gender == "male" else 1
