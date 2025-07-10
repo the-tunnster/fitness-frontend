@@ -18,7 +18,17 @@ if not streamlit.user.is_logged_in:
     streamlit.switch_page("./Fitness Tracker.py")
 
 uiSetup()
-initSessionState()
+initSessionState(["user_data", "routine_creator_data"])
+
+streamlit.header("Routine Creation.", anchor=False)
+streamlit.markdown("""
+Design your workout routines from scratch. </br>
+Enter a routine name, add or remove exercises and decide how many sets & reps you want.</br>
+                   
+On a side note, the deletion is a bit jank. </br>
+Select exercises, then press 'Remove' to drop them. </br>
+""", unsafe_allow_html=True)
+streamlit.divider()
 
 user_data: User
 
@@ -36,14 +46,13 @@ user_data = streamlit.session_state["user_data"]
 routine_creator_data = streamlit.session_state["routine_creator_data"]
 routine_creator_exercises = routine_creator_data["exercises"]
 
-streamlit.header("Create a New Routine.", anchor=False)
 
-streamlit.markdown(""" Add a routine name and build your workout from scratch. """, unsafe_allow_html=True)
-
-# Input fields for routine name and description
-routine_creator_data["name"] = streamlit.text_input("Routine Name", value=routine_creator_data.get("name", ""))
-
-streamlit.divider()
+routine_creator_data["name"] = streamlit.text_input(
+    label="Routine Name",
+    value=routine_creator_data.get("name", ""),
+    label_visibility="collapsed",
+    placeholder="Routine Name"
+)
 
 global_exercise_names: list[str] | None = None
 global_exercise_list = getExerciseList()
@@ -53,9 +62,6 @@ if global_exercise_list is not None:
 else:
     global_exercise_list = []
     global_exercise_names = []
-
-streamlit.caption("☑️ Tick exercises to delete, then press '🗑️ Delete Selected'")
-streamlit.divider()
 
 with streamlit.form("routine_creator_form", clear_on_submit=False, border=False):
     for i, exercise in enumerate(routine_creator_exercises):
@@ -88,7 +94,6 @@ with streamlit.form("routine_creator_form", clear_on_submit=False, border=False)
             key=f"remove_creator_{i}", label_visibility="collapsed"
         )
 
-    streamlit.divider()
     col_add, col_delete, col_save = streamlit.columns([1, 1, 1])
 
     if col_add.form_submit_button("Add", icon=":material/add:", use_container_width=True):
