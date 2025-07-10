@@ -5,7 +5,7 @@ from models.user import *
 from models.routines import *
 from models.exercise import *
 
-def deleteRoutine(user_id:str, routine_id: str) -> bool :
+def deleteRoutine(user_id: str | None, routine_id: str | None) -> bool :
     try:
         response = requests.delete(
             url=ROUTINE_URLS["delete"],
