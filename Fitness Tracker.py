@@ -10,13 +10,13 @@ streamlit.set_page_config(
     page_title="Home Page",
     page_icon="🏋️",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 uiSetup()
 initSessionState()
 
-streamlit.header("Welcome to the Workout Tracker", anchor=False)
+streamlit.header("Welcome.", anchor=False)
 
 if not streamlit.user.is_logged_in:
     streamlit.warning("You'll need to log in to continue")
@@ -32,7 +32,7 @@ if streamlit.session_state["user_data"] is None:
         if result:
             user_data = getUser(str(streamlit.user.email))
             streamlit.session_state["user_data"] = user_data
-            streamlit.info("A dummy profile has ben created.")
+            streamlit.info("A dummy profile has been created. Feel free to update the information as you see fit.")
 
         else:
             streamlit.error("Couldn't create a new user")
@@ -41,18 +41,16 @@ if streamlit.session_state["user_data"] is None:
     else:
         streamlit.session_state["user_data"] = user_data
 
-streamlit.info("Welcome " + streamlit.session_state["user_data"].username + ".")
+streamlit.info("Welcome " + streamlit.session_state["user_data"].username + "!")
 
 streamlit.markdown("""
                    
-Congratulations on making it this far. </br>
-I was sure something would've broken by now. </br>
-But here we are. </br>
+Congratulations on making it this far! </br>
+I was sure something would've broken by now, but here we are. </br>
                    
-In any case, let's get started. </br>
 The sidebar navigation should help you get around. </br>
 If you come across any issues, please let me know, and I'll get onto fixing it ASAP. </br>
-For now though, it is in super early development, so please try and break it?. </br>
+For now though, it is in super early development, so please try and break it? </br>
 
 Good luck, and have a G lift! </br>
 
