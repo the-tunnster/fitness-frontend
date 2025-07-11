@@ -1,13 +1,13 @@
-import pandas
 import requests
 import streamlit
+from typing import Any
 
 from config.urls import *
 
-from models.user import *
-from models.routines import *
-from models.exercise import *
+from models.user import User
 from models.session import *
+from models.routines import *
+from models.exercise import Exercise
 
 def getUser(emailID: str) -> User | None :
     try:
@@ -170,7 +170,7 @@ def checkWorkoutCount(user_id: str | None) -> int :
         print(f"Exception while checking for workout: {e}")
         return 0
     
-def getHistoryData(user_id: str | None, exercise_id:str) -> pandas.DataFrame | None :
+def getHistoryData(user_id: str | None, exercise_id: str) -> list[dict[Any, Any]] | None :
     try:
         response = requests.get(
             url=HISTORY_URLS["data"],
@@ -179,9 +179,7 @@ def getHistoryData(user_id: str | None, exercise_id:str) -> pandas.DataFrame | N
 
         response.raise_for_status()
 
-        exercise_history = pandas.DataFrame(response.json())
-
-        return exercise_history
+        return response.json()
         
     except Exception as e:
         print(f"Exception while checking for history: {e}")
