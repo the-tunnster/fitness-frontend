@@ -69,12 +69,12 @@ if workout_count < 15 :
 else:
     historic_data = getHistoryData(user_data.id, selected_exercise_data.id)
 
-if historic_data is None:
+if not historic_data:
     streamlit.info(f"No workout history found for '{selected_exercise_name}'.")
     streamlit.stop()
 
-if historic_data.empty:
-    streamlit.info(f"No valid sets (reps > 0 and weight > 0) found for '{selected_exercise_name}'.")
+if len(historic_data) <= 1:
+    streamlit.info(f"Not enough valid data found for '{selected_exercise_name}'.")
     streamlit.stop()
 
 
@@ -83,8 +83,8 @@ fig = go.Figure()
 
 # Max Weight (Primary Axis)
 fig.add_trace(go.Scatter(                                                                                           # type:ignore
-    x=historic_data['date'],
-    y=historic_data['interpolated_weight'],
+    x=[entry['date'] for entry in historic_data],
+    y=[entry['interpolated_weight'] for entry in historic_data],
     mode='lines',
     name='Max Weight',
     line=dict(color='rgba(255, 145, 164, 1)', width=3, shape='spline'),
@@ -93,8 +93,8 @@ fig.add_trace(go.Scatter(                                                       
 
 # Volume Moved (Secondary Axis)
 fig.add_trace(go.Scatter(                                                                                           # type:ignore
-    x=historic_data[historic_data['volume'].notna()]['date'],
-    y=historic_data[historic_data['volume'].notna()]['volume'],
+    x=[entry['date'] for entry in historic_data if 'volume' in entry],
+    y=[entry['volume'] for entry in historic_data if 'volume' in entry],
     mode='lines',
     name='Volume Moved',
     yaxis='y2',
