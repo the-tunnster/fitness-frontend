@@ -247,7 +247,7 @@ if is_workout_active:
 
             streamlit.success("Workout saved to disk. Re-directing!")
             clearSessionVariable(["workout_session_data", "current_exercise_index", "add_exercise_dialog", "workout_exercise_selection"])
-            streamlit.switch_page("pages/analytics-workout.py")
+            streamlit.switch_page("pages/analytics-historic.py")
 
 
     with col_cancel_workout.expander("Cancel Workout", expanded=False, icon=":material/cancel:"):
