@@ -14,7 +14,6 @@ def actualSidebar():
 		streamlit.divider()
 		streamlit.page_link("pages/workout-recorder.py", label="Record a Workout", icon=":material/exercise:")
 		streamlit.divider()
-		streamlit.page_link("pages/analytics-workout.py", label="Post Workout Analytics", icon=":material/monitoring:")
 		streamlit.page_link("pages/analytics-historic.py", label="Historical Workout Analytics", icon=":material/table_chart_view:")
 		streamlit.divider()
 
