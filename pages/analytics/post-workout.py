@@ -17,20 +17,4 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState(["user_data", ])
 
-streamlit.header("Post Workout Analytics", anchor=False)
-
-# --- Load user data ---
-
-user_data: User | None
-if streamlit.session_state["user_data"] is None:
-    user_data = getUser(str(streamlit.user.email))
-    if user_data is not None:
-        streamlit.session_state["user_data"] = user_data
-    else:
-        streamlit.error("User data could not be loaded. Please log in again.")
-        streamlit.stop()
-else:
-    user_data = streamlit.session_state["user_data"]
-
-# --- Load last 2 workouts ---
-
+streamlit.header("Coming Soon...", anchor=False)
