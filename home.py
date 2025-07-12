@@ -1,20 +1,20 @@
 import streamlit
 
-from database.read import *
-from database.create import *
+from database.read import getUser
+from database.create import createDummyUserProfile
 
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
 streamlit.set_page_config(
     page_title="Home Page",
-    page_icon="💪🏻",
+    page_icon=":material/home:",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 uiSetup()
-initSessionState()
+initSessionState(["user_data"])
 
 if not streamlit.user.is_logged_in:
     streamlit.header("Welcome.", anchor=False)
@@ -53,5 +53,5 @@ streamlit.write("""
 
 Feel free to explore and make the most of the features, and I'll be adding new ones as I go.
 In the meantime, if you encounter any issues or think of any cool new features you want, let me know and I'll get on it.
-Good luck, and enjoy your fitness journey!
-                """)
+Good luck!
+""")
