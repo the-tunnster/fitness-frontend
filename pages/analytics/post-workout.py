@@ -15,12 +15,13 @@ if not streamlit.user.is_logged_in:
     streamlit.switch_page("./Fitness Tracker.py")
 
 uiSetup()
-initSessionState()
+initSessionState(["user_data", ])
 
-streamlit.header("Workout Analytics", anchor=False)
+streamlit.header("Post Workout Analytics", anchor=False)
+
+# --- Load user data ---
 
 user_data: User | None
-
 if streamlit.session_state["user_data"] is None:
     user_data = getUser(str(streamlit.user.email))
     if user_data is not None:
@@ -30,4 +31,6 @@ if streamlit.session_state["user_data"] is None:
         streamlit.stop()
 else:
     user_data = streamlit.session_state["user_data"]
+
+# --- Load last 2 workouts ---
 

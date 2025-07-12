@@ -16,9 +16,8 @@ streamlit.set_page_config(
 uiSetup()
 initSessionState()
 
-streamlit.header("Welcome.", anchor=False)
-
 if not streamlit.user.is_logged_in:
+    streamlit.header("Welcome.", anchor=False)
     streamlit.warning("You'll need to log in to continue")
     streamlit.stop()
 
@@ -41,7 +40,7 @@ if streamlit.session_state["user_data"] is None:
     else:
         streamlit.session_state["user_data"] = user_data
 
-streamlit.info("Welcome " + streamlit.session_state["user_data"].username + "!")
+streamlit.header("Welcome " + streamlit.session_state["user_data"].username + "!", anchor=False)
 
 streamlit.markdown("""
                    

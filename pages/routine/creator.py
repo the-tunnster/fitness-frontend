@@ -11,7 +11,6 @@ streamlit.set_page_config(
     page_title="Routine Creator",
     page_icon=":material/add_notes:",
     layout="wide",
-    initial_sidebar_state="collapsed"
 )
 
 if not streamlit.user.is_logged_in:

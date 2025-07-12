@@ -13,7 +13,6 @@ streamlit.set_page_config(
     page_title="Routine Manager",
     page_icon="🏋️",
     layout="wide",
-    initial_sidebar_state="collapsed"
 )
 
 if not streamlit.user.is_logged_in:
