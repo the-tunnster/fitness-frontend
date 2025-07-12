@@ -139,7 +139,7 @@ if is_workout_active:
     current_exercise = workout_session_data.exercises[current_exercise_index]
     
     if current_exercise:
-        with streamlit.form("exercise_recording_form", clear_on_submit=False, enter_to_submit=False):
+        with streamlit.form("exercise_recording_form", clear_on_submit=False, enter_to_submit=False, border=False):
             exercise_metadata = getExerciseData(current_exercise.exercise_id)
 
             if exercise_metadata:
@@ -196,7 +196,7 @@ if is_workout_active:
 
             col_add_set, col_drop_set, col_update_info = streamlit.columns([1, 1, 1])
 
-            if col_add_set.form_submit_button("Add Set", use_container_width=True, icon=":material/add:"):
+            if col_add_set.form_submit_button("Add", use_container_width=True, icon=":material/add:"):
                 current_exercise.sets.append(
                     WorkoutSet(reps=current_exercise.sets[0].reps if current_exercise.sets else 8, weight=0.0)
                 )
@@ -205,7 +205,7 @@ if is_workout_active:
                 else:
                     streamlit.error("Failed to update session information.")
 
-            if col_drop_set.form_submit_button("Drop Set", use_container_width=True, icon=":material/delete:"):
+            if col_drop_set.form_submit_button("Drop", use_container_width=True, icon=":material/delete:"):
                 if current_exercise.sets:
                     current_exercise.sets.pop() 
                     if updateWorkoutSession(streamlit.session_state["workout_session_data"]):
