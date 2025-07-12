@@ -143,7 +143,7 @@ with streamlit.form("routine_creator_form", clear_on_submit=False, border=False,
             else:
                 streamlit.error("That didn't work.")
 
-streamlit.markdown("---")
+streamlit.divider()
 
 if streamlit.button("Clear All", type="secondary"):
     del streamlit.session_state["routine_creator_data"]
