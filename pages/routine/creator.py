@@ -14,7 +14,7 @@ streamlit.set_page_config(
 )
 
 if not streamlit.user.is_logged_in:
-    streamlit.switch_page("./Fitness Tracker.py")
+    streamlit.switch_page("home.py")
 
 uiSetup()
 initSessionState(["user_data", "routine_creator_data"])

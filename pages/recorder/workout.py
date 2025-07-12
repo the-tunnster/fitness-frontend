@@ -17,7 +17,7 @@ streamlit.set_page_config(
 )
 
 if not streamlit.user.is_logged_in:
-    streamlit.switch_page("./Fitness Tracker.py")
+    streamlit.switch_page("home.py")
 
 uiSetup()
 initSessionState(["user_data", "workout_session_data", "current_exercise_index", "add_exercise_dialog"])
@@ -215,7 +215,7 @@ if is_workout_active:
                 else:
                     streamlit.warning("No sets to drop.")
 
-            if col_update_info.form_submit_button("Update Data", use_container_width=True, icon=":material/upgrade:"):
+            if col_update_info.form_submit_button("Update", use_container_width=True, icon=":material/upgrade:"):
                 if updateWorkoutSession(workout_session_data):
                     streamlit.rerun()
                 else:
@@ -247,7 +247,7 @@ if is_workout_active:
 
             streamlit.success("Workout saved to disk. Re-directing!")
             clearSessionVariable(["workout_session_data", "current_exercise_index", "add_exercise_dialog", "workout_exercise_selection"])
-            streamlit.switch_page("pages/analytics-historic.py")
+            streamlit.switch_page("pages/analytics/historic.py")
 
 
     with col_cancel_workout.expander("Cancel Workout", expanded=False, icon=":material/cancel:"):
