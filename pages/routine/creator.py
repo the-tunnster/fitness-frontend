@@ -1,4 +1,3 @@
-import time
 import streamlit
 
 from helpers.cache_manager import *
@@ -140,8 +139,7 @@ with streamlit.form("routine_creator_form", clear_on_submit=False, border=False)
             if result:
                 streamlit.success("Routine created successfully!")
                 del streamlit.session_state["routine_creator_data"]
-                time.sleep(3)
-                streamlit.rerun()
+                streamlit.switch_page("pages/routine/manager.py")
             else:
                 streamlit.error("That didn't work.")
 
