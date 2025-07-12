@@ -32,7 +32,7 @@ if streamlit.session_state["user_data"] is None:
 
 user_data = streamlit.session_state["user_data"]
 
-with streamlit.form("user_profile"):
+with streamlit.form("user_profile", enter_to_submit=False):
     gender_index = 0 if user_data.gender == "male" else 1
     user_data.dateOfBirth = str(user_data.dateOfBirth)
     unit_preference_index = 0 if user_data.unitPreference == "metric" else 1

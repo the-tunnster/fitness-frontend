@@ -61,7 +61,7 @@ else:
     global_exercise_list = []
     global_exercise_names = []
 
-with streamlit.form("routine_creator_form", clear_on_submit=False, border=False):
+with streamlit.form("routine_creator_form", clear_on_submit=False, border=False, enter_to_submit=False):
     for i, exercise in enumerate(routine_creator_exercises):
         col1, col2 = streamlit.columns([1, 1], vertical_alignment="bottom")
         col3, col4, col5 = col2.columns([1, 1, 1], vertical_alignment="bottom")

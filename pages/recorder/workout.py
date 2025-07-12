@@ -65,7 +65,7 @@ def addExerciseDialog():
         global_exercise_list = []
         global_exercise_names = []
 
-    with streamlit.form("add_exercise_dialog_form", clear_on_submit=True):
+    with streamlit.form("add_exercise_dialog_form", clear_on_submit=True, enter_to_submit=False):
         selected_exercise_name = streamlit.selectbox(
             label="Select a new exercise to add",
             options=global_exercise_names,

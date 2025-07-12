@@ -96,7 +96,7 @@ if not routine_editor_exercises :
 streamlit.caption("☑️ Select exercises to delete, then press '🗑️ Delete Selected' to remove them.")
 streamlit.divider()
 
-with streamlit.form("routine_viewer", clear_on_submit=False, border=False):
+with streamlit.form("routine_viewer", clear_on_submit=False, border=False, enter_to_submit=False):
     for i, exercise in enumerate(routine_editor_exercises):
         col1, col2 = streamlit.columns([1, 1], vertical_alignment="bottom")
         col3, col4, col5 = col2.columns([1, 1, 1], vertical_alignment="bottom")
