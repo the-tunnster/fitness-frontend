@@ -1,14 +1,16 @@
 import streamlit
 
-from database.read import *
-from database.update import *
+from models.user import User
+
+from database.read import getUser
+from database.update import updateUserProfile
 
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
 streamlit.set_page_config(
     page_title="Profile Management",
-    page_icon="🏋️",
+    page_icon=":material/account_box:",
     layout="wide",
 )
 
@@ -18,10 +20,10 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState(["user_data"])
 
-streamlit.header("User Profile.", anchor=False)
+streamlit.header("Profile Management.", anchor=False)
 streamlit.markdown("""
 This is your user profile page. </br>
-Feel free to leave this values as they are, I chose averages as dummy values. </br>
+Feel free to leave these values as they are, I chose dummy values. </br>
 However, if you wish to update these, try to have them as accurate as possible. </br>
 """, unsafe_allow_html=True)
 
