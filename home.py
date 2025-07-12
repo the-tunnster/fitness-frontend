@@ -43,14 +43,17 @@ if streamlit.session_state["user_data"] is None:
 streamlit.header("Welcome " + streamlit.session_state["user_data"].username + "!", anchor=False)
 
 streamlit.markdown("""
-                   
-Congratulations on making it this far! </br>
-I was sure something would've broken by now, but here we are. </br>
-                   
-The sidebar navigation should help you get around. </br>
-If you come across any issues, please let me know, and I'll get onto fixing it ASAP. </br>
-For now though, it is in super early development, so please try and break it? </br>
+This application is designed to help you track your fitness journey, manage routines, record workouts, and analyze progress. </br>
 
-Good luck, and have a G lift! </br>
+### Features Overview
+- **Workout Recorder**: Log your cardio and strength workouts.
+- **Routine Manager**: Create and manage your personal routines.
+- **Analytics**: Dive into your workout data with historic and post-workout analytics.
+- **User Profile**: Update and manage your personal information.
 
+Feel free to explore and make the most of the features, and I'll be adding new ones as I go.
+                   
+In the meantime, if you encounter any issues or think of any cool new features you want, let me know and I'll get on it. </br>
+
+Good luck, and enjoy your fitness journey! </br>
 """, unsafe_allow_html=True)
