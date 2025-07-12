@@ -1,17 +1,19 @@
-import time
-from typing import Any
 import streamlit
+from typing import Any
+
+from models.user import User
+from models.routines import RoutineExercise, FullRoutine
 
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-from database.read import *
-from database.update import *
-from database.delete import *
+from database.read import getUser, getExerciseList, getExerciseIDs, getRoutinesList, getRoutineData
+from database.update import updateUserRoutine
+from database.delete import deleteRoutine
 
 streamlit.set_page_config(
     page_title="Routine Manager",
-    page_icon="🏋️",
+    page_icon=":material/construction:",
     layout="wide",
 )
 
@@ -187,7 +189,6 @@ with streamlit.expander("⚠️ Delete This Routine", expanded=False):
                 streamlit.success("Deleted Routine")
                 clearSessionVariable(["routine_editor_data"])
                 routine_editor_data, routine_editor_exercises = [], []
-                time.sleep(2)
                 streamlit.rerun()
             else:
                 streamlit.error("That didn't work.")
