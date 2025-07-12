@@ -86,7 +86,7 @@ fig.add_trace(go.Scatter(                                                       
     x=[entry['date'] for entry in historic_data],
     y=[entry['interpolated_weight'] for entry in historic_data],
     mode='lines',
-    name='Max Weight                                  ',
+    name='Max Weight                     |',
     line=dict(color='rgba(255, 145, 164, 1)', width=3, shape='spline'),
     hovertemplate='%{x|%b %d, %Y}<br>Interpolated: %{y:.1f} kg',
 )) 
