@@ -71,15 +71,15 @@ def updateWorkoutSession(session: WorkoutSession) -> bool:
         return False
     
 
-def updateHistory(user_id: str | None, workout_id:str) -> bool:
+def updateHistory(user_id: str | None, workout_id: str) -> bool:
     try:
         response = requests.patch(
             url=HISTORY_URLS["update"],
             params={"user_id": user_id, "workout_id": workout_id}
         )
 
-        if response.status_code in (200, 204):
-            print(f"History updated successfully! User ID: {response.json()}")
+        if response.status_code == 204:
+            print("History updated successfully! No content returned.")
             return True
         else:
             print(f"Error updating history files: {response.status_code}, {response.text}")
