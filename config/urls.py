@@ -45,3 +45,9 @@ HISTORY_URLS = {
 	"create": BASE_URL + "/history/create",
 	"update": BASE_URL + "/history/update",
 }
+
+CARDIO_URLS = {
+	"data": BASE_URL + "/cardio/data",
+	"create": BASE_URL + "/cardio/create",
+	"update": BASE_URL + "/cardio/update",
+}
