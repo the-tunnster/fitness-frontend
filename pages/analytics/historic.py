@@ -65,9 +65,9 @@ if selected_exercise_data is None:
 
 # --- Fetch processed history data ---
 if workout_count < 15 :
-    historic_data = getHistoryData('68674a2e19fc0c426e3ece85', selected_exercise_data.id)
+    historic_data = getExerciseHistoryData('68674a2e19fc0c426e3ece85', selected_exercise_data.id)
 else:
-    historic_data = getHistoryData(user_data.id, selected_exercise_data.id)
+    historic_data = getExerciseHistoryData(user_data.id, selected_exercise_data.id)
 
 if not historic_data:
     streamlit.info(f"No workout history found for '{selected_exercise_name}'.")
