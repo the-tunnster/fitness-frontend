@@ -6,6 +6,7 @@ from config.urls import *
 from models.user import User
 from models.routines import FullRoutine
 from models.session import WorkoutSession
+from models.cardio import CardioSession
 
 def updateUserProfile(user: User, user_id: str) -> bool:
     try:
@@ -71,7 +72,7 @@ def updateWorkoutSession(session: WorkoutSession) -> bool:
         return False
     
 
-def updateHistory(user_id: str | None, workout_id: str) -> bool:
+def updateExerciseHistory(user_id: str | None, workout_id: str) -> bool:
     try:
         response = requests.patch(
             url=HISTORY_URLS["update"],
@@ -87,4 +88,24 @@ def updateHistory(user_id: str | None, workout_id: str) -> bool:
 
     except Exception as e:
         print(f"Exception during history update: {e}")
+        return False
+    
+def updateCardioHistory(user_id: str | None, cardio_id: str, session: CardioSession) -> bool:
+    try:
+        payload = asdict(session)
+        response = requests.patch(
+            url=HISTORY_URLS["update"],
+            params={"user_id": user_id, "cardio_id": cardio_id},
+            json=payload
+        )
+
+        if response.status_code == 204:
+            print("History updated successfully! No content returned.")
+            return True
+        else:
+            print(f"Error updating cardio history files: {response.status_code}, {response.text}")
+            return False
+
+    except Exception as e:
+        print(f"Exception during cardio history update: {e}")
         return False
