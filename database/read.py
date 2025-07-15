@@ -170,7 +170,7 @@ def checkWorkoutCount(user_id: str | None) -> int :
         print(f"Exception while checking for workout: {e}")
         return 0
     
-def getHistoryData(user_id: str | None, exercise_id: str) -> list[dict[Any, Any]] | None :
+def getExerciseHistoryData(user_id: str | None, exercise_id: str) -> list[dict[Any, Any]] | None :
     try:
         response = requests.get(
             url=HISTORY_URLS["data"],
@@ -183,4 +183,19 @@ def getHistoryData(user_id: str | None, exercise_id: str) -> list[dict[Any, Any]
         
     except Exception as e:
         print(f"Exception while checking for history: {e}")
+        return None
+
+def getCardioHistoryData(user_id: str | None, cardio_id: str) -> list[dict[Any, Any]] | None :
+    try:
+        response = requests.get(
+            url=CARDIO_URLS["data"],
+            params={"user_id": user_id, "cardio_id": cardio_id}
+        )
+
+        response.raise_for_status()
+
+        return response.json()
+        
+    except Exception as e:
+        print(f"Exception while checking for cardio history: {e}")
         return None
