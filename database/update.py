@@ -80,7 +80,7 @@ def updateExerciseHistory(user_id: str | None, workout_id: str) -> bool:
         )
 
         if response.status_code == 204:
-            print("History updated successfully! No content returned.")
+            print("History updated successfully!")
             return True
         else:
             print(f"Error updating history files: {response.status_code}, {response.text}")
@@ -94,7 +94,7 @@ def updateCardioHistory(user_id: str | None, cardio_id: str, session: CardioSess
     try:
         payload = asdict(session)
         response = requests.patch(
-            url=HISTORY_URLS["update"],
+            url=CARDIO_URLS["update"],
             params={"user_id": user_id, "cardio_id": cardio_id},
             json=payload
         )
