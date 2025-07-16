@@ -43,7 +43,7 @@ def setupNavigation():
 	cardio = streamlit.Page(page="pages/recorder/cardio.py", title="Cardiovascular", icon=":material/sprint:")
 
 	post_workout = streamlit.Page(page="pages/analytics/post-workout.py", title="Post Workout", icon=":material/table_chart_view:")
-	post_cardio = streamlit.Page(page="pages/analytics/post-cardio.py", title="Post Cardio", icon=":material/table_chart_view:")
+	post_cardio = streamlit.Page(page="pages/analytics/post-cardio.py", title="Cardiovascular", icon=":material/table_chart_view:")
 	historical = streamlit.Page(page="pages/analytics/historic.py", title="Historical", icon=":material/table_chart_view:")
 
 	profile = streamlit.Page(page="pages/user/profile.py", title="Management", icon=":material/account_box:")
