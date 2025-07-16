@@ -243,7 +243,7 @@ if is_workout_active:
                 streamlit.error("Couldn't clear session data.")
                 streamlit.stop()
             
-            updateHistory(user_data.id, workoutID)
+            updateExerciseHistory(user_data.id, workoutID)
 
             streamlit.success("Workout saved to disk. Re-directing!")
             clearSessionVariable(["workout_session_data", "current_exercise_index", "add_exercise_dialog", "workout_exercise_selection"])
