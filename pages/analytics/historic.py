@@ -4,7 +4,9 @@ import plotly.graph_objects as go                                               
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-from database.read import *
+from database.read import getUser, checkWorkoutCount, getExerciseList, getExerciseHistoryData
+
+from models.user import User
 
 streamlit.set_page_config(
     page_title="Analytics",
@@ -86,7 +88,7 @@ fig.add_trace(go.Scatter(                                                       
     x=[entry['date'] for entry in historic_data],
     y=[entry['interpolated_weight'] for entry in historic_data],
     mode='lines',
-    name='Max Weight             ',
+    name='Max Weight          ',
     line=dict(color='rgba(255, 145, 164, 1)', width=3, shape='spline'),
     hovertemplate='%{x|%b %d, %Y}<br>Interpolated: %{y:.1f} kg',
 )) 
