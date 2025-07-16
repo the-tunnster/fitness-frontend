@@ -4,6 +4,7 @@ from typing import Any
 
 from config.urls import *
 
+from models.cardio import Cardio
 from models.user import User
 from models.session import *
 from models.routines import *
@@ -60,7 +61,23 @@ def getExerciseList() -> list[Exercise] | None :
     except Exception as e:
         print(f"Exception: {e}")
         return None
-    
+
+@streamlit.cache_data
+def getCardioList() -> list[Cardio] | None :
+    try:
+        response = requests.get(
+            url=CARDIO_URLS["list"]
+        )
+        
+        response.raise_for_status()
+
+        cardios = [Cardio(**item) for item in response.json()]
+        return cardios
+
+    except Exception as e:
+        print(f"Exception: {e}")
+        return None
+
 def getExerciseNames(exercise_ids: list[str]) -> list[str] :
     try:
         response = requests.get(
