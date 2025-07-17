@@ -4,7 +4,9 @@ import plotly.graph_objects as go                                               
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-from database.read import *
+from database.read import getUser, checkWorkoutCount, getExerciseList, getExerciseHistoryData
+
+from models.user import User
 
 streamlit.set_page_config(
     page_title="Analytics",
@@ -44,7 +46,7 @@ global_exercise_list = getExerciseList()
 if not global_exercise_list:
     streamlit.info("No exercises found in your database. Please add exercises first.")
     streamlit.stop()
-global_exercise_names = [exercise.name for exercise in global_exercise_list]
+global_exercise_names = ["None"] + [exercise.name for exercise in global_exercise_list]
 
 selected_exercise_name = streamlit.selectbox(
     label="Select an exercise to view its history:",
@@ -53,21 +55,16 @@ selected_exercise_name = streamlit.selectbox(
     index=0
 )
 
-selected_exercise_data = next(
-    (exercise for exercise in global_exercise_list if exercise.name == selected_exercise_name),
-    None
-)
-
-if selected_exercise_data is None:
-    streamlit.error("Selected exercise data not found. This should not happen.")
+if selected_exercise_name == "None":
     streamlit.stop()
 
+selected_exercise_data = global_exercise_list[global_exercise_names.index(selected_exercise_name) - 1]
 
 # --- Fetch processed history data ---
 if workout_count < 15 :
-    historic_data = getHistoryData('68674a2e19fc0c426e3ece85', selected_exercise_data.id)
+    historic_data = getExerciseHistoryData('68674a2e19fc0c426e3ece85', selected_exercise_data.id)
 else:
-    historic_data = getHistoryData(user_data.id, selected_exercise_data.id)
+    historic_data = getExerciseHistoryData(user_data.id, selected_exercise_data.id)
 
 if not historic_data:
     streamlit.info(f"No workout history found for '{selected_exercise_name}'.")
@@ -84,9 +81,9 @@ fig = go.Figure()
 # Max Weight (Primary Axis)
 fig.add_trace(go.Scatter(                                                                                           # type:ignore
     x=[entry['date'] for entry in historic_data],
-    y=[entry['interpolated_weight'] for entry in historic_data],
+    y=[entry['weight'] for entry in historic_data],
     mode='lines',
-    name='Max Weight             ',
+    name='Max Weight          ',
     line=dict(color='rgba(255, 145, 164, 1)', width=3, shape='spline'),
     hovertemplate='%{x|%b %d, %Y}<br>Interpolated: %{y:.1f} kg',
 )) 
