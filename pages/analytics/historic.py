@@ -46,7 +46,7 @@ global_exercise_list = getExerciseList()
 if not global_exercise_list:
     streamlit.info("No exercises found in your database. Please add exercises first.")
     streamlit.stop()
-global_exercise_names = [exercise.name for exercise in global_exercise_list]
+global_exercise_names = ["None"] + [exercise.name for exercise in global_exercise_list]
 
 selected_exercise_name = streamlit.selectbox(
     label="Select an exercise to view its history:",
@@ -55,15 +55,10 @@ selected_exercise_name = streamlit.selectbox(
     index=0
 )
 
-selected_exercise_data = next(
-    (exercise for exercise in global_exercise_list if exercise.name == selected_exercise_name),
-    None
-)
-
-if selected_exercise_data is None:
-    streamlit.error("Selected exercise data not found. This should not happen.")
+if selected_exercise_name == "None":
     streamlit.stop()
 
+selected_exercise_data = global_exercise_list[global_exercise_names.index(selected_exercise_name) - 1]
 
 # --- Fetch processed history data ---
 if workout_count < 15 :
@@ -86,7 +81,7 @@ fig = go.Figure()
 # Max Weight (Primary Axis)
 fig.add_trace(go.Scatter(                                                                                           # type:ignore
     x=[entry['date'] for entry in historic_data],
-    y=[entry['interpolated_weight'] for entry in historic_data],
+    y=[entry['weight'] for entry in historic_data],
     mode='lines',
     name='Max Weight          ',
     line=dict(color='rgba(255, 145, 164, 1)', width=3, shape='spline'),
