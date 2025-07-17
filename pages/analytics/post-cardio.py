@@ -100,7 +100,6 @@ fig.update_layout(                                                              
         tickfont=dict(size=10),
         tickmode='auto',
         nticks=5,
-        title_text='Total Distance (m)' # Label for the primary y-axis
     ),
     yaxis2=dict(
         overlaying='y',
@@ -115,7 +114,6 @@ fig.update_layout(                                                              
         position=1,
         tickmode='auto',
         nticks=5,
-        title_text='Total Time (sec)' # Label for the secondary y-axis
     ),
     template='simple_white',
     legend=dict(
