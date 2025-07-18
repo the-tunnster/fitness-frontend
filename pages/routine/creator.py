@@ -6,11 +6,6 @@ from helpers.user_interface import *
 from database.read import *
 from database.create import *
 
-streamlit.set_page_config(
-    page_title="Routine Creator",
-    page_icon=":material/add_notes:",
-    layout="wide",
-)
 
 if not streamlit.user.is_logged_in:
     streamlit.switch_page("home.py")

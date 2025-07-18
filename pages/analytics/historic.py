@@ -8,11 +8,6 @@ from database.read import getUser, checkWorkoutCount, getExerciseList, getExerci
 
 from models.user import User
 
-streamlit.set_page_config(
-    page_title="Analytics",
-    page_icon=":material/table_chart_view:",
-    layout="wide",
-)
 
 if not streamlit.user.is_logged_in:
     streamlit.switch_page("home.py")

@@ -11,11 +11,6 @@ from database.read import getUser, getExerciseList, getExerciseIDs, getRoutinesL
 from database.update import updateUserRoutine
 from database.delete import deleteRoutine
 
-streamlit.set_page_config(
-    page_title="Routine Manager",
-    page_icon=":material/construction:",
-    layout="wide",
-)
 
 if not streamlit.user.is_logged_in:
     streamlit.switch_page("home.py")

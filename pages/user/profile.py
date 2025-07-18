@@ -8,11 +8,6 @@ from database.update import updateUserProfile
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-streamlit.set_page_config(
-    page_title="Profile Management",
-    page_icon=":material/account_box:",
-    layout="wide",
-)
 
 if not streamlit.user.is_logged_in:
     streamlit.switch_page("home.py")

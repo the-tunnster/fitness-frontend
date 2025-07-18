@@ -6,12 +6,6 @@ from database.create import createDummyUserProfile
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-streamlit.set_page_config(
-    page_title="Home Page",
-    page_icon=":material/home:",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
 uiSetup()
 initSessionState(["user_data"])

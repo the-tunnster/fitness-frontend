@@ -9,11 +9,6 @@ from helpers.user_interface import *
 from models.user import User
 from models.cardio import CardioMetric, CardioSession
 
-streamlit.set_page_config(
-    page_title="Cardiovascular",
-    page_icon=":material/sprint:",
-    layout="wide",
-)
 
 if not streamlit.user.is_logged_in:
     streamlit.switch_page("home.py")

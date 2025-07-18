@@ -6,11 +6,6 @@ from helpers.user_interface import *
 
 from database.read import *
 
-streamlit.set_page_config(
-    page_title="Post Cardio Analysis",
-    page_icon=":material/table_chart_view:",
-    layout="wide",
-)
 
 if not streamlit.user.is_logged_in:
     streamlit.switch_page("home.py")

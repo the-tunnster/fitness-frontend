@@ -10,11 +10,6 @@ from database.update import *
 
 from models.session import WorkoutSet
 
-streamlit.set_page_config(
-    page_title="Workout Recorder",
-    page_icon=":material/exercise:",
-    layout="wide",
-)
 
 if not streamlit.user.is_logged_in:
     streamlit.switch_page("home.py")
