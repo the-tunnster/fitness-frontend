@@ -19,10 +19,8 @@ uiSetup()
 initSessionState(["user_data", "routine_editor_data"])
 
 streamlit.header("Routine Management.", anchor=False)
-streamlit.markdown("""
-This is where you'll manage existing routines and their set-ups.</br>
-                   
-Select a routine to get started.</br>
+streamlit.write("""This is where you'll manage existing routines and their set-ups.<br>
+Select a routine to get started.<br>
 """, unsafe_allow_html=True)
 
 user_data: User
@@ -33,7 +31,7 @@ if streamlit.session_state["user_data"] is None:
 if streamlit.session_state["routine_editor_data"] is None:
     streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": "None"}
 
-user_data : User = streamlit.session_state["user_data"]
+user_data = streamlit.session_state["user_data"]
 routine_editor_data = streamlit.session_state["routine_editor_data"]
 
 routine_editor_exercises: list[dict[str, Any]] = streamlit.session_state["routine_editor_data"]["exercises"]
@@ -171,8 +169,8 @@ with streamlit.form("routine_viewer", clear_on_submit=False, border=False, enter
         else:
             streamlit.error("That didn't work.")
 
-with streamlit.expander("⚠️ Delete This Routine", expanded=False):
-    streamlit.warning("This action is technically reversible, but it is a hassle to create a whole new routine.")
+with streamlit.expander("Delete This Routine", expanded=False, icon=":material/delete:"):
+    streamlit.warning("This action is technically reversible, but it is a hassle to re-create a whole new routine.")
 
     confirm_delete = streamlit.checkbox("I understand and want to delete this routine")
 
