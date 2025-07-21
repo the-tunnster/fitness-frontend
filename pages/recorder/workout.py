@@ -3,13 +3,16 @@ import streamlit
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-from database.read import *
-from database.create import *
-from database.delete import *
-from database.update import *
+from database.read import getUser, getRoutinesList, getWorkoutSessionData
+from database.read import getExerciseList, getExerciseNames, getExerciseData
 
-from models.session import WorkoutSet
+from database.create import createWorkout, createWorkoutSession
+from database.delete import deleteSession
+from database.update import updateWorkoutSession, updateExerciseHistory
 
+from models.user import User
+from models.routines import Routine
+from models.session import WorkoutSession, WorkoutExercise, WorkoutSet
 
 if not streamlit.user.is_logged_in:
     streamlit.switch_page("home.py")
@@ -242,7 +245,7 @@ if is_workout_active:
 
             streamlit.success("Workout saved to disk. Re-directing!")
             clearSessionVariable(["workout_session_data", "current_exercise_index", "add_exercise_dialog", "workout_exercise_selection"])
-            streamlit.switch_page("pages/analytics/historic.py")
+            streamlit.switch_page("pages/analytics/post-workout.py")
 
 
     with col_cancel_workout.expander("Cancel Workout", expanded=False, icon=":material/cancel:"):
@@ -263,6 +266,15 @@ if is_workout_active:
             streamlit.rerun()             
 
 else:
+    with streamlit.expander("If you're confused"):
+        streamlit.write("""
+                    This section is fairly straightforward. <br>
+                    The first time you start a workout, the app has no refernce for the equipment or varitaion you wish to use. <br>
+                    You'll see "Exercise Name (None, None)" in the selectbox because of this. <br>
+                    Simply choose the equipment and variation for an exercise and hit the "Update" button to fix that entry in the list. <br>
+                    
+                    Future workouts will pre-load this information from your last workout, so it shouldn't be the biggest issue. <br>
+                    """, unsafe_allow_html=True)
     streamlit.write("Select a workout routine to get started.")
 
     user_routines = getRoutinesList(user_data.id)

@@ -35,8 +35,7 @@ if streamlit.session_state["user_data"] is None:
         streamlit.session_state["user_data"] = user_data
 
 streamlit.header("Welcome " + streamlit.session_state["user_data"].username + "!", anchor=False)
-
-streamlit.write("This application is designed to help you track your fitness journey, manage routines, record workouts, and analyze progress.")
+streamlit.write("This application is designed to help you on your fitness journey.")
 
 streamlit.subheader("Features Overview", anchor=False)
 streamlit.markdown("""
@@ -45,7 +44,9 @@ streamlit.markdown("""
 - **Analytics**: Dive into your workout data with historic and post-workout analytics.
 - **User Profile**: Update and manage your personal information.
 
-Feel free to explore and make the most of the features, and I'll be adding new ones as I go. </br>
-In the meantime, if you encounter any issues or think of any cool new features you want, let me know and I'll get on it. </br>
+Each page in the sidebar deals with a specific component of the experience, and I've added tooltips if you're feeling a bit lost. <br>
+If you're a little too lost though, please reach out and I'll be happy to help! <br>
+                
+In the meantime, if you encounter any issues or think of any cool new features you want, let me know and I'll get on it. <br>
 Good luck!
 """, unsafe_allow_html=True)

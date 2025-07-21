@@ -3,8 +3,11 @@ import streamlit
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-from database.read import *
-from database.create import *
+from database.read import getUser, getExerciseList, getExerciseIDs
+from database.create import createUserRoutine
+
+from models.user import User
+from models.routines import RoutineExercise, FullRoutine
 
 
 if not streamlit.user.is_logged_in:
@@ -14,13 +17,20 @@ uiSetup()
 initSessionState(["user_data", "routine_creator_data"])
 
 streamlit.header("Routine Creation.", anchor=False)
-streamlit.markdown("""
-Design your workout routines from scratch. </br>
-Enter a routine name, add or remove exercises and decide how many sets & reps you want.</br>
-                   
-On a side note, the deletion is a bit jank. </br>
-Select exercises, then press 'Remove' to drop them. </br>
-""", unsafe_allow_html=True)
+streamlit.write("Design your workout routines from scratch.")
+with streamlit.expander("If you're confused"):
+    streamlit.write("""
+                    I'll admit, there are some nuances to this. <br>
+                    When you're adding an exercise, the options listed are the high-level version of the exercise. <br>
+                    You'll be able to select the variation and equipment used when you're in the actual workout. <br>
+
+                    I will add a section to explore and add new exercises, but that's gonna take a bit longer. <br>
+
+                    Also, removing an exercise from this list is a bit weird. <br>
+                    To drop one or more exercises, select the corresponding checkbox on the right, then click the "Remove" button. <br>
+                    Sometimes the checkbox remains selected, idk why though, so properly remove everything, then "Save". <br>
+                    """, unsafe_allow_html=True)
+
 streamlit.divider()
 
 user_data: User
