@@ -34,19 +34,26 @@ if streamlit.session_state["user_data"] is None:
     else:
         streamlit.session_state["user_data"] = user_data
 
-streamlit.header("Welcome " + streamlit.session_state["user_data"].username + "!", anchor=False)
-streamlit.write("This application is designed to help you on your fitness journey.")
+streamlit.header(f"Welcome, {streamlit.session_state['user_data'].username}!", anchor=False)
+streamlit.write("Your fitness journey starts here. This app is your companion to track, manage, and analyze your workouts.")
 
-streamlit.subheader("Features Overview", anchor=False)
+streamlit.subheader("Features at a Glance", anchor=False)
 streamlit.markdown("""
-- **Workout Recorder**: Log your cardio and strength workouts.
-- **Routine Manager**: Create and manage your personal routines.
-- **Analytics**: Dive into your workout data with historic and post-workout analytics.
-- **User Profile**: Update and manage your personal information.
+- 🏋️ **Workout Recorder**: Log your cardio and strength workouts effortlessly.
+- 📋 **Routine Manager**: Create and customize your personal workout routines.
+- 📊 **Analytics**: Gain insights with detailed workout analytics.
+- 👤 **User Profile**: Manage your personal information with ease.
+""")
 
-Each page in the sidebar deals with a specific component of the experience, and I've added tooltips if you're feeling a bit lost. <br>
-If you're a little too lost though, please reach out and I'll be happy to help! <br>
-                
-In the meantime, if you encounter any issues or think of any cool new features you want, let me know and I'll get on it. <br>
-Good luck!
-""", unsafe_allow_html=True)
+streamlit.subheader("Getting Started and Need Help?", anchor=False)
+with streamlit.expander("Routine Creation"):
+    streamlit.write("""
+    - To add an exercise, select a high-level option. Variations and equipment can be chosen during the workout.
+    - To remove exercises, use the checkboxes and click "Remove". Ensure you've saved changes before leaving the page.
+    """)
+
+with streamlit.expander("Workout Tips"):
+    streamlit.write("""
+    - The first workout may show "Exercise Name (None, None)". Select your equipment and variation, and then "Update" to fix this.
+    - Future workouts will remember your last settings for convenience.
+    """)
