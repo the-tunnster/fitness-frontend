@@ -31,6 +31,7 @@ WORKOUT_URLS = {
 	"data": BASE_URL + "/workouts/data",
 	"count": BASE_URL + "/workouts/count",
 	"create": BASE_URL + "/workouts/create",
+	"comparison": BASE_URL + "/workouts/comparison",
 }
 
 SESSION_URLS = {

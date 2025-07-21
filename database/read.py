@@ -216,3 +216,18 @@ def getCardioHistoryData(user_id: str | None, cardio_id: str) -> list[dict[Any, 
     except Exception as e:
         print(f"Exception while checking for cardio history: {e}")
         return None
+    
+def getWorkoutComparison(user_id: str | None, routine_id: str) :
+    try:
+        response = requests.get(
+            url=WORKOUT_URLS["comparison"],
+            params={"user_id": user_id, "routine_id": routine_id}
+        )
+
+        response.raise_for_status()
+
+        return response.json()
+        
+    except Exception as e:
+        print(f"Exception while checking for workout comparison: {e}")
+        return None

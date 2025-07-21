@@ -34,7 +34,7 @@ def columnWidthHack():
 	
 
 def setupNavigation():
-	home_page = streamlit.Page(page="home.py", title="Home", icon=":material/home:")
+	home_page = streamlit.Page(page="home.py", title="Home", icon=":material/fitness_center:")
 
 	manager = streamlit.Page(page="pages/routine/manager.py", title="Management", icon=":material/construction:")
 	creator = streamlit.Page(page="pages/routine/creator.py", title="Creation", icon=":material/add_notes:")
