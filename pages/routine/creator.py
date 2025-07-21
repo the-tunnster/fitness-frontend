@@ -18,18 +18,6 @@ initSessionState(["user_data", "routine_creator_data"])
 
 streamlit.header("Routine Creation.", anchor=False)
 streamlit.write("Design your workout routines from scratch.")
-with streamlit.expander("If you're confused"):
-    streamlit.write("""
-                    I'll admit, there are some nuances to this. <br>
-                    When you're adding an exercise, the options listed are the high-level version of the exercise. <br>
-                    You'll be able to select the variation and equipment used when you're in the actual workout. <br>
-
-                    I will add a section to explore and add new exercises, but that's gonna take a bit longer. <br>
-
-                    Also, removing an exercise from this list is a bit weird. <br>
-                    To drop one or more exercises, select the corresponding checkbox on the right, then click the "Remove" button. <br>
-                    Sometimes the checkbox remains selected, idk why though, so properly remove everything, then "Save". <br>
-                    """, unsafe_allow_html=True)
 
 streamlit.divider()
 
