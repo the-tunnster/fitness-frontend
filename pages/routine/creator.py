@@ -18,7 +18,7 @@ initSessionState(["user_data", "routine_creator_data"])
 
 streamlit.header("Routine Creation.", anchor=False)
 streamlit.write("Design your workout routines from scratch.")
-with streamlit.expander("Information"):
+with streamlit.expander("If you're confused"):
     streamlit.write("""
                     I'll admit, there are some nuances to this. <br>
                     When you're adding an exercise, the options listed are the high-level version of the exercise. <br>
