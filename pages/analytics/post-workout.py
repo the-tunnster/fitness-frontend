@@ -51,7 +51,7 @@ selected_routine_data: Routine = user_routines[user_routine_names.index(selected
 data = getWorkoutComparison(user_data.id, selected_routine_data.id)
 
 if data is None:
-    streamlit.info("There aren't enough wrokouts saved for a comparison.")
+    streamlit.info("There aren't enough workouts saved for a comparison.")
     streamlit.stop()
 
 for entry in data:
