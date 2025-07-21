@@ -266,15 +266,6 @@ if is_workout_active:
             streamlit.rerun()             
 
 else:
-    with streamlit.expander("If you're confused"):
-        streamlit.write("""
-                    This section is fairly straightforward. <br>
-                    The first time you start a workout, the app has no refernce for the equipment or varitaion you wish to use. <br>
-                    You'll see "Exercise Name (None, None)" in the selectbox because of this. <br>
-                    Simply choose the equipment and variation for an exercise and hit the "Update" button to fix that entry in the list. <br>
-                    
-                    Future workouts will pre-load this information from your last workout, so it shouldn't be the biggest issue. <br>
-                    """, unsafe_allow_html=True)
     streamlit.write("Select a workout routine to get started.")
 
     user_routines = getRoutinesList(user_data.id)
