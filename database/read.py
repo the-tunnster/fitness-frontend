@@ -169,7 +169,7 @@ def getWorkoutSessionData(user_id: str | None) -> WorkoutSession | None :
         return session
 
     except Exception as e:
-        print(f"Exception while fetching routine: {e}")
+        print(f"Exception while fetching session: {e}")
         return None
     
 def checkWorkoutCount(user_id: str | None) -> int :
