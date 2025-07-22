@@ -44,20 +44,20 @@ streamlit.divider()
 streamlit.subheader("Features", anchor=False)
 with streamlit.expander("Current"):
     streamlit.markdown("""
-    - **Routine Manager**: Create and customize your personal workout routines. This is essential to the next feature.
-    - **Workout Recorder**: Log your cardio and strength workouts effortlessly. Literally depends on you having set up routines.
-    - **Analytics**: Gain insights with analytics. If you're a bit lost, I'd be happy to explain, below.
-    - **User Profile**: Manage your personal information with ease.
-    """)
+    - **Routine Manager**: <br> Create and customize your personal workout routines. This is essential to the next feature.
+    - **Workout Recorder**: <br> Log your cardio and strength workouts effortlessly. Literally depends on you having set up routines.
+    - **Analytics**: <br> Gain insights with analytics. If you're a bit lost, I'd be happy to explain, below.
+    - **User Profile**: <br> Manage your personal information with ease.
+    """, unsafe_allow_html=True)
 
 with streamlit.expander("Upcoming"):
     streamlit.markdown("""
-    - **Freestyle Mode**: Annoyed by the fact that you need a routine to workout? You don't have to be. Soon.
-    - **Exercise Modifier**: Since some of y'all have non-standard exercise variaitons or equipment, I'll set up something cleaner. However, there is obviously room for abuse here, so it'll take a bit longer.
-    - **Leaderboards**: A large aspect of hitting the gym is having someone to out-lift or compete with. I'll be adding "Leaderboard Routines" that you can do to see how you stack up against the rest of the users. Some ML will go into this, so its normalised.
-    - **Predictive Lifting/Growth**: Since I re-wrote everything, the ML stuff from before has to be re-designed as well. This also needs user data for me to train on, so please use this as mch as possible.
-    - **Muscle Group Balancing**: Using analytics, I'm hoping I can help you identify what groups you're under-training and suggest supplemets to your workouts.
-    """)
+    - **Freestyle Mode**: <br> Annoyed by the fact that you need a routine to workout? You don't have to be. Soon.
+    - **Exercise Modifier**: <br> Since some of y'all have non-standard exercise variaitons or equipment, I'll set up something cleaner. However, there is obviously room for abuse here, so it'll take a bit longer.
+    - **Leaderboards**: <br> A large aspect of hitting the gym is having someone to out-lift or compete with. I'll be adding "Leaderboard Routines" that you can do to see how you stack up against the rest of the users. Some ML will go into this, so its normalised.
+    - **Predictive Lifting/Growth**: <br> Since I re-wrote everything, the ML stuff from before has to be re-designed as well. This also needs user data for me to train on, so please use this as mch as possible.
+    - **Muscle Group Balancing**: <br> Using analytics, I'm hoping I can help you identify what groups you're under-training and suggest supplemets to your workouts.
+    """, unsafe_allow_html=True)
 
 streamlit.divider()
 
