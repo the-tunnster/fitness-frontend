@@ -35,25 +35,47 @@ if streamlit.session_state["user_data"] is None:
         streamlit.session_state["user_data"] = user_data
 
 streamlit.header(f"Welcome, {streamlit.session_state['user_data'].username}!", anchor=False)
-streamlit.write("Your fitness journey starts here. This app is your companion to track, manage, and analyze your workouts.")
+streamlit.write("""
+The app is in early development. Some things may be broken, and some might be confusing.
+If you need help, there is a small section below. If that doesn't help, just gimme a call or reach out.""")
 
-streamlit.subheader("Features at a Glance", anchor=False)
-streamlit.markdown("""
-- 🏋️ **Workout Recorder**: Log your cardio and strength workouts effortlessly.
-- 📋 **Routine Manager**: Create and customize your personal workout routines.
-- 📊 **Analytics**: Gain insights with detailed workout analytics.
-- 👤 **User Profile**: Manage your personal information with ease.
-""")
+streamlit.divider()
+
+streamlit.subheader("Features", anchor=False)
+with streamlit.expander("Current"):
+    streamlit.markdown("""
+    - **Routine Manager**: Create and customize your personal workout routines. This is essential to the next feature.
+    - **Workout Recorder**: Log your cardio and strength workouts effortlessly. Literally depends on you having set up routines.
+    - **Analytics**: Gain insights with analytics. If you're a bit lost, I'd be happy to explain, below.
+    - **User Profile**: Manage your personal information with ease.
+    """)
+
+with streamlit.expander("Upcoming"):
+    streamlit.markdown("""
+    - **Freestyle Mode**: Annoyed by the fact that you need a routine to workout? You don't have to be. Soon.
+    - **Exercise Modifier**: Since some of y'all have non-standard exercise variaitons or equipment, I'll set up something cleaner. However, there is obviously room for abuse here, so it'll take a bit longer.
+    - **Leaderboards**: A large aspect of hitting the gym is having someone to out-lift or compete with. I'll be adding "Leaderboard Routines" that you can do to see how you stack up against the rest of the users. Some ML will go into this, so its normalised.
+    - **Predictive Lifting/Growth**: Since I re-wrote everything, the ML stuff from before has to be re-designed as well. This also needs user data for me to train on, so please use this as mch as possible.
+    - **Muscle Group Balancing**: Using analytics, I'm hoping I can help you identify what groups you're under-training and suggest supplemets to your workouts.
+    """)
+
+streamlit.divider()
 
 streamlit.subheader("Getting Started and Need Help?", anchor=False)
-with streamlit.expander("Routine Creation"):
+with streamlit.expander("Routines"):
     streamlit.write("""
     - To add an exercise, select a high-level option. Variations and equipment can be chosen during the workout.
     - To remove exercises, use the checkboxes and click "Remove". Ensure you've saved changes before leaving the page.
     """)
 
-with streamlit.expander("Workout Tips"):
+with streamlit.expander("Workouts"):
     streamlit.write("""
     - The first workout may show "Exercise Name (None, None)". Select your equipment and variation, and then "Update" to fix this.
     - Future workouts will remember your last settings for convenience.
+    """)
+
+with streamlit.expander("Analytics"):
+    streamlit.write("""
+    - The charts are comparisons of volume moved (weight X reps) and maximum weight lifted in a session.
+    - You can see the variance between the two over time, and figure out your rhythym for future workouts.
     """)
