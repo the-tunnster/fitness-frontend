@@ -56,7 +56,7 @@ else:
 
 with streamlit.form("routine_creator_form", clear_on_submit=False, border=False, enter_to_submit=False):
     for i, exercise in enumerate(routine_creator_exercises):
-        col1, col2 = streamlit.columns([1, 1], vertical_alignment="bottom")
+        col1, col2 = streamlit.columns([2, 1], vertical_alignment="bottom")
         col3, col4, col5 = col2.columns([1, 1, 1], vertical_alignment="bottom")
 
         if i == 0:
@@ -82,7 +82,8 @@ with streamlit.form("routine_creator_form", clear_on_submit=False, border=False,
 
         exercise["remove"] = col5.checkbox(
             "Remove", value=exercise.get("remove", False),
-            key=f"remove_creator_{i}", label_visibility="collapsed"
+            key=f"remove_creator_{i}", label_visibility="collapsed",
+            width="stretch"
         )
 
     col_add, col_delete, col_save = streamlit.columns([1, 1, 1])
