@@ -36,7 +36,7 @@ if user_routines is None or user_routines == []:
     streamlit.info("You don't seem to have any routines set up. Please create one to access it here.")
     streamlit.stop()
 
-user_routine_names: list[str] = [routine.name for routine in user_routines]
+user_routine_names: list[str] = ["None"] + [routine.name for routine in user_routines]
 
 selected_routine_name: str = streamlit.selectbox(
     label="Select a routine",
@@ -45,6 +45,9 @@ selected_routine_name: str = streamlit.selectbox(
     key="start_routine_select",
     label_visibility="collapsed"
 )
+
+if selected_routine_name == "None":
+    streamlit.stop()
 
 selected_routine_data: Routine = user_routines[user_routine_names.index(selected_routine_name)]
 
