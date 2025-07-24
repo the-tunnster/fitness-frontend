@@ -49,7 +49,7 @@ selected_routine_name: str = streamlit.selectbox(
 if selected_routine_name == "None":
     streamlit.stop()
 
-selected_routine_data: Routine = user_routines[user_routine_names.index(selected_routine_name)]
+selected_routine_data: Routine = user_routines[user_routine_names.index(selected_routine_name) - 1 ]
 
 data = getWorkoutComparison(user_data.id, selected_routine_data.id)
 
@@ -60,6 +60,6 @@ if data is None:
 for entry in data:
     streamlit.subheader(f"{entry["exercise_name"]}, {entry["variation"]}", anchor=False)
     col1, col2, col3 = streamlit.columns(3)
-    col1.metric(label="Weight Lifted", value=entry["max_weight"], delta=f"{entry['max_weight']:.2f}")
+    col1.metric(label="Weight Lifted", value=entry["max_weight"], delta=f"{entry['weight_change']:.2f}")
     col2.metric(label="Reps Completed", value=entry["reps"], delta=f"{entry['reps_change']:.2f}")
     col3.metric(label="Volume Moved", value=entry["volume"], delta=f"{entry['volume_change']:.2f}")
