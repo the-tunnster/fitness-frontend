@@ -18,13 +18,12 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState(["user_data", "routine_editor_data"])
 
-streamlit.header("Routine Management.", anchor=False)
+streamlit.title("Routine Management.", anchor=False)
 streamlit.write("""This is where you'll manage existing routines and their set-ups.<br>
 Select a routine to get started.<br>
 """, unsafe_allow_html=True)
 
 user_data: User
-
 if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]

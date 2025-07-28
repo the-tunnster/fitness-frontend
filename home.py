@@ -11,7 +11,7 @@ uiSetup()
 initSessionState(["user_data"])
 
 if not streamlit.user.is_logged_in:
-    streamlit.header("Welcome.", anchor=False)
+    streamlit.title("Welcome.", anchor=False)
     streamlit.warning("You'll need to log in to continue")
     streamlit.stop()
 
@@ -36,7 +36,7 @@ if streamlit.session_state["user_data"] is None:
 
 user_data = streamlit.session_state["user_data"]
 
-streamlit.header(f"Welcome, {streamlit.session_state['user_data'].username}!", anchor=False)
+streamlit.title(f"Welcome, {streamlit.session_state['user_data'].username}!", anchor=False)
 
 if user_data.clearanceLevel < 1:
     streamlit.write("""

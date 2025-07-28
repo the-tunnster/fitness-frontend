@@ -16,13 +16,12 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState(["user_data", "routine_creator_data"])
 
-streamlit.header("Routine Creation.", anchor=False)
+streamlit.title("Routine Creation.", anchor=False)
 streamlit.write("Design your workout routines from scratch.")
 
 streamlit.divider()
 
 user_data: User
-
 if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]

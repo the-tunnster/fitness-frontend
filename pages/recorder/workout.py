@@ -20,7 +20,7 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState(["user_data", "workout_session_data", "current_exercise_index", "add_exercise_dialog"])
 
-streamlit.header("Workout Recorder", anchor=False)
+streamlit.title("Workout Recorder", anchor=False)
 
 user_data: User | None
 workout_session_data: WorkoutSession | None

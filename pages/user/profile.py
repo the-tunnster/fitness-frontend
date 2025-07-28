@@ -15,7 +15,7 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState(["user_data"])
 
-streamlit.header("Profile Management.", anchor=False)
+streamlit.title("Profile Management.", anchor=False)
 streamlit.markdown("""
 This is your user profile page. </br>
 Feel free to leave these values as they are, I chose dummy values. </br>
