@@ -13,24 +13,14 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState(["user_data", ])
 
-streamlit.header("Cardio History", anchor=False)
+streamlit.title("Cardio History", anchor=False)
 
-user_data: User | None
-
+user_data: User
 if streamlit.session_state["user_data"] is None:
-    user_data = getUser(str(streamlit.user.email))
-    if user_data is not None:
-        streamlit.session_state["user_data"] = user_data
-    else:
-        streamlit.error("User data could not be loaded.")
-        streamlit.stop()
-else:
-    user_data = streamlit.session_state["user_data"]
+    streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+user_data = streamlit.session_state["user_data"]
 
-if user_data is None:
-    streamlit.stop()
-
-if user_data.clearanceLevel < 1:
+if user_data.clearanceLevel < 2:
     streamlit.switch_page("home.py")
 
 cardio_list = getCardioList()

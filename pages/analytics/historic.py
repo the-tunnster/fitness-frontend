@@ -15,29 +15,25 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState(["user_data", ])
 
-streamlit.header("Historical Workout Analytics", anchor=False)
+streamlit.title("Historical Workout Analytics", anchor=False)
 
 # --- Load user data ---
-user_data: User | None = streamlit.session_state["user_data"]
-if user_data is None:
-    user_data = getUser(str(streamlit.user.email))
-    if user_data:
-        streamlit.session_state["user_data"] = user_data
-    else:
-        streamlit.error("User data could not be loaded. Please log in again.")
-        streamlit.stop()
-
-if user_data.clearanceLevel < 1:
-    streamlit.switch_page("home.py")
+user_data: User
+if streamlit.session_state["user_data"] is None:
+    streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+user_data = streamlit.session_state["user_data"]
 
 workout_count = checkWorkoutCount(user_data.id)
-if workout_count < 15 :
+if workout_count < 10:
     streamlit.progress(
         text="You need at least 10 workouts recorded.",
         value=(1/10)*workout_count
         )
     streamlit.info("You don't have enough workouts to display any useful data. Here's mine instead.")
 
+if user_data.clearanceLevel < 2:
+    streamlit.info("You're eligible for this clearance level now. DM or call me for an upgrade!")
+    streamlit.stop()
 
 # --- Load exercises ---
 global_exercise_list = getExerciseList()
@@ -83,7 +79,7 @@ fig.add_trace(go.Scatter(                                                       
     mode='lines',
     name='Max Weight          ',
     line=dict(color='rgba(255, 145, 164, 1)', width=3, shape='spline'),
-    hovertemplate='%{x|%b %d, %Y}<br>Interpolated: %{y:.1f} kg',
+    hovertemplate='%{x|%b %d, %Y}<br>Weight: %{y:.1f} kg',
 )) 
 
 # Volume Moved (Secondary Axis)
