@@ -98,7 +98,7 @@ with streamlit.form(key="exercise_editor_form", enter_to_submit=False, border=Fa
     
     with col2:
         submit_button = streamlit.form_submit_button(
-            label="Update Exercise",
+            label="Update",
             icon=":material/save:",
             use_container_width=True
         )
