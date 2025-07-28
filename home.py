@@ -38,11 +38,11 @@ user_data = streamlit.session_state["user_data"]
 
 streamlit.header(f"Welcome, {streamlit.session_state['user_data'].username}!", anchor=False)
 
-if user_data is not None and user_data.clearanceLevel < 1:
+if user_data.clearanceLevel < 1:
     streamlit.write("""
-    Some of ya'll just aren't worth developing for. <br>
-    I've decided to restrict usage to those who actually seem like they'd benefit from this. <br>      
-    If you want access, give me a call or send me a DM and I'll get approve your access personally. <br>
+    I've decided to restrict usage to those who actually seem like they'd benefit from this app. <br>
+    Some of ya'll are just not worth developing for, and I'd much rather focus on the others. <br>
+    If you want access, gimme a call or send me a DM and I'll approve your access personally. <br>
     """, unsafe_allow_html=True)
     col1, col2 = streamlit.columns([1, 1])
     col1.link_button(label="Instagram DM", url="https://www.instagram.com/the_tunnster/", icon=":material/chat:")
