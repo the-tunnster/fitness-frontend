@@ -36,6 +36,9 @@ def columnWidthHack():
 def setupNavigation():
 	home_page = streamlit.Page(page="home.py", title="Home", icon=":material/fitness_center:")
 
+	viewer = streamlit.Page(page="pages/exercise/viewer.py", title="Viewer", icon=":material/view_headline:")
+	editor = streamlit.Page(page="pages/exercise/editor.py", title="Editor", icon=":material/add_notes:")
+
 	manager = streamlit.Page(page="pages/routine/manager.py", title="Management", icon=":material/construction:")
 	creator = streamlit.Page(page="pages/routine/creator.py", title="Creation", icon=":material/add_notes:")
 
@@ -51,10 +54,11 @@ def setupNavigation():
 	nav_bar = streamlit.navigation(
 		pages={
 			"": [home_page],
+			"Exercises": [viewer, editor],
 			"Routines": [manager, creator],
 			"Record A Session": [workout, cardio],
 			"Analytics": [post_workout, post_cardio, historical],
-			"Account": [profile]
+			"User Account": [profile]
 		},
 		position="sidebar",
 		expanded=True
