@@ -29,6 +29,9 @@ else:
 if user_data is None:
     streamlit.stop()
 
+if user_data.clearanceLevel < 1:
+    streamlit.switch_page("home.py")
+
 streamlit.write("Select a workout routine to get started.")
 
 user_routines = getRoutinesList(user_data.id)

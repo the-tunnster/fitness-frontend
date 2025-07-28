@@ -29,6 +29,9 @@ if streamlit.session_state["user_data"] is None:
 
 user_data = streamlit.session_state["user_data"]
 
+if user_data.clearanceLevel < 1:
+    streamlit.switch_page("home.py")
+
 with streamlit.form("user_profile", enter_to_submit=False):
     gender_index = 0 if user_data.gender == "male" else 1
     user_data.dateOfBirth = str(user_data.dateOfBirth)
@@ -53,6 +56,7 @@ with streamlit.form("user_profile", enter_to_submit=False):
             height=height,
             weight=weight,
             unitPreference=unit_preference,
+            clearanceLevel=user_data.clearanceLevel,
             id=None
         )
         result = updateUserProfile(updated_user, user_data.id) # type: ignore

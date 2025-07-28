@@ -34,7 +34,21 @@ if streamlit.session_state["user_data"] is None:
     else:
         streamlit.session_state["user_data"] = user_data
 
+user_data = streamlit.session_state["user_data"]
+
 streamlit.header(f"Welcome, {streamlit.session_state['user_data'].username}!", anchor=False)
+
+if user_data is not None and user_data.clearanceLevel < 1:
+    streamlit.write("""
+    Some of ya'll just aren't worth developing for. <br>
+    I've decided to restrict usage to those who actually seem like they'd benefit from this. <br>      
+    If you want access, give me a call or send me a DM and I'll get approve your access personally. <br>
+    """, unsafe_allow_html=True)
+    col1, col2 = streamlit.columns([1, 1])
+    col1.link_button(label="Instagram DM", url="https://www.instagram.com/the_tunnster/", icon=":material/chat:")
+    col2.link_button(label="Call", url="tel:+61493648088", icon=":material/add_call:")
+    streamlit.stop()
+
 streamlit.write("""
 The app is in early development. Some things may be broken, and some might be confusing.
 If you need help, there is a small section below. If that doesn't help, just gimme a call or reach out.""")

@@ -10,4 +10,5 @@ class User:
     height: float
     weight: float
     unitPreference: str
+    clearanceLevel: int
     id: Optional[str]

@@ -34,6 +34,9 @@ else:
 if user_data is None:
     streamlit.stop()
 
+if user_data.clearanceLevel < 1:
+    streamlit.switch_page("home.py")
+
 cardio_list = getCardioList()
 cardio_names: list[str]
 

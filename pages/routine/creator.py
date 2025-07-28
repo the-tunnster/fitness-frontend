@@ -25,6 +25,10 @@ user_data: User
 
 if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+user_data = streamlit.session_state["user_data"]
+
+if user_data.clearanceLevel < 1:
+    streamlit.switch_page("home.py")
 
 if streamlit.session_state["routine_creator_data"] is None:
     streamlit.session_state["routine_creator_data"] = {
@@ -33,10 +37,8 @@ if streamlit.session_state["routine_creator_data"] is None:
         "description": ""
     }
 
-user_data = streamlit.session_state["user_data"]
 routine_creator_data = streamlit.session_state["routine_creator_data"]
 routine_creator_exercises = routine_creator_data["exercises"]
-
 
 routine_creator_data["name"] = streamlit.text_input(
     label="Routine Name",

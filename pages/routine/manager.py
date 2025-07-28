@@ -27,11 +27,13 @@ user_data: User
 
 if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+user_data = streamlit.session_state["user_data"]
+
+if user_data.clearanceLevel < 1:
+    streamlit.switch_page("home.py")
 
 if streamlit.session_state["routine_editor_data"] is None:
     streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": "None"}
-
-user_data = streamlit.session_state["user_data"]
 routine_editor_data = streamlit.session_state["routine_editor_data"]
 
 routine_editor_exercises: list[dict[str, Any]] = streamlit.session_state["routine_editor_data"]["exercises"]

@@ -27,11 +27,14 @@ if user_data is None:
         streamlit.error("User data could not be loaded. Please log in again.")
         streamlit.stop()
 
+if user_data.clearanceLevel < 1:
+    streamlit.switch_page("home.py")
+
 workout_count = checkWorkoutCount(user_data.id)
 if workout_count < 15 :
     streamlit.progress(
-        text="You need at least 15 workouts recorded.",
-        value=(1/15)*workout_count
+        text="You need at least 10 workouts recorded.",
+        value=(1/10)*workout_count
         )
     streamlit.info("You don't have enough workouts to display any useful data. Here's mine instead.")
 
@@ -56,7 +59,7 @@ if selected_exercise_name == "None":
 selected_exercise_data = global_exercise_list[global_exercise_names.index(selected_exercise_name) - 1]
 
 # --- Fetch processed history data ---
-if workout_count < 15 :
+if workout_count < 10 :
     historic_data = getExerciseHistoryData('68674a2e19fc0c426e3ece85', selected_exercise_data.id)
 else:
     historic_data = getExerciseHistoryData(user_data.id, selected_exercise_data.id)

@@ -37,6 +37,9 @@ else:
 
 if user_data is None:
     streamlit.stop()
+    
+if user_data.clearanceLevel < 1:
+    streamlit.switch_page("home.py")
 
 if streamlit.session_state["workout_session_data"] is None:
     workout_session_data = getWorkoutSessionData(user_data.id)
