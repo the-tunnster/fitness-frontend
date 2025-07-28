@@ -7,6 +7,7 @@ from models.user import User
 from models.routines import FullRoutine
 from models.session import WorkoutSession
 from models.cardio import CardioSession
+from models.exercise import Exercise
 
 def updateUserProfile(user: User, user_id: str) -> bool:
     try:
@@ -108,4 +109,25 @@ def updateCardioHistory(user_id: str | None, cardio_id: str, session: CardioSess
 
     except Exception as e:
         print(f"Exception during cardio history update: {e}")
+        return False
+
+
+def updateExercise(exercise: Exercise) -> bool:
+    try:
+        payload = asdict(exercise)
+        response = requests.patch(
+            url=EXERCISE_URLS["update"],
+            params={"exercise_id": exercise.id},
+            json=payload
+        )
+
+        if response.status_code in (200, 204):
+            print(f"Exercise '{exercise.name}' updated successfully.")
+            return True
+        else:
+            print(f"Error updating exercise: Status Code {response.status_code}, Response: {response.text}")
+            return False
+
+    except Exception as e:
+        print(f"Exception during exercise update: {e}")
         return False
