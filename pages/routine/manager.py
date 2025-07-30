@@ -18,7 +18,7 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState(["user_data", "routine_editor_data"])
 
-streamlit.title("Routine Management.", anchor=False)
+streamlit.title("Routine Management", anchor=False)
 streamlit.write("""This is where you'll manage existing routines and their set-ups.<br>
 Select a routine to get started.<br>
 """, unsafe_allow_html=True)

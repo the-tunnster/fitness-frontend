@@ -16,7 +16,7 @@ if not streamlit.user.is_logged_in:
 uiSetup()
 initSessionState(["user_data", "routine_creator_data"])
 
-streamlit.title("Routine Creation.", anchor=False)
+streamlit.title("Routine Creation", anchor=False)
 streamlit.write("Design your workout routines from scratch.")
 
 streamlit.divider()
