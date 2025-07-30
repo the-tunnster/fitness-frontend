@@ -36,11 +36,12 @@ def columnWidthHack():
 def setupNavigation():
 	home_page = streamlit.Page(page="home.py", title="Home", icon=":material/fitness_center:")
 
-	viewer = streamlit.Page(page="pages/exercise/viewer.py", title="Viewer", icon=":material/view_headline:")
-	editor = streamlit.Page(page="pages/exercise/editor.py", title="Editor", icon=":material/add_notes:")
+	viewer = streamlit.Page(page="pages/exercise/viewer.py", title="View", icon=":material/view_headline:")
+	editor = streamlit.Page(page="pages/exercise/editor.py", title="Edit", icon=":material/add_notes:")
+	adder = streamlit.Page(page="pages/exercise/adder.py", title="Create", icon=":material/add_notes:")
 
-	manager = streamlit.Page(page="pages/routine/manager.py", title="Management", icon=":material/construction:")
-	creator = streamlit.Page(page="pages/routine/creator.py", title="Creation", icon=":material/add_notes:")
+	manager = streamlit.Page(page="pages/routine/manager.py", title="Manage", icon=":material/construction:")
+	creator = streamlit.Page(page="pages/routine/creator.py", title="Create", icon=":material/add_notes:")
 
 	workout = streamlit.Page(page="pages/recorder/workout.py", title="Strength Training", icon=":material/exercise:")
 	cardio = streamlit.Page(page="pages/recorder/cardio.py", title="Cardiovascular", icon=":material/sprint:")
@@ -54,7 +55,7 @@ def setupNavigation():
 	nav_bar = streamlit.navigation(
 		pages={
 			"": [home_page],
-			"Exercises": [viewer, editor],
+			"Exercises": [viewer, editor, adder],
 			"Routines": [manager, creator],
 			"Record A Session": [workout, cardio],
 			"Analytics": [post_workout, post_cardio, historical],
