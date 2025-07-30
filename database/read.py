@@ -152,6 +152,9 @@ def getWorkoutSessionData(user_id: str | None) -> WorkoutSession | None :
             params={"user_id": user_id}
         )
 
+        if response.status_code == 404:
+            return None
+        
         response.raise_for_status()
 
         if response.json()["id"] == "000000000000000000000000":
