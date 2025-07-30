@@ -17,7 +17,7 @@ def createDummyUserProfile(emailID: str, username: str) -> bool:
         height=175.0,
         weight=78.5,
         unitPreference="metric",
-        clearanceLevel=0,
+        clearanceLevel=1,
         id=None
     )
 
