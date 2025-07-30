@@ -212,6 +212,9 @@ def getCardioHistoryData(user_id: str | None, cardio_id: str) -> list[dict[Any, 
             params={"user_id": user_id, "cardio_id": cardio_id}
         )
 
+        if response.status_code == 404:
+            return None
+
         response.raise_for_status()
 
         return response.json()
