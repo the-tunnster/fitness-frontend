@@ -16,6 +16,7 @@ uiSetup()
 initSessionState(["user_data", ])
 
 streamlit.title("Historical Workout Analytics", anchor=False)
+streamlit.write("Select an exercise to view your progress.")
 
 # --- Load user data ---
 user_data: User
@@ -46,7 +47,8 @@ selected_exercise_name = streamlit.selectbox(
     label="Select an exercise to view its history:",
     options=global_exercise_names,
     key="select_exercise_for_analytics",
-    index=0
+    index=0,
+    label_visibility="collapsed"
 )
 
 if selected_exercise_name == "None":
