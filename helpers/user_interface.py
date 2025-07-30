@@ -37,18 +37,18 @@ def setupNavigation():
 	home_page = streamlit.Page(page="home.py", title="Home", icon=":material/fitness_center:")
 
 	viewer = streamlit.Page(page="pages/exercise/viewer.py", title="View", icon=":material/view_headline:")
-	editor = streamlit.Page(page="pages/exercise/editor.py", title="Edit", icon=":material/add_notes:")
-	adder = streamlit.Page(page="pages/exercise/adder.py", title="Create", icon=":material/add_notes:")
+	editor = streamlit.Page(page="pages/exercise/editor.py", title="Edit", icon=":material/construction:")
+	adder = streamlit.Page(page="pages/exercise/adder.py", title="Create", icon=":material/library_add:")
 
 	manager = streamlit.Page(page="pages/routine/manager.py", title="Manage", icon=":material/construction:")
-	creator = streamlit.Page(page="pages/routine/creator.py", title="Create", icon=":material/add_notes:")
+	creator = streamlit.Page(page="pages/routine/creator.py", title="Create", icon=":material/library_add:")
 
 	workout = streamlit.Page(page="pages/recorder/workout.py", title="Strength Training", icon=":material/exercise:")
 	cardio = streamlit.Page(page="pages/recorder/cardio.py", title="Cardiovascular", icon=":material/sprint:")
 
-	post_workout = streamlit.Page(page="pages/analytics/post-workout.py", title="Post Workout", icon=":material/table_chart_view:")
-	post_cardio = streamlit.Page(page="pages/analytics/post-cardio.py", title="Cardiovascular", icon=":material/table_chart_view:")
-	historical = streamlit.Page(page="pages/analytics/historic.py", title="Historical", icon=":material/table_chart_view:")
+	post_workout = streamlit.Page(page="pages/analytics/post-workout.py", title="Post Workout", icon=":material/candlestick_chart:")
+	post_cardio = streamlit.Page(page="pages/analytics/post-cardio.py", title="Cardiovascular", icon=":material/trending_up:")
+	historical = streamlit.Page(page="pages/analytics/historic.py", title="Historical", icon=":material/trending_up:")
 
 	profile = streamlit.Page(page="pages/user/profile.py", title="Management", icon=":material/account_box:")
 
