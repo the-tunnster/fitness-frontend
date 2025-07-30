@@ -53,6 +53,6 @@ if data is None:
 for entry in data:
     streamlit.subheader(f"{entry["exercise_name"]}, {entry["variation"]}", anchor=False)
     col1, col2, col3 = streamlit.columns(3)
-    col1.metric(label="Weight Lifted", value=entry["max_weight"], delta=f"{entry['weight_change']:.2f}")
-    col2.metric(label="Reps Completed", value=entry["reps"], delta=f"{entry['reps_change']:.2f}")
-    col3.metric(label="Volume Moved", value=entry["volume"], delta=f"{entry['volume_change']:.2f}")
+    col1.metric(label="Weight Lifted", value=entry["max_weight"], delta=None if entry['weight_change'] == 0 else f"{entry['weight_change']:.2f}")
+    col2.metric(label="Reps Completed", value=entry["reps"], delta=None if entry['reps_change'] == 0 else f"{entry['reps_change']:.2f}")
+    col3.metric(label="Volume Moved", value=entry["volume"], delta=None if entry['volume_change'] == 0 else f"{entry['volume_change']:.2f}")
