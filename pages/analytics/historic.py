@@ -46,9 +46,8 @@ global_exercise_names = ["None"] + [exercise.name for exercise in global_exercis
 selected_exercise_name = streamlit.selectbox(
     label="Select an exercise to view its history:",
     options=global_exercise_names,
-    key="select_exercise_for_analytics",
     index=0,
-    label_visibility="collapsed"
+    label_visibility="collapsed",
 )
 
 if selected_exercise_name == "None":
