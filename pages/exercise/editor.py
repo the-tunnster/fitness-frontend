@@ -93,15 +93,11 @@ with streamlit.form(key="exercise_editor_form", enter_to_submit=False, border=Fa
         label_visibility="collapsed"
     )
     
-    # Form submission
-    col1, col2, col3 = streamlit.columns([1, 1, 1])
-    
-    with col2:
-        submit_button = streamlit.form_submit_button(
-            label="Update",
-            icon=":material/save:",
-            use_container_width=True
-        )
+    submit_button = streamlit.form_submit_button(
+        label="Update",
+        icon=":material/save:",
+        use_container_width=True
+    )
     
     if submit_button:
         # Parse variations and equipment
