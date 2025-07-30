@@ -4,9 +4,9 @@ from dataclasses import asdict
 
 from config.urls import *
 
-from models.user import *
-from models.session import *
-from models.routines import *
+from models.user import User
+from models.exercise import Exercise
+from models.routines import FullRoutine
 
 def createDummyUserProfile(emailID: str, username: str) -> bool:
     new_user = User(
@@ -116,3 +116,25 @@ def createHistory(user_id: str) -> bool:
     except Exception as e:
         print(f"Exception during history creation: {e}")
         return False
+
+
+def createExercise(exercise: Exercise) -> str | None:
+    try:
+        payload = asdict(exercise)
+        payload.pop('id', None)
+        
+        response = requests.post(
+            url=EXERCISE_URLS["create"],
+            json=payload
+        )
+
+        if response.status_code == 201:
+            exercise_id = response.json()
+            return exercise_id
+        else:
+            print(f"Error creating exercise: Status Code {response.status_code}, Response: {response.text}")
+            return None
+
+    except Exception as e:
+        print(f"Exception during exercise creation: {e}")
+        return None
