@@ -32,9 +32,8 @@ if workout_count < 10:
         )
     streamlit.info("You don't have enough workouts to display any useful data. Here's mine instead.")
 
-if user_data.clearanceLevel < 2:
+if workout_count > 10 and user_data.clearanceLevel < 2:
     streamlit.info("You're eligible for this clearance level now. DM or call me for an upgrade!")
-    streamlit.stop()
 
 # --- Load exercises ---
 global_exercise_list = getExerciseList()
