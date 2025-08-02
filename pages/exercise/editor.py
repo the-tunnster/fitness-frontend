@@ -57,12 +57,6 @@ streamlit.subheader(f"Editing: {selected_exercise_data.name}", anchor=False)
 
 # Create the edit form
 with streamlit.form(key="exercise_editor_form", enter_to_submit=False, border=False):
-    # Exercise name
-    new_name = streamlit.text_input(
-        label="Exercise Name",
-        value=selected_exercise_data.name,
-        help="The name of the exercise"
-    )
     
     # Exercise category
     categories = ["Strength", "Flexibility", "Stability", "Endurance", "Functional"]
@@ -106,7 +100,7 @@ with streamlit.form(key="exercise_editor_form", enter_to_submit=False, border=Fa
         
         # Create updated exercise object
         updated_exercise = Exercise(
-            name=new_name,
+            name=selected_exercise_data.name,
             category=new_category,
             variations=new_variations,
             equipment=new_equipment,
@@ -115,7 +109,7 @@ with streamlit.form(key="exercise_editor_form", enter_to_submit=False, border=Fa
         
         # Attempt to update the exercise
         if updateExercise(updated_exercise):
-            streamlit.success(f"Exercise '{new_name}' updated successfully!")
+            streamlit.success(f"Exercise '{selected_exercise_data.name}' updated successfully!")
             
             streamlit.cache_data.clear()
             streamlit.switch_page("pages/exercise/viewer.py")
