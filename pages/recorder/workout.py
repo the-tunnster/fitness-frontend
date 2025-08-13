@@ -22,24 +22,17 @@ initSessionState(["user_data", "workout_session_data", "current_exercise_index",
 
 streamlit.title("Workout Recorder", anchor=False)
 
-user_data: User | None
 workout_session_data: WorkoutSession | None
 
+user_data: User
 if streamlit.session_state["user_data"] is None:
-    user_data = getUser(str(streamlit.user.email))
-    if user_data is not None:
-        streamlit.session_state["user_data"] = user_data
-    else:
-        streamlit.error("User data could not be loaded.")
-        streamlit.stop()
-else:
-    user_data = streamlit.session_state["user_data"]
-
-if user_data is None:
-    streamlit.stop()
+    streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+user_data = streamlit.session_state["user_data"]
     
 if user_data.clearanceLevel < 1:
-    streamlit.switch_page("home.py")
+    accessControlWarning()
+    getInTouch()
+    streamlit.stop()
 
 if streamlit.session_state["workout_session_data"] is None:
     workout_session_data = getWorkoutSessionData(user_data.id)
