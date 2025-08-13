@@ -12,7 +12,7 @@ initSessionState(["user_data"])
 
 if not streamlit.user.is_logged_in:
     streamlit.title("Welcome.", anchor=False)
-    streamlit.warning("You'll need to log in to continue")
+    streamlit.warning("You'll need to log in to continue. (It's in the sidebar)")
     streamlit.stop()
 
 if streamlit.session_state["user_data"] is None:
@@ -39,13 +39,8 @@ user_data = streamlit.session_state["user_data"]
 streamlit.title(f"Welcome, {streamlit.session_state['user_data'].username}!", anchor=False)
 
 if user_data.clearanceLevel < 1:
-    streamlit.write("""
-    I've started to implement an access control system. <br>
-    If you're seeing this page, it's a bug I need to fix, so reach out and let me know. <br>
-    """, unsafe_allow_html=True)
-    col1, col2 = streamlit.columns([1, 1])
-    col1.link_button(label="Instagram DM", url="https://www.instagram.com/the_tunnster/", icon=":material/chat:")
-    col2.link_button(label="Call", url="tel:+61493648088", icon=":material/add_call:")
+    accessControlWarning()
+    getInTouch()
     streamlit.stop()
 
 streamlit.write("""
