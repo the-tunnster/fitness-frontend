@@ -57,7 +57,7 @@ with streamlit.form("user_profile", enter_to_submit=False):
             weight=weight,
             unitPreference=unit_preference,
             clearanceLevel=user_data.clearanceLevel,
-            id=None
+            id=""
         )
         result = updateUserProfile(updated_user, user_data.id) # type: ignore
         if result == True:

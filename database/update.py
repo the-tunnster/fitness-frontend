@@ -11,10 +11,13 @@ from models.exercise import Exercise
 
 def updateUserProfile(user: User, user_id: str) -> bool:
     try:
+        payload = asdict(user)
+        payload.pop("id")
+
         response = requests.patch(
             url=USER_URLS["update"],
             params={"user_id": user_id},
-            json=asdict(user)
+            json=payload
         )
 
         if response.status_code in (200, 204):

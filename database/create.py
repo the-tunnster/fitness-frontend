@@ -18,13 +18,16 @@ def createDummyUserProfile(emailID: str, username: str) -> bool:
         weight=78.5,
         unitPreference="metric",
         clearanceLevel=1,
-        id=None
+        id=""
     )
 
     try:
+        payload = asdict(new_user)
+        payload.pop("id")
+
         response = requests.post(
             url=USER_URLS["create"],
-            json=asdict(new_user)
+            json=payload
         )
 
         if response.status_code == 201:
