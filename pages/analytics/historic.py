@@ -24,6 +24,11 @@ if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]
 
+if user_data.clearanceLevel < 1:
+    accessControlWarning()
+    getInTouch()
+    streamlit.stop()
+
 workout_count = checkWorkoutCount(user_data.id)
 if workout_count < 10:
     streamlit.progress(
@@ -34,6 +39,8 @@ if workout_count < 10:
 
 if workout_count > 10 and user_data.clearanceLevel < 2:
     streamlit.info("You're eligible for this clearance level now. DM or call me for an upgrade!")
+    getInTouch()
+    streamlit.stop()
 
 # --- Load exercises ---
 global_exercise_list = getExerciseList()

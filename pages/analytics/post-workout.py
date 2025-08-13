@@ -20,7 +20,9 @@ if streamlit.session_state["user_data"] is None:
 user_data = streamlit.session_state["user_data"]
 
 if user_data.clearanceLevel < 1:
-    streamlit.switch_page("home.py")
+    accessControlWarning()
+    getInTouch()
+    streamlit.stop()
 
 streamlit.write("Select a workout routine to get started.")
 

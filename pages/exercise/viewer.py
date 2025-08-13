@@ -24,7 +24,9 @@ user_data = streamlit.session_state["user_data"]
 
 
 if user_data.clearanceLevel < 1:
-    streamlit.switch_page("home.py")
+    accessControlWarning()
+    getInTouch()
+    streamlit.stop()
     
 global_exercise_names: list[str] | None = None
 global_exercise_list = getExerciseList()

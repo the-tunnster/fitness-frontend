@@ -27,7 +27,9 @@ if streamlit.session_state["user_data"] is None:
 user_data = streamlit.session_state["user_data"]
 
 if user_data.clearanceLevel < 1:
-    streamlit.switch_page("home.py")
+    accessControlWarning()
+    getInTouch()
+    streamlit.stop()
 
 if streamlit.session_state["routine_creator_data"] is None:
     streamlit.session_state["routine_creator_data"] = {
