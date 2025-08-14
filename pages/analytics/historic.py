@@ -4,9 +4,9 @@ import plotly.graph_objects as go                                               
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-from database.read import getUser, checkWorkoutCount, getExerciseList, getExerciseHistoryData
+from database.read import getBasicUser, checkWorkoutCount, getExerciseList, getExerciseHistoryData
 
-from models.user import User
+from models.user import BasicUser
 
 
 if not streamlit.user.is_logged_in:
@@ -19,9 +19,9 @@ streamlit.title("Historical Workout Analytics", anchor=False)
 streamlit.write("Select an exercise to view your progress.")
 
 # --- Load user data ---
-user_data: User
+user_data: BasicUser
 if streamlit.session_state["user_data"] is None:
-    streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+    streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]
 
 if user_data.clearanceLevel < 1:
