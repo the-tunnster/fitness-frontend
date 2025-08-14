@@ -1,9 +1,6 @@
 import requests
 
 from config.urls import *
-from models.user import *
-from models.routines import *
-from models.exercise import *
 
 def deleteRoutine(user_id: str | None, routine_id: str | None) -> bool :
     try:
