@@ -1,6 +1,6 @@
 import streamlit
 
-from database.read import getUser
+from database.read import getBasicUser
 from database.create import createDummyUserProfile
 
 from helpers.cache_manager import *
@@ -16,14 +16,14 @@ if not streamlit.user.is_logged_in:
     streamlit.stop()
 
 if streamlit.session_state["user_data"] is None:
-    user_data = getUser(str(streamlit.user.email))
+    user_data = getBasicUser(str(streamlit.user.email))
 
     if user_data is None:
         streamlit.info("This is your first time logging in.")
         result = createDummyUserProfile(str(streamlit.user.email), str(streamlit.user.given_name))
 
         if result:
-            user_data = getUser(str(streamlit.user.email))
+            user_data = getBasicUser(str(streamlit.user.email))
             streamlit.session_state["user_data"] = user_data
             streamlit.info("A dummy profile has been created. Feel free to update the information as you see fit.")
 
