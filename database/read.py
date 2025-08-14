@@ -5,12 +5,12 @@ from typing import Any
 from config.urls import *
 
 from models.cardio import Cardio
-from models.user import User
-from models.session import *
-from models.routines import *
 from models.exercise import Exercise
+from models.user import FullUser, BasicUser
+from models.session import WorkoutExercise, WorkoutSession
+from models.routines import RoutineExercise, Routine, FullRoutine
 
-def getUser(emailID: str) -> User | None :
+def getFullUser(emailID: str) -> FullUser | None :
     try:
         response = requests.get(
             url=USER_URLS["me"],
@@ -18,11 +18,30 @@ def getUser(emailID: str) -> User | None :
         )
 
         response.raise_for_status()
-
-        if response.json()["id"] == "000000000000000000000000":
-            return None
         
-        user = User(**response.json())
+        user = FullUser(**response.json())
+        return user
+
+    except:
+        return None
+
+@streamlit.cache_data
+def getBasicUser(emailID: str) -> BasicUser | None :
+    try:
+        response = requests.get(
+            url=USER_URLS["me"],
+            params={"email": emailID}
+        )
+
+        response.raise_for_status()
+        
+        response_data = response.json()
+        user = BasicUser(
+            id=response_data["id"],
+            username=response_data["username"],
+            clearanceLevel=response_data["clearanceLevel"]
+        )
+
         return user
 
     except:
@@ -36,9 +55,6 @@ def getExerciseData(exerciseID: str) -> Exercise | None:
         )
 
         response.raise_for_status()
-
-        if response.json()["id"] == "000000000000000000000000":
-            return None
         
         exercise = Exercise(**response.json())
         return exercise
