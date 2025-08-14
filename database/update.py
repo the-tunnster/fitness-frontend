@@ -3,16 +3,18 @@ from dataclasses import asdict
 
 from config.urls import *
 
-from models.user import User
+from models.user import FullUser, BasicUser
 from models.routines import FullRoutine
 from models.session import WorkoutSession
 from models.cardio import CardioSession
 from models.exercise import Exercise
 
-def updateUserProfile(user: User, user_id: str) -> bool:
+def updateUserProfile(user: FullUser, user_id: str) -> bool:
     try:
         payload = asdict(user)
         payload.pop("id")
+        payload.pop("stravaAccessToken")
+        payload.pop("stravaRefreshToken")
 
         response = requests.patch(
             url=USER_URLS["update"],
@@ -32,7 +34,7 @@ def updateUserProfile(user: User, user_id: str) -> bool:
         return False
 
 
-def updateUserRoutine(user: User, routine: FullRoutine) -> bool:
+def updateUserRoutine(user: BasicUser, routine: FullRoutine) -> bool:
     try:
         payload = [asdict(ex) for ex in routine.exercises]
 
