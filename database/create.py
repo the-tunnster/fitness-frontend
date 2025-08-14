@@ -4,12 +4,12 @@ from dataclasses import asdict
 
 from config.urls import *
 
-from models.user import User
+from models.user import FullUser, BasicUser
 from models.exercise import Exercise
 from models.routines import FullRoutine
 
 def createDummyUserProfile(emailID: str, username: str) -> bool:
-    new_user = User(
+    new_user = FullUser(
         username=username,
         email=emailID,
         gender="male",
@@ -18,6 +18,8 @@ def createDummyUserProfile(emailID: str, username: str) -> bool:
         weight=78.5,
         unitPreference="metric",
         clearanceLevel=0,
+        stravaAccessToken="",
+        stravaRefreshToken="",
         id=""
     )
 
@@ -41,7 +43,7 @@ def createDummyUserProfile(emailID: str, username: str) -> bool:
         print(f"Exception: {e}")
         return False
 
-def createUserRoutine(user: User, routine: FullRoutine) -> bool:
+def createUserRoutine(user: BasicUser, routine: FullRoutine) -> bool:
     try:
         payload: dict[str, Any] = {
             "name": routine.name,
