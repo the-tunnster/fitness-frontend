@@ -1,12 +1,12 @@
 import streamlit
 
-from database.read import getExerciseList, getUser
+from database.read import getExerciseList, getBasicUser
 from database.update import updateExercise
 
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-from models.user import User
+from models.user import BasicUser
 from models.exercise import Exercise
 
 
@@ -22,9 +22,9 @@ streamlit.write("""
                 I'm trusting you with this, please don't fuck it up. <br>
                 """, unsafe_allow_html=True)
 
-user_data: User
+user_data: BasicUser
 if streamlit.session_state["user_data"] is None:
-    streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+    streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]
 
 if user_data.clearanceLevel < 3:

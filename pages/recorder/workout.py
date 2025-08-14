@@ -3,14 +3,14 @@ import streamlit
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-from database.read import getUser, getRoutinesList, getWorkoutSessionData
+from database.read import getBasicUser, getRoutinesList, getWorkoutSessionData
 from database.read import getExerciseList, getExerciseNames, getExerciseData
 
 from database.create import createWorkout, createWorkoutSession
 from database.delete import deleteSession
 from database.update import updateWorkoutSession, updateExerciseHistory
 
-from models.user import User
+from models.user import BasicUser
 from models.routines import Routine
 from models.session import WorkoutSession, WorkoutExercise, WorkoutSet
 
@@ -24,9 +24,9 @@ streamlit.title("Workout Recorder", anchor=False)
 
 workout_session_data: WorkoutSession | None
 
-user_data: User
+user_data: BasicUser
 if streamlit.session_state["user_data"] is None:
-    streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+    streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]
     
 if user_data.clearanceLevel < 1:

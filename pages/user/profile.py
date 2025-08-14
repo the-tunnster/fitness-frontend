@@ -1,8 +1,8 @@
 import streamlit
 
-from models.user import User
+from models.user import FullUser
 
-from database.read import getUser
+from database.read import getFullUser
 from database.update import updateUserProfile
 
 from helpers.cache_manager import *
@@ -22,12 +22,9 @@ Feel free to leave these values as they are, I chose dummy values. </br>
 However, if you wish to update these, try to have them as accurate as possible. </br>
 """, unsafe_allow_html=True)
 
-user_data: User
-
-if streamlit.session_state["user_data"] is None:
-    streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
-
-user_data = streamlit.session_state["user_data"]
+user_data = getFullUser(str(streamlit.user.email))
+if user_data is None:
+    streamlit.stop()
 
 if user_data.clearanceLevel < 1:
     accessControlWarning()
@@ -50,7 +47,7 @@ with streamlit.form("user_profile", enter_to_submit=False):
 
     submitted = streamlit.form_submit_button("Update Information")
     if submitted:
-        updated_user = User(
+        updated_user = FullUser(
             username=str(user_name),
             email=str(email_id),
             gender=gender,
@@ -59,11 +56,14 @@ with streamlit.form("user_profile", enter_to_submit=False):
             weight=weight,
             unitPreference=unit_preference,
             clearanceLevel=user_data.clearanceLevel,
+            stravaAccessToken="",
+            stravaRefreshToken="",
             id=""
         )
         result = updateUserProfile(updated_user, user_data.id) # type: ignore
         if result == True:
             streamlit.success("Updated user profile!")
-            streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+            streamlit.cache_data.clear()
+            streamlit.session_state["user_data"] = getFullUser(str(streamlit.user.email))
         else:
             streamlit.error("Couldn't update profile...")

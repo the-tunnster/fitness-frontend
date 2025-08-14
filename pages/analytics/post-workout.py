@@ -3,7 +3,10 @@ import streamlit
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-from database.read import *
+from database.read import getBasicUser, getRoutinesList, getWorkoutComparison
+
+from models.user import BasicUser
+from models.routines import Routine
 
 
 if not streamlit.user.is_logged_in:
@@ -14,9 +17,9 @@ initSessionState(["user_data", ])
 
 streamlit.title("Post Workout Analytics", anchor=False)
 
-user_data: User
+user_data: BasicUser
 if streamlit.session_state["user_data"] is None:
-    streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+    streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]
 
 if user_data.clearanceLevel < 1:

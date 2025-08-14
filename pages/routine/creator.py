@@ -3,10 +3,10 @@ import streamlit
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-from database.read import getUser, getExerciseList, getExerciseIDs
+from database.read import getBasicUser, getExerciseList, getExerciseIDs
 from database.create import createUserRoutine
 
-from models.user import User
+from models.user import BasicUser
 from models.routines import RoutineExercise, FullRoutine
 
 
@@ -21,9 +21,9 @@ streamlit.write("Design your workout routines from scratch.")
 
 streamlit.divider()
 
-user_data: User
+user_data: BasicUser
 if streamlit.session_state["user_data"] is None:
-    streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+    streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]
 
 if user_data.clearanceLevel < 1:

@@ -1,13 +1,13 @@
 import streamlit
 from typing import Any
 
-from models.user import User
+from models.user import BasicUser
 from models.routines import RoutineExercise, FullRoutine
 
 from helpers.cache_manager import *
 from helpers.user_interface import *
 
-from database.read import getUser, getExerciseList, getExerciseIDs, getRoutinesList, getRoutineData
+from database.read import getBasicUser, getExerciseList, getExerciseIDs, getRoutinesList, getRoutineData
 from database.update import updateUserRoutine
 from database.delete import deleteRoutine
 
@@ -23,9 +23,9 @@ streamlit.write("""This is where you'll manage existing routines and their set-u
 Select a routine to get started.<br>
 """, unsafe_allow_html=True)
 
-user_data: User
+user_data: BasicUser
 if streamlit.session_state["user_data"] is None:
-    streamlit.session_state["user_data"] = getUser(str(streamlit.user.email))
+    streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]
 
 if user_data.clearanceLevel < 1:
