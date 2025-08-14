@@ -7,7 +7,7 @@ from config.urls import *
 from models.cardio import Cardio
 from models.exercise import Exercise
 from models.user import FullUser, BasicUser
-from models.session import WorkoutExercise, WorkoutSession
+from models.session import WorkoutExercise, WorkoutSet, WorkoutSession
 from models.routines import RoutineExercise, Routine, FullRoutine
 
 def getFullUser(emailID: str) -> FullUser | None :
