@@ -48,9 +48,5 @@ The app is in early development. Some things may be broken, and some might be co
 For now though, jump right in! <br>
 """, unsafe_allow_html=True)
 
-col1, col2 = streamlit.columns([1, 1])
-
-with col1:
-    streamlit.page_link(page="pages/recorder/workout.py", label="Record a Session", icon=":material/exercise:", use_container_width=True)
-with col2:
-    streamlit.page_link(page="pages/user/profile.py", label="Account Management", icon=":material/account_box:", use_container_width=True)
+streamlit.page_link(page="pages/recorder/workout.py", label="Record a Session", icon=":material/exercise:", use_container_width=True)
+streamlit.page_link(page="pages/user/profile.py", label="Account Management", icon=":material/account_box:", use_container_width=True)
