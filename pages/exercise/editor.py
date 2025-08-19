@@ -19,18 +19,13 @@ initSessionState(["user_data"])
 streamlit.title("Exercise Editor", anchor=False)
 streamlit.write("""
                 Select an exercise to edit its details, variations, and equipment options. <br>
-                I'm trusting you with this, please don't fuck it up. <br>
+                If I'm trusting you with this, please don't fuck it up. <br>
                 """, unsafe_allow_html=True)
 
 user_data: BasicUser
 if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]
-
-if user_data.clearanceLevel < 3:
-    streamlit.error("Sorry bruv, you aren't cleared for this stuff. If you think you should be though, do get in touch.")
-    getInTouch()
-    streamlit.stop()
     
 global_exercise_names: list[str] | None = None
 global_exercise_list = getExerciseList()
@@ -85,13 +80,14 @@ with streamlit.form(key="exercise_editor_form", enter_to_submit=False, border=Fa
         value="\n".join(selected_exercise_data.equipment) if selected_exercise_data.equipment else "",
         help="Enter each piece of equipment on a new line",
         height=25*(len(selected_exercise_data.equipment)+1),
-        label_visibility="collapsed"
+        label_visibility="collapsed",
     )
     
     submit_button = streamlit.form_submit_button(
         label="Update",
         icon=":material/save:",
-        use_container_width=True
+        use_container_width=True,
+        disabled=user_data.clearanceLevel < 3
     )
     
     if submit_button:
