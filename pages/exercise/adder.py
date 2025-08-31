@@ -116,7 +116,7 @@ with streamlit.form(key="exercise_creator_form", enter_to_submit=False, border=F
                 streamlit.cache_data.clear()
                 
                 # Redirect to viewer page
-                streamlit.switch_page("pages/exercise/viewer.py")
+                streamlit.switch_page("pages/exercise/editor.py")
             else:
                 streamlit.error("Failed to create exercise. Please try again.")
 
