@@ -69,7 +69,7 @@ with streamlit.form(key="exercise_editor_form", enter_to_submit=False, border=Fa
         label="Variations",
         value="\n".join(selected_exercise_data.variations) if selected_exercise_data.variations else "",
         help="Enter each variation on a new line",
-        height=25*(len(selected_exercise_data.variations)+1),
+        height=25*(len(selected_exercise_data.variations)+1) if 25*(len(selected_exercise_data.variations)+1) > 68 else 68,
         label_visibility="collapsed"
     )
     
@@ -79,7 +79,7 @@ with streamlit.form(key="exercise_editor_form", enter_to_submit=False, border=Fa
         label="Equipment (one per line)",
         value="\n".join(selected_exercise_data.equipment) if selected_exercise_data.equipment else "",
         help="Enter each piece of equipment on a new line",
-        height=25*(len(selected_exercise_data.equipment)+1),
+        height=25*(len(selected_exercise_data.equipment)+1) if 25*(len(selected_exercise_data.equipment)+1) > 68 else 68,
         label_visibility="collapsed",
     )
     
