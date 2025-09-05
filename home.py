@@ -36,7 +36,7 @@ if streamlit.session_state["user_data"] is None:
 
 user_data = streamlit.session_state["user_data"]
 
-streamlit.title(f"Welcome, {streamlit.session_state['user_data'].username}!", anchor=False)
+streamlit.title(f"Welcome, {user_data.username}!", anchor=False)
 
 if user_data.clearanceLevel < 1:
     accessControlWarning()
@@ -48,5 +48,5 @@ The app is in early development. Some things may be broken, and some might be co
 For now though, jump right in! <br>
 """, unsafe_allow_html=True)
 
-streamlit.page_link(page="pages/recorder/workout.py", label="Record a Session", icon=":material/exercise:", use_container_width=True)
+streamlit.page_link(page="pages/strength-training/workout.py", label="Record a Session", icon=":material/exercise:", use_container_width=True)
 streamlit.page_link(page="pages/user/profile.py", label="Account Management", icon=":material/account_box:", use_container_width=True)
