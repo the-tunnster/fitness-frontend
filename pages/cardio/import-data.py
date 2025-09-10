@@ -1,7 +1,5 @@
 import streamlit
 
-from config.strava_urls import *
-
 from database.read import getFullUser
 
 from helpers.cache_manager import *
