@@ -109,6 +109,6 @@ with streamlit.form(key="exercise_editor_form", enter_to_submit=False, border=Fa
             streamlit.success(f"Exercise '{selected_exercise_data.name}' updated successfully!")
             
             streamlit.cache_data.clear()
-            streamlit.switch_page("pages/exercise/viewer.py")
+            streamlit.switch_page("pages/exercise/editor.py")
         else:
             streamlit.error("Failed to update exercise. Please try again.")
