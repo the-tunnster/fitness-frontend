@@ -17,6 +17,9 @@ initSessionState(["user_data"])
 
 streamlit.title("Import Cardio Data", anchor=False)
 
+streamlit.write("This is a work in progress. Come back later.")
+streamlit.stop()
+
 user_data: FullUser | None = getFullUser(str(streamlit.user.email))
 if user_data is None:
     streamlit.stop()
