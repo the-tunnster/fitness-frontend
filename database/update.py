@@ -13,8 +13,6 @@ def updateUserProfile(user: FullUser, user_id: str) -> bool:
     try:
         payload = asdict(user)
         payload.pop("id")
-        payload.pop("stravaAccessToken")
-        payload.pop("stravaRefreshToken")
 
         response = requests.patch(
             url=USER_URLS["update"],

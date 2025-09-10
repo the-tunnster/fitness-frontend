@@ -11,7 +11,6 @@ from database.delete import deleteSession
 from database.update import updateWorkoutSession, updateExerciseHistory
 
 from models.user import BasicUser
-from models.routines import Routine
 from models.session import WorkoutSession, WorkoutExercise, WorkoutSet
 
 if not streamlit.user.is_logged_in:
@@ -241,7 +240,7 @@ if is_workout_active:
 
             streamlit.success("Workout saved to disk. Re-directing!")
             clearSessionVariable(["workout_session_data", "current_exercise_index", "add_exercise_dialog", "workout_exercise_selection"])
-            streamlit.switch_page("pages/analytics/post-workout.py")
+            streamlit.switch_page("pages/strength-training/post-workout.py")
 
 
     with col_cancel_workout.expander("Cancel Workout", expanded=False, icon=":material/cancel:"):
@@ -269,7 +268,7 @@ else:
         streamlit.info("You don't seem to have any routines set up. Please create one to access it here.")
         streamlit.stop()
 
-    user_routine_names: List[str] = ["None"] + [routine.name for routine in user_routines]
+    user_routine_names: List[str] = ["None", "Freestyle"] + [routine.name for routine in user_routines]
 
     selected_routine_name: str = streamlit.selectbox(
         label="Select a routine",
@@ -283,17 +282,17 @@ else:
 
     if streamlit.button("Start Workout", disabled=start_workout_button_disabled, use_container_width=True, type="primary", icon=":material/play_arrow:"):
         if selected_routine_name != "None":
-            selected_routine: Routine = user_routines[user_routine_names.index(selected_routine_name) - 1]
+            if selected_routine_name == "Freestyle":
+                routine_id = '68b4073b9f9d0233e1c187ce'
+            else:
+                routine_id = user_routines[user_routine_names.index(selected_routine_name) - 2].id
 
-            if selected_routine and selected_routine.id:
-
-                new_workout_session = createWorkoutSession(user_data.id, selected_routine.id)
-                if new_workout_session:
-                    streamlit.session_state["workout_session_data"] = getWorkoutSessionData(user_data.id)
-                    streamlit.session_state["current_exercise_index"] = 0
-                    streamlit.success(f"Workout '{selected_routine.name}' started!")
-                    streamlit.rerun()
-                else:
-                    streamlit.error("Failed to start workout session. Please try again.")
+            new_workout_session = createWorkoutSession(user_data.id, routine_id)
+            if new_workout_session:
+                streamlit.session_state["workout_session_data"] = getWorkoutSessionData(user_data.id)
+                streamlit.session_state["current_exercise_index"] = 0
+                streamlit.rerun()
+            else:
+                streamlit.error("Failed to start workout session. Please try again.")
         else:
             streamlit.warning("Please select a routine to start.")

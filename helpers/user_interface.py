@@ -36,20 +36,24 @@ def columnWidthHack():
 def setupNavigation():
 	home_page = streamlit.Page(page="home.py", title="Home", icon=":material/fitness_center:")
 
-	#viewer = streamlit.Page(page="pages/exercise/viewer.py", title="View", icon=":material/view_headline:")
+# Exercises
 	editor = streamlit.Page(page="pages/exercise/editor.py", title="Manage", icon=":material/construction:")
 	adder = streamlit.Page(page="pages/exercise/adder.py", title="Create", icon=":material/library_add:")
 
+# Routines
 	manager = streamlit.Page(page="pages/routine/manager.py", title="Manage", icon=":material/construction:")
 	creator = streamlit.Page(page="pages/routine/creator.py", title="Create", icon=":material/library_add:")
 
-	workout = streamlit.Page(page="pages/recorder/workout.py", title="Record a Session", icon=":material/exercise:")
-	post_workout = streamlit.Page(page="pages/analytics/post-workout.py", title="Workout Analytics", icon=":material/candlestick_chart:")
-	historical = streamlit.Page(page="pages/analytics/historic.py", title="Historical Analytics", icon=":material/trending_up:")
+# Strength Training
+	workout = streamlit.Page(page="pages/strength-training/workout.py", title="Record a Session", icon=":material/exercise:")
+	post_workout = streamlit.Page(page="pages/strength-training/post-workout.py", title="Workout Analytics", icon=":material/candlestick_chart:")
+	historical = streamlit.Page(page="pages/strength-training/historic.py", title="Historical Analytics", icon=":material/trending_up:")
 
-	cardio = streamlit.Page(page="pages/recorder/cardio.py", title="Import Data", icon=":material/sprint:")
-	post_cardio = streamlit.Page(page="pages/analytics/post-cardio.py", title="Activity Analytics", icon=":material/trending_up:")
+# Cardio vis Strava
+	cardio = streamlit.Page(page="pages/cardio/import-data.py", title="Import Data", icon=":material/sprint:")
+	post_cardio = streamlit.Page(page="pages/cardio/post-cardio.py", title="Activity Analytics", icon=":material/trending_up:")
 
+# User Profile Management
 	profile = streamlit.Page(page="pages/user/profile.py", title="Management", icon=":material/account_box:")
 
 	nav_bar = streamlit.navigation(
