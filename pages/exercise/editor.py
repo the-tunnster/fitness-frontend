@@ -55,7 +55,7 @@ streamlit.subheader(f"Editing: {selected_exercise_data.name}", anchor=False)
 with streamlit.form(key="exercise_editor_form", enter_to_submit=False, border=False):
     
     # Exercise category
-    categories = ["Strength", "Flexibility", "Stability", "Endurance", "Functional"]
+    categories = ["Strength", "Power", "Flexibility", "Stability", "Endurance", "Functional"]
     new_category = streamlit.selectbox(
         label="Category",
         options=categories,

@@ -52,7 +52,7 @@ with streamlit.form(key="exercise_creator_form", enter_to_submit=False, border=F
     )
     
     # Exercise category
-    categories = ["Strength", "Flexibility", "Stability", "Endurance", "Functional"]
+    categories = ["Strength", "Power", "Flexibility", "Stability", "Endurance", "Functional"]
     new_category = streamlit.selectbox(
         label="Category",
         options=categories, 
