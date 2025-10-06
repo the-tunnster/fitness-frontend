@@ -23,6 +23,7 @@ if streamlit.session_state["user_data"] is None:
         result = createDummyUserProfile(str(streamlit.user.email), str(streamlit.user.given_name))
 
         if result:
+            streamlit.cache_data.clear()
             user_data = getBasicUser(str(streamlit.user.email))
             streamlit.session_state["user_data"] = user_data
             streamlit.info("A dummy profile has been created. Feel free to update the information as you see fit.")
