@@ -8,14 +8,14 @@ class FullUser:
     username: str
     height: float
     weight: float
-    dateOfBirth: str
-    unitPreference: str
-    clearanceLevel: int
-    stravaAccessToken: str
-    stravaRefreshToken: str
+    date_of_birth: str
+    unit_preference: str
+    clearance_level: int
+    strava_access_token: str
+    strava_refresh_token: str
 
 @dataclass
 class BasicUser:
     id: str
     username: str
-    clearanceLevel: int
+    clearance_level: int

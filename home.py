@@ -39,7 +39,7 @@ user_data = streamlit.session_state["user_data"]
 
 streamlit.title(f"Welcome, {user_data.username}!", anchor=False)
 
-if user_data.clearanceLevel < 1:
+if user_data.clearance_level < 1:
     accessControlWarning()
     getInTouch()
     streamlit.stop()

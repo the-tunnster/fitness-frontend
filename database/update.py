@@ -6,7 +6,6 @@ from config.urls import *
 from models.user import FullUser, BasicUser
 from models.routines import FullRoutine
 from models.session import WorkoutSession
-from models.cardio import CardioSession
 from models.exercise import Exercise
 
 def updateUserProfile(user: FullUser, user_id: str) -> bool:
@@ -17,6 +16,7 @@ def updateUserProfile(user: FullUser, user_id: str) -> bool:
         response = requests.patch(
             url=USER_URLS["update"],
             params={"user_id": user_id},
+            headers={"X-User-ID": user_id},
             json=payload
         )
 
@@ -94,27 +94,6 @@ def updateExerciseHistory(user_id: str | None, workout_id: str) -> bool:
         print(f"Exception during history update: {e}")
         return False
     
-def updateCardioHistory(user_id: str | None, cardio_id: str, session: CardioSession) -> bool:
-    try:
-        payload = asdict(session)
-        response = requests.patch(
-            url=CARDIO_URLS["update"],
-            params={"user_id": user_id, "cardio_id": cardio_id},
-            json=payload
-        )
-
-        if response.status_code == 204:
-            print("History updated successfully! No content returned.")
-            return True
-        else:
-            print(f"Error updating cardio history files: {response.status_code}, {response.text}")
-            return False
-
-    except Exception as e:
-        print(f"Exception during cardio history update: {e}")
-        return False
-
-
 def updateExercise(exercise: Exercise) -> bool:
     try:
         payload = asdict(exercise)
@@ -134,3 +113,6 @@ def updateExercise(exercise: Exercise) -> bool:
     except Exception as e:
         print(f"Exception during exercise update: {e}")
         return False
+
+
+    

@@ -1,4 +1,4 @@
-HOST = "http://fitness-database"
+HOST = "http://localhost"
 PORT = ":8080"
 
 BASE_URL = HOST+PORT
@@ -45,11 +45,4 @@ HISTORY_URLS = {
 	"data": BASE_URL + "/history/data",
 	"create": BASE_URL + "/history/create",
 	"update": BASE_URL + "/history/update",
-}
-
-CARDIO_URLS = {
-	"data": BASE_URL + "/cardio/data",
-	"create": BASE_URL + "/cardio/create",
-	"update": BASE_URL + "/cardio/update",
-	"list": BASE_URL + "/cardio/list",
 }

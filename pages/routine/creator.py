@@ -26,7 +26,7 @@ if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]
 
-if user_data.clearanceLevel < 1:
+if user_data.clearance_level < 1:
     accessControlWarning()
     getInTouch()
     streamlit.stop()

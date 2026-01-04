@@ -24,7 +24,7 @@ if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]
 
-if user_data.clearanceLevel < 1:
+if user_data.clearance_level < 1:
     accessControlWarning()
     getInTouch()
     streamlit.stop()
@@ -37,7 +37,7 @@ if workout_count < 10:
         )
     streamlit.info("You don't have enough workouts to display any useful data. Here's mine instead.")
 
-if workout_count > 10 and user_data.clearanceLevel < 2:
+if workout_count > 10 and user_data.clearance_level < 2:
     streamlit.info("You're eligible for this clearance level now. DM or call me for an upgrade!")
     getInTouch()
     streamlit.stop()

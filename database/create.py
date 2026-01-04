@@ -13,13 +13,13 @@ def createDummyUserProfile(emailID: str, username: str) -> bool:
         username=username,
         email=emailID,
         gender="male",
-        dateOfBirth="2000-05-21T00:00:00Z",
+        date_of_birth="2000-05-21T00:00:00Z",
         height=175.0,
         weight=78.5,
-        unitPreference="metric",
-        clearanceLevel=1,
-        stravaAccessToken="",
-        stravaRefreshToken="",
+        unit_preference="metric",
+        clearance_level=1,
+        strava_access_token="",
+        strava_refresh_token="",
         id=""
     )
 
@@ -72,7 +72,8 @@ def createWorkoutSession(user_id: str | None, routine_id: str) -> bool:
     try:
         response = requests.post(
             url=SESSION_URLS["create"],
-            params={"user_id": user_id, "routine_id": routine_id}
+            params={"user_id": user_id, "routine_id": routine_id},
+            headers={"X-User-ID": user_id or ""}
         )
 
         if response.status_code == 201:
@@ -86,11 +87,12 @@ def createWorkoutSession(user_id: str | None, routine_id: str) -> bool:
         print(f"Exception during workout session creation: {e}")
         return False
     
-def createWorkout(session_id: str) -> str | None:
+def createWorkout(session_id: str, user_id: str | None) -> str | None:
     try:
         response = requests.post(
             url=WORKOUT_URLS["create"],
-            params={"session_id": session_id}
+            params={"session_id": session_id, "user_id": user_id},
+            headers={"X-User-ID": user_id or ""}
         )
 
         if response.status_code == 201:

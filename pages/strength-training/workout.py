@@ -28,7 +28,7 @@ if streamlit.session_state["user_data"] is None:
     streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
 user_data = streamlit.session_state["user_data"]
     
-if user_data.clearanceLevel < 1:
+if user_data.clearance_level < 1:
     accessControlWarning()
     getInTouch()
     streamlit.stop()
@@ -226,7 +226,7 @@ if is_workout_active:
                 streamlit.error("Something broke...")
                 streamlit.stop()
 
-            workoutID = createWorkout(streamlit.session_state["workout_session_data"].id)
+            workoutID = createWorkout(streamlit.session_state["workout_session_data"].id, user_data.id)
             if workoutID is None:
                 streamlit.error("Couldn't save workout.")
                 streamlit.stop()
@@ -268,7 +268,7 @@ else:
         streamlit.info("You don't seem to have any routines set up. Please create one to access it here.")
         streamlit.stop()
 
-    user_routine_names: List[str] = ["None", "Freestyle"] + [routine.name for routine in user_routines]
+    user_routine_names: List[str] = ["None"] + [routine.name for routine in user_routines]
 
     selected_routine_name: str = streamlit.selectbox(
         label="Select a routine",
@@ -282,10 +282,7 @@ else:
 
     if streamlit.button("Start Workout", disabled=start_workout_button_disabled, use_container_width=True, type="primary", icon=":material/play_arrow:"):
         if selected_routine_name != "None":
-            if selected_routine_name == "Freestyle":
-                routine_id = '68b4073b9f9d0233e1c187ce'
-            else:
-                routine_id = user_routines[user_routine_names.index(selected_routine_name) - 2].id
+            routine_id = user_routines[user_routine_names.index(selected_routine_name) - 1].id
 
             new_workout_session = createWorkoutSession(user_data.id, routine_id)
             if new_workout_session:

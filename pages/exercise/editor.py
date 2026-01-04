@@ -87,7 +87,7 @@ with streamlit.form(key="exercise_editor_form", enter_to_submit=False, border=Fa
         label="Update",
         icon=":material/save:",
         use_container_width=True,
-        disabled=user_data.clearanceLevel < 3
+        disabled=user_data.clearance_level < 3
     )
     
     if submit_button:

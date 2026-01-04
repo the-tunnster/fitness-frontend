@@ -4,7 +4,6 @@ from typing import Any
 
 from config.urls import *
 
-from models.cardio import Cardio
 from models.exercise import Exercise
 from models.user import FullUser, BasicUser
 from models.session import WorkoutExercise, WorkoutSet, WorkoutSession
@@ -39,7 +38,7 @@ def getBasicUser(emailID: str) -> BasicUser | None :
         user = BasicUser(
             id=response_data["id"],
             username=response_data["username"],
-            clearanceLevel=response_data["clearanceLevel"]
+            clearance_level=response_data["clearance_level"]
         )
 
         return user
@@ -79,21 +78,6 @@ def getExerciseList() -> list[Exercise] | None :
         return None
 
 @streamlit.cache_data
-def getCardioList() -> list[Cardio] | None :
-    try:
-        response = requests.get(
-            url=CARDIO_URLS["list"]
-        )
-        
-        response.raise_for_status()
-
-        cardios = [Cardio(**item) for item in response.json()]
-        return cardios
-
-    except Exception as e:
-        print(f"Exception: {e}")
-        return None
-
 def getExerciseNames(exercise_ids: list[str]) -> list[str] :
     try:
         response = requests.get(
@@ -123,6 +107,22 @@ def getExerciseIDs(exercise_names: list[str]) -> list[str]:
     except Exception as e:
         print(f"Exception: {e}")
         return []
+
+def getRoutinesList(user_id: str | None) -> list[Routine] | None :
+    try:
+        response = requests.get(
+            url=ROUTINE_URLS["list"],
+            params={"user_id": user_id}
+        )
+
+        response.raise_for_status()
+
+        routines = [Routine(**item) for item in response.json()]
+        return routines
+
+    except Exception as e:
+        print(f"Exception: {e}")
+        return None
 
 def getRoutinesList(user_id: str | None) -> list[Routine] | None :
     try:
@@ -221,22 +221,19 @@ def getExerciseHistoryData(user_id: str | None, exercise_id: str) -> list[dict[A
         print(f"Exception while checking for history: {e}")
         return None
 
-def getCardioHistoryData(user_id: str | None, cardio_id: str) -> list[dict[Any, Any]] | None :
+def getWorkoutComparison(user_id: str | None, routine_id: str) :
     try:
         response = requests.get(
-            url=CARDIO_URLS["data"],
-            params={"user_id": user_id, "cardio_id": cardio_id}
+            url=WORKOUT_URLS["comparison"],
+            params={"user_id": user_id, "routine_id": routine_id}
         )
-
-        if response.status_code == 404:
-            return None
 
         response.raise_for_status()
 
         return response.json()
         
     except Exception as e:
-        print(f"Exception while checking for cardio history: {e}")
+        print(f"Exception while checking for workout comparison: {e}")
         return None
     
 def getWorkoutComparison(user_id: str | None, routine_id: str) :

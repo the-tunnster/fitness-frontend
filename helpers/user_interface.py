@@ -49,10 +49,6 @@ def setupNavigation():
 	post_workout = streamlit.Page(page="pages/strength-training/post-workout.py", title="Workout Analytics", icon=":material/candlestick_chart:")
 	historical = streamlit.Page(page="pages/strength-training/historic.py", title="Historical Analytics", icon=":material/trending_up:")
 
-# Cardio vis Strava
-	cardio = streamlit.Page(page="pages/cardio/import-data.py", title="Import Data", icon=":material/sprint:")
-	post_cardio = streamlit.Page(page="pages/cardio/post-cardio.py", title="Activity Analytics", icon=":material/trending_up:")
-
 # User Profile Management
 	profile = streamlit.Page(page="pages/user/profile.py", title="Management", icon=":material/account_box:")
 
@@ -62,7 +58,6 @@ def setupNavigation():
 			"Exercises": [editor, adder],
 			"Routines": [manager, creator],
 			"Strength Training": [workout, post_workout, historical],
-			"Strava": [cardio, post_cardio],
 			"User Account": [profile]
 		},
 		position="sidebar",
@@ -81,4 +76,4 @@ def accessControlWarning():
 def getInTouch():
 	col1, col2 = streamlit.columns([1, 1])
 	col1.link_button(label="Instagram DM", url="https://www.instagram.com/the_tunnster/", icon=":material/chat:")
-	col2.link_button(label="Call", url="tel:+61493648088", icon=":material/add_call:")
+	col2.link_button(label="Call", url="tel:+918767236939", icon=":material/add_call:")
