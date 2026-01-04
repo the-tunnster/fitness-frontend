@@ -1,4 +1,5 @@
 import streamlit
+from datetime import datetime, date
 
 from models.user import FullUser
 
@@ -39,7 +40,15 @@ with streamlit.form("user_profile", enter_to_submit=False):
     user_name = streamlit.text_input(label="user_name", value=user_data.username)
     email_id = streamlit.text_input(label="email_id", value=user_data.email, disabled=True)
     gender = streamlit.selectbox(label="gender", options=["male", "female"], index=gender_index)
-    date_of_birth = streamlit.date_input(label="date_of_birth", value=user_data.date_of_birth)
+    raw_dob = user_data.date_of_birth
+    try:
+        dob_value = datetime.fromisoformat(str(raw_dob).replace("Z", "+00:00")).date()
+    except Exception:
+        try:
+            dob_value = date.fromisoformat(str(raw_dob).split("T")[0])
+        except Exception:
+            dob_value = date.today()
+    date_of_birth = streamlit.date_input(label="date_of_birth", value=dob_value)
     height = streamlit.number_input(label="height", value=user_data.height)
     weight = streamlit.number_input(label="weight", value=user_data.weight)
     unit_preference = streamlit.selectbox(label="unit_preference", options=["metric", "freedom"], index=unit_preference_index)
