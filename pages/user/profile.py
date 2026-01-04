@@ -33,7 +33,7 @@ if user_data.clearance_level < 1:
 
 with streamlit.form("user_profile", enter_to_submit=False):
     gender_index = 0 if user_data.gender == "male" else 1
-    user_data.date_of_birth = str(user_data.date_of_birth)
+    user_data.date_of_birth = user_data.date_of_birth
     unit_preference_index = 0 if user_data.unit_preference == "metric" else 1
 
     user_name = streamlit.text_input(label="user_name", value=user_data.username)
