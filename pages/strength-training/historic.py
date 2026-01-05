@@ -63,7 +63,11 @@ selected_exercise_data = global_exercise_list[global_exercise_names.index(select
 
 # --- Fetch processed history data ---
 if workout_count < 10 :
-    historic_data = getExerciseHistoryData('68674a2e19fc0c426e3ece85', selected_exercise_data.id)
+    demo_user_id = str(streamlit.secrets.get("demo_user_id", "")).strip()
+    if not demo_user_id:
+        streamlit.info("Demo user id is not configured. Set demo_user_id in .streamlit/secrets.toml.")
+        streamlit.stop()
+    historic_data = getExerciseHistoryData(demo_user_id, selected_exercise_data.id)
 else:
     historic_data = getExerciseHistoryData(user_data.id, selected_exercise_data.id)
 
