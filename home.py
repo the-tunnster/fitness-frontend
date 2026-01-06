@@ -3,19 +3,19 @@ import streamlit
 from database.read import getBasicUser
 from database.create import createDummyUserProfile
 
-from helpers.cache_manager import *
+from helpers.state_manager import AppState
 from helpers.user_interface import *
 
 
 uiSetup()
-initSessionState(["user_data"])
+state = AppState()
 
 if not streamlit.user.is_logged_in:
     streamlit.title("Welcome.", anchor=False)
     streamlit.warning("You'll need to log in to continue. (It's in the sidebar)")
     streamlit.stop()
 
-if streamlit.session_state["user_data"] is None:
+if state.user is None:
     user_data = getBasicUser(str(streamlit.user.email))
 
     if user_data is None:
@@ -25,7 +25,7 @@ if streamlit.session_state["user_data"] is None:
         if result:
             streamlit.cache_data.clear()
             user_data = getBasicUser(str(streamlit.user.email))
-            streamlit.session_state["user_data"] = user_data
+            state.user = user_data
             streamlit.info("A dummy profile has been created. Feel free to update the information as you see fit.")
 
         else:
@@ -33,9 +33,9 @@ if streamlit.session_state["user_data"] is None:
             streamlit.stop()
 
     else:
-        streamlit.session_state["user_data"] = user_data
+        state.user = user_data
 
-user_data = streamlit.session_state["user_data"]
+user_data = state.user
 
 streamlit.title(f"Welcome, {user_data.username}!", anchor=False)
 
