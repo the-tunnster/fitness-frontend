@@ -3,7 +3,7 @@ from typing import Optional, List, Any
 from dataclasses import dataclass, field
 
 # --- IMPORTS ---
-from models.user import BasicUser
+from models.user import BasicUser, FullUser
 from models.session import WorkoutSession
 # from models.routines import FullRoutine (If needed later)
 
@@ -44,6 +44,7 @@ class AppState:
     
     # --- Constants ---
     KEY_USER = "user_data"
+    KEY_USER_FULL = "user_full_data"
     KEY_ROUTINE_CREATOR = "routine_creator_data"
     KEY_ROUTINE_EDITOR = "routine_editor_data"
     KEY_WORKOUT_SESSION = "workout_session_data"
@@ -53,6 +54,7 @@ class AppState:
 
     def __init__(self):
         self._ensure_key(self.KEY_USER, None)
+        self._ensure_key(self.KEY_USER_FULL, None)
         # Initialize builders as None; pages will create them if needed
         self._ensure_key(self.KEY_ROUTINE_CREATOR, None)
         self._ensure_key(self.KEY_ROUTINE_EDITOR, None)
@@ -74,6 +76,14 @@ class AppState:
     @user.setter
     def user(self, value: Optional[BasicUser]):
         st.session_state[self.KEY_USER] = value
+
+    @property
+    def full_user(self) -> Optional[FullUser]:
+        return st.session_state[self.KEY_USER_FULL]
+    
+    @full_user.setter
+    def full_user(self, value: Optional[FullUser]):
+        st.session_state[self.KEY_USER_FULL] = value
 
     @property
     def workout_session(self) -> Optional[WorkoutSession]:
