@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-@dataclass
+@dataclass(slots=True)
 class Exercise:
     name: str
     category: str
@@ -9,19 +9,19 @@ class Exercise:
     equipment: List[str]
     id: str
 
-@dataclass
+@dataclass(slots=True)
 class WorkoutSet:
     reps: int
     weight: float
 
-@dataclass
+@dataclass(slots=True)
 class ExerciseSets:
     date: str
     equipment: str
     variation: str
     sets: List[WorkoutSet]
 
-@dataclass
+@dataclass(slots=True)
 class ExerciseHistory:
     id: str
     user_id: str

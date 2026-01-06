@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-@dataclass
+@dataclass(slots=True)
 class FullUser:
     id: str
     email: str
@@ -14,7 +14,7 @@ class FullUser:
     strava_access_token: str
     strava_refresh_token: str
 
-@dataclass
+@dataclass(slots=True)
 class BasicUser:
     id: str
     username: str

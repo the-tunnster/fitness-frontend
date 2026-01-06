@@ -1,20 +1,20 @@
 from dataclasses import dataclass
 from typing import List
 
-@dataclass
+@dataclass(slots=True)
 class Routine:
     user_id: str
     name: str
     id: str
 
-@dataclass
+@dataclass(slots=True)
 class RoutineExercise:
     exercise_id: str
     name: str
     target_sets: int
     target_reps: int
 
-@dataclass
+@dataclass(slots=True)
 class FullRoutine:
     id: str
     user_id: str

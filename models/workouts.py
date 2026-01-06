@@ -1,24 +1,24 @@
 from dataclasses import dataclass
 from typing import Optional, List
 
-@dataclass
+@dataclass(slots=True)
 class Workout:
     id: Optional[str]
     user_id: Optional[str]
     routine_id: Optional[str]
     workout_date: str
 
-@dataclass
+@dataclass(slots=True)
 class WorkoutSet:
     reps: int
     weight: float
 
-@dataclass
+@dataclass(slots=True)
 class WorkoutExercise:
     sets: List[WorkoutSet]
     exercise_id: Optional[str]
 
-@dataclass
+@dataclass(slots=True)
 class FullWorkout:
     user_id: Optional[str]
     routine_id: Optional[str]
