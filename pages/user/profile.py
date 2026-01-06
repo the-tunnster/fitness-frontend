@@ -3,10 +3,10 @@ from datetime import datetime, date
 
 from models.user import FullUser
 
-from database.read import getFullUser
+from database.read import getFullUser, getBasicUser
 from database.update import updateUserProfile
 
-from helpers.cache_manager import *
+from helpers.state_manager import AppState
 from helpers.user_interface import *
 
 
@@ -14,7 +14,7 @@ if not streamlit.user.is_logged_in:
     streamlit.switch_page("home.py")
 
 uiSetup()
-initSessionState(["user_data"])
+state = AppState()
 
 streamlit.title("Profile Management.", anchor=False)
 streamlit.markdown("""
@@ -23,14 +23,14 @@ Feel free to leave these values as they are, I chose dummy values. </br>
 However, if you wish to update these, try to have them as accurate as possible. </br>
 """, unsafe_allow_html=True)
 
-user_data = getFullUser(str(streamlit.user.email))
-if user_data is None:
-    streamlit.stop()
-
-if user_data.clearance_level < 1:
-    accessControlWarning()
-    getInTouch()
-    streamlit.stop()
+user_data: FullUser
+if state.full_user is None:
+    state.full_user = getFullUser(str(streamlit.user.email))
+    if state.full_user is None or state.full_user.clearance_level < 1:
+        accessControlWarning()
+        getInTouch()
+        streamlit.stop()
+user_data = state.full_user
 
 with streamlit.form("user_profile", enter_to_submit=False):
     gender_index = 0 if user_data.gender == "male" else 1
@@ -69,10 +69,10 @@ with streamlit.form("user_profile", enter_to_submit=False):
             strava_refresh_token="",
             id=""
         )
-        result = updateUserProfile(updated_user, user_data.id) # type: ignore
+        result = updateUserProfile(updated_user, user_data.id)
         if result == True:
             streamlit.success("Updated user profile!")
             streamlit.cache_data.clear()
-            streamlit.session_state["user_data"] = getFullUser(str(streamlit.user.email))
+            state.user = getBasicUser(str(streamlit.user.email))
         else:
             streamlit.error("Couldn't update profile...")
