@@ -111,7 +111,6 @@ if is_workout_active and workout_session_data:
 
     # If the index is out of bounds (e.g. -1), default to 0
     box_index = current_exercise_index if current_exercise_index >= 0 and current_exercise_index < len(workout_session_data.exercises) else 0
-    print(box_index)
 
     selected_exercise = streamlit.selectbox(
         label="Select An Exercise",
