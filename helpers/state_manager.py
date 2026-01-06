@@ -140,7 +140,6 @@ class AppState:
         self.workout_session = None
         self.current_exercise_index = 0
         self.is_add_dialog_open = False
-        self.workout_exercise_selection = None
 
     # --- Helper Actions ---
 
