@@ -1,10 +1,10 @@
 import streamlit
 
-from helpers.cache_manager import *
+from helpers.state_manager import AppState
 from helpers.user_interface import *
 
 from database.read import getBasicUser, getRoutinesList, getWorkoutSessionData
-from database.read import getExerciseList, getExerciseNames, getExerciseData
+from database.read import getExerciseList, getExerciseData
 
 from database.create import createWorkout, createWorkoutSession
 from database.delete import deleteSession
@@ -17,35 +17,34 @@ if not streamlit.user.is_logged_in:
     streamlit.switch_page("home.py")
 
 uiSetup()
-initSessionState(["user_data", "workout_session_data", "current_exercise_index", "add_exercise_dialog"])
+state = AppState()
 
 streamlit.title("Workout Recorder", anchor=False)
 
 workout_session_data: WorkoutSession | None
 
 user_data: BasicUser
-if streamlit.session_state["user_data"] is None:
-    streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
-user_data = streamlit.session_state["user_data"]
-    
-if user_data.clearance_level < 1:
-    accessControlWarning()
-    getInTouch()
-    streamlit.stop()
+if state.user is None:
+    state.user = getBasicUser(str(streamlit.user.email))
+    if state.user is None or state.user.clearance_level < 1:
+        accessControlWarning()
+        getInTouch()
+        streamlit.stop()
+user_data = state.user
 
-if streamlit.session_state["workout_session_data"] is None:
+if state.workout_session is None:
     workout_session_data = getWorkoutSessionData(user_data.id)
     if workout_session_data is not None:
-        streamlit.session_state["workout_session_data"] = workout_session_data
-        streamlit.session_state["current_exercise_index"] = workout_session_data.exercise_index
+        state.workout_session = workout_session_data
+        state.current_exercise_index = workout_session_data.exercise_index
     else:
-        streamlit.session_state["workout_session_data"] = None
-        streamlit.session_state["current_exercise_index"] = -1
+        state.workout_session = None
+        state.current_exercise_index = -1
 else:
-    workout_session_data = streamlit.session_state["workout_session_data"]
+    workout_session_data = state.workout_session
 
-if streamlit.session_state["add_exercise_dialog"] is None:
-    streamlit.session_state["add_exercise_dialog"] = False
+if state.is_add_dialog_open:
+    state.is_add_dialog_open = False
 
 @streamlit.dialog("Add an Exercise to your Workout")
 def addExerciseDialog():
@@ -66,68 +65,66 @@ def addExerciseDialog():
         )
     
         if streamlit.form_submit_button("Add exercise", use_container_width=True):
+            if state.workout_session is None:
+                streamlit.error("No active workout session.")
+                return 
+
             selected_exercise_data = global_exercise_list[global_exercise_names.index(selected_exercise_name)]
             new_exercise = WorkoutExercise(
                 exercise_id=selected_exercise_data.id,
                 variation="None",
                 equipment="None",
-                sets=[WorkoutSet(reps=8, weight=0.0), WorkoutSet(reps=8, weight=0.0), WorkoutSet(reps=8, weight=0.0)]
+                sets=[WorkoutSet(reps=8, weight=0.0), WorkoutSet(reps=8, weight=0.0), WorkoutSet(reps=8, weight=0.0)],
+                name=selected_exercise_data.name
             )
-            streamlit.session_state["workout_session_data"].exercises.append(new_exercise)
+            state.workout_session.add_exercise(new_exercise)
+            state.current_exercise_index = state.workout_session.exercise_index
 
-            streamlit.session_state["current_exercise_index"] = len(streamlit.session_state["workout_session_data"].exercises) - 1
-
-            if updateWorkoutSession(streamlit.session_state["workout_session_data"]):
+            if updateWorkoutSession(state.workout_session):
                 streamlit.rerun()
 
 def switchExerciseCallback():
-    selected_exercise_identifier = streamlit.session_state["active_exercise_select"]
+    selection = state.workout_exercise_selection
 
-    if selected_exercise_identifier == "Add New Exercise...":
-        streamlit.session_state["add_exercise_dialog"] = True
+    if selection == "Add New Exercise...":
+        state.is_add_dialog_open = True
         return
-
-    current_workout: WorkoutSession = streamlit.session_state["workout_session_data"]
-
-    # Create unique identifiers for each exercise (name + variation + equipment)
-    current_exercise_identifiers = [
-        f"{getExerciseNames([exercise.exercise_id])[0]} ({exercise.variation}, {exercise.equipment})"
-        for exercise in current_workout.exercises
-    ]
-
-    # Find the index of the selected exercise based on its unique identifier
-    try:
-        selected_exercise_index = current_exercise_identifiers.index(selected_exercise_identifier)
-    except ValueError:
-        streamlit.error("Selected exercise not found.")
+    
+    if state.workout_session is None:
         return
 
     # Update session state and workout session data
-    streamlit.session_state["current_exercise_index"] = selected_exercise_index
-    current_workout.exercise_index = selected_exercise_index
-    updateWorkoutSession(current_workout)
+    try:
+        selected_exercise_index = state.workout_session.exercises.index(selection)
+        state.current_exercise_index = selected_exercise_index
+        state.workout_session.exercise_index = selected_exercise_index
+        updateWorkoutSession(state.workout_session)
+    except ValueError:
+        streamlit.error("Selected exercise not found.")
 
 is_workout_active = workout_session_data is not None
 
-if is_workout_active:
-    workout_exercise_identifiers = [
-        f"{getExerciseNames([exercise.exercise_id])[0]} ({exercise.variation}, {exercise.equipment})"
-        for exercise in workout_session_data.exercises
-    ]
+if is_workout_active and workout_session_data:
+    options = workout_session_data.exercises + ["Add New Exercise..."]
 
-    current_exercise_index: int = streamlit.session_state["current_exercise_index"]
+    current_exercise_index: int = state.current_exercise_index
 
-    selected_exercise_identifier = streamlit.selectbox(
+    # If the index is out of bounds (e.g. -1), default to 0
+    box_index = current_exercise_index if current_exercise_index >= 0 and current_exercise_index < len(workout_session_data.exercises) else 0
+    print(box_index)
+
+    selected_exercise = streamlit.selectbox(
         label="Select An Exercise",
-        options=workout_exercise_identifiers + ["Add New Exercise..."],
-        index=current_exercise_index,
+        options=options,
+        index=box_index,
+        format_func=lambda x: x.display_name if isinstance(x, WorkoutExercise) else x,
         on_change=switchExerciseCallback,
-        key="active_exercise_select"
+        key="workout_exercise_selection"
     )
 
-    if streamlit.session_state["add_exercise_dialog"]:
+    if state.is_add_dialog_open:
         addExerciseDialog()
-        streamlit.session_state["add_exercise_dialog"] = False
+        state.is_add_dialog_open = False
 
     current_exercise = workout_session_data.exercises[current_exercise_index]
     
@@ -182,7 +179,8 @@ if is_workout_active:
                         min_value=0.0,
                         step=0.5,
                         key=f"weight_{current_exercise.exercise_id}_{set_index}",
-                        label_visibility="collapsed"
+                        label_visibility="collapsed",
+                        help="Barbell + Plates = Total, Dumbbells/Kettlebells = Individual"
                     )
 
             streamlit.markdown("---")
@@ -190,23 +188,20 @@ if is_workout_active:
             col_add_set, col_drop_set, col_update_info = streamlit.columns([1, 1, 1])
 
             if col_add_set.form_submit_button("Add", use_container_width=True, icon=":material/add:"):
-                current_exercise.sets.append(
-                    WorkoutSet(reps=current_exercise.sets[0].reps if current_exercise.sets else 8, weight=0.0)
+                current_exercise.add_set(
+                    reps=current_exercise.sets[0].reps if current_exercise.sets else 8, weight=0.0
                 )
-                if updateWorkoutSession(streamlit.session_state["workout_session_data"]):
+                if updateWorkoutSession(workout_session_data):
                     streamlit.rerun()
                 else:
                     streamlit.error("Failed to update session information.")
 
-            if col_drop_set.form_submit_button("Drop", use_container_width=True, icon=":material/delete:"):
-                if current_exercise.sets:
-                    current_exercise.sets.pop() 
-                    if updateWorkoutSession(streamlit.session_state["workout_session_data"]):
-                        streamlit.rerun()
-                    else:
-                        streamlit.error("Failed to update session information.")
+            if col_drop_set.form_submit_button("Drop", use_container_width=True, icon=":material/remove:"):
+                current_exercise.drop_set()
+                if updateWorkoutSession(workout_session_data):
+                    streamlit.rerun()
                 else:
-                    streamlit.warning("No sets to drop.")
+                    streamlit.error("Failed to update session information.")
 
             if col_update_info.form_submit_button("Update", use_container_width=True, icon=":material/upgrade:"):
                 if updateWorkoutSession(workout_session_data):
@@ -221,17 +216,21 @@ if is_workout_active:
     with col_end_workout.expander("Finish Workout", expanded=False, icon=":material/save:"):
         streamlit.warning("This will commit your routine to disk.")
         if streamlit.button("Confirm", key="finish-workout-btn"):
-            result = updateWorkoutSession(streamlit.session_state["workout_session_data"])
+            result = updateWorkoutSession(workout_session_data)
             if not result:
                 streamlit.error("Something broke...")
                 streamlit.stop()
 
-            workoutID = createWorkout(streamlit.session_state["workout_session_data"].id, user_data.id)
+            if not workout_session_data.id:
+                streamlit.error("Session ID is invalid.")
+                streamlit.stop()
+
+            workoutID = createWorkout(workout_session_data.id, user_data.id)
             if workoutID is None:
                 streamlit.error("Couldn't save workout.")
                 streamlit.stop()
 
-            result = deleteSession(streamlit.session_state["workout_session_data"].id)
+            result = deleteSession(workout_session_data.id)
             if not result:
                 streamlit.error("Couldn't clear session data.")
                 streamlit.stop()
@@ -239,25 +238,29 @@ if is_workout_active:
             updateExerciseHistory(user_data.id, workoutID)
 
             streamlit.success("Workout saved to disk. Re-directing!")
-            clearSessionVariable(["workout_session_data", "current_exercise_index", "add_exercise_dialog", "workout_exercise_selection"])
+            state.reset_workout_state()
             streamlit.switch_page("pages/strength-training/post-workout.py")
 
 
     with col_cancel_workout.expander("Cancel Workout", expanded=False, icon=":material/cancel:"):
         streamlit.warning("This will erase your current progress.")
         if streamlit.button("Confirm", key="cancel-workout-btn"):
-            result = updateWorkoutSession(streamlit.session_state["workout_session_data"])
+            result = updateWorkoutSession(workout_session_data)
             if not result:
                 streamlit.error("Something broke...")
                 streamlit.stop()
 
-            result = deleteSession(streamlit.session_state["workout_session_data"].id)
+            if not workout_session_data.id:
+                 streamlit.error("Invalid session ID")
+                 streamlit.stop()
+
+            result = deleteSession(workout_session_data.id)
             if not result:
                 streamlit.error("Couldn't clear session data.")
                 streamlit.stop()
 
             streamlit.success("Workout cancelled. All progress discarded!")
-            clearSessionVariable(["workout_session_data", "current_exercise_index", "add_exercise_dialog", "workout_exercise_selection"])
+            state.reset_workout_state()
             streamlit.rerun()             
 
 else:
@@ -268,7 +271,7 @@ else:
         streamlit.info("You don't seem to have any routines set up. Please create one to access it here.")
         streamlit.stop()
 
-    user_routine_names: List[str] = ["None"] + [routine.name for routine in user_routines]
+    user_routine_names: list[str] = ["None"] + [routine.name for routine in user_routines]
 
     selected_routine_name: str = streamlit.selectbox(
         label="Select a routine",
@@ -286,8 +289,8 @@ else:
 
             new_workout_session = createWorkoutSession(user_data.id, routine_id)
             if new_workout_session:
-                streamlit.session_state["workout_session_data"] = getWorkoutSessionData(user_data.id)
-                streamlit.session_state["current_exercise_index"] = 0
+                state.workout_session = getWorkoutSessionData(user_data.id)
+                state.current_exercise_index = 0
                 streamlit.rerun()
             else:
                 streamlit.error("Failed to start workout session. Please try again.")

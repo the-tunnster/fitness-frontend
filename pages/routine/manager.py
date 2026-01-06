@@ -1,190 +1,136 @@
 import streamlit
-from typing import Any
-
-from models.user import BasicUser
-from models.routines import RoutineExercise, FullRoutine
-
-from helpers.cache_manager import *
+from helpers.state_manager import AppState, BuilderExercise
 from helpers.user_interface import *
-
 from database.read import getBasicUser, getExerciseList, getExerciseIDs, getRoutinesList, getRoutineData
 from database.update import updateUserRoutine
 from database.delete import deleteRoutine
-
+from models.routines import RoutineExercise, FullRoutine
 
 if not streamlit.user.is_logged_in:
     streamlit.switch_page("home.py")
 
 uiSetup()
-initSessionState(["user_data", "routine_editor_data"])
-
+state = AppState()
 streamlit.title("Routine Management", anchor=False)
-streamlit.write("""This is where you'll manage existing routines and their set-ups.<br>
-Select a routine to get started.<br>
-""", unsafe_allow_html=True)
 
-user_data: BasicUser
-if streamlit.session_state["user_data"] is None:
-    streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
-user_data = streamlit.session_state["user_data"]
-
-if user_data.clearance_level < 1:
+# --- Auth ---
+if state.user is None:
+    state.user = getBasicUser(str(streamlit.user.email))
+if state.user is None or state.user.clearance_level < 1:
     accessControlWarning()
-    getInTouch()
+    streamlit.stop()
+user_data = state.user
+
+# --- Load State (Rich Object) ---
+routine_editor = state.get_or_create_routine_editor()
+
+# --- Routine Selection Logic ---
+user_routines = getRoutinesList(user_id=user_data.id) or []
+if not user_routines:
+    streamlit.info("No routines found.")
     streamlit.stop()
 
-if streamlit.session_state["routine_editor_data"] is None:
-    streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": "None"}
-routine_editor_data = streamlit.session_state["routine_editor_data"]
+routine_names = ["None"] + [r.name for r in user_routines]
+selected_name = streamlit.selectbox("Select Routine", options=routine_names)
 
-routine_editor_exercises: list[dict[str, Any]] = streamlit.session_state["routine_editor_data"]["exercises"]
-
-global_exercise_names: list[str] | None = None
-global_exercise_list = getExerciseList()
-
-if global_exercise_list is not None:
-    global_exercise_names = [exercise.name for exercise in global_exercise_list]
-else:
-    global_exercise_list = []
-    global_exercise_names = []
-
-user_routines_list = getRoutinesList(user_id=user_data.id)
-if user_routines_list is None or user_routines_list == []:
-    streamlit.info("You don't seem to have any routines set up. Please create one to access it here.")
+# Reset state if selection changes
+if selected_name == "None":
+    if routine_editor.name != "None":
+        state.clear_keys([state.KEY_ROUTINE_EDITOR])
     streamlit.stop()
+
+if routine_editor.name != selected_name:
+    # Load new routine from DB into State Object
+    routine_editor.clear() # Reset
+    routine_editor.name = selected_name
     
-user_routine_names = ["None"] + [routine.name for routine in user_routines_list]
+    # Find ID and fetch full data
+    r_index = routine_names.index(selected_name)
+    r_id = user_routines[r_index - 1].id
+    full_data = getRoutineData(user_data.id, r_id)
+    
+    if full_data:
+        # Map DB model to View Model
+        for ex in full_data.exercises:
+            routine_editor.exercises.append(
+                BuilderExercise(name=ex.name, sets=ex.target_sets, reps=ex.target_reps)
+            )
+    else:
+        streamlit.error("Could not load routine.")
 
-selected_routine_name = streamlit.selectbox(
-    label="Select a routine",
-    options=user_routine_names,
-    index=0,
-    label_visibility="collapsed"
-)
-
-if selected_routine_name == "None":
-    streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": "None"}
-    routine_editor_exercises = streamlit.session_state["routine_editor_data"]["exercises"]
-    streamlit.stop()
-
-if streamlit.session_state["routine_editor_data"]["name"] != selected_routine_name:
-    streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": selected_routine_name}
-    routine_editor_exercises = streamlit.session_state["routine_editor_data"]["exercises"]
-
-selected_routine_index = user_routine_names.index(selected_routine_name)
-selected_routine = user_routines_list[selected_routine_index - 1]
-
-full_user_routine = getRoutineData(user_data.id, selected_routine.id)
-if full_user_routine is None:
-    streamlit.error("Failed to load routine data. Please try again.")
-    streamlit.session_state["routine_editor_data"] = {"exercises": [], "name": selected_routine_name}
-    routine_editor_exercises = streamlit.session_state["routine_editor_data"]["exercises"]
-    streamlit.stop()
-
-if not routine_editor_exercises :
-    for ex in full_user_routine.exercises:
-        routine_editor_exercises.append({
-            "name": ex.name,
-            "sets": ex.target_sets,
-            "reps": ex.target_reps,
-            "remove": False,
-        })
-    streamlit.session_state["routine_editor_data"]["exercises"] = routine_editor_exercises
+# --- Editor Form ---
+global_exercise_list = getExerciseList() or []
+global_names = [ex.name for ex in global_exercise_list] or ["None"]
 
 streamlit.caption("☑️ Select exercises to delete, then press '🗑️ Delete Selected' to remove them.")
 streamlit.divider()
 
-with streamlit.form("routine_viewer", clear_on_submit=False, border=False, enter_to_submit=False):
-    for i, exercise in enumerate(routine_editor_exercises):
-        col1, col2 = streamlit.columns([1, 1], vertical_alignment="bottom")
-        col3, col4, col5 = col2.columns([1, 1, 1], vertical_alignment="bottom")
+with streamlit.form("routine_viewer", border=False, enter_to_submit=False):
+    # Header
+    cols = streamlit.columns([2, 1, 1, 1], vertical_alignment="bottom")
+    cols[0].write("Exercise Name")
+    cols[1].write("Sets")
+    cols[2].write("Reps")
 
-        if i == 0:
-            col1.write("Exercise Name")
-            col3.write("Sets")
-            col4.write("Reps")
-
-        exercise["name"] = col1.selectbox(
-            "Exercise", options=global_exercise_names,
-            index=global_exercise_names.index(exercise["name"]) if exercise["name"] in global_exercise_names else 0,
-            key=f"name_{i}", label_visibility="collapsed"
+    for i, exercise in enumerate(routine_editor.exercises):
+        c1, c2, c3, c4 = streamlit.columns([2, 1, 1, 1], vertical_alignment="bottom")
+        
+        exercise.name = c1.selectbox(
+            "Exercise", options=global_names,
+            index=global_names.index(exercise.name) if exercise.name in global_names else 0,
+            key=f"e_name_{i}", label_visibility="collapsed"
         )
-
-        exercise["sets"] = col3.number_input(
-            "Sets", min_value=1, value=exercise["sets"], step=1,
-            key=f"sets_{i}", label_visibility="collapsed"
-        )
-
-        exercise["reps"] = col4.number_input(
-            "Reps", min_value=1, value=exercise["reps"], step=1,
-            key=f"reps_{i}", label_visibility="collapsed"
-        )
-
-        exercise["remove"] = col5.checkbox(
-            "Remove", value=exercise.get("remove", False),
-            key=f"remove_{i}", label_visibility="collapsed"
-        )
-
+        exercise.sets = c2.number_input("Sets", min_value=1, value=exercise.sets, key=f"e_sets_{i}", label_visibility="collapsed")
+        exercise.reps = c3.number_input("Reps", min_value=1, value=exercise.reps, key=f"e_reps_{i}", label_visibility="collapsed")
+        exercise.remove = c4.checkbox("Remove", value=exercise.remove, key=f"e_rem_{i}", label_visibility="collapsed")
+    
     streamlit.divider()
-    col_add, col_delete, col_save = streamlit.columns([1, 1, 1])
-
-    if col_add.form_submit_button("Add", icon=":material/add:", use_container_width=True):
-        routine_editor_exercises.append({
-            "name": global_exercise_names[0],
-            "sets": 3,
-            "reps": 10,
-            "remove": False,
-        })
+    c_add, c_del, c_save = streamlit.columns(3)
+    
+    if c_add.form_submit_button("Add", icon=":material/add:", use_container_width=True):
+        routine_editor.add_exercise(default_name=global_names[0])
         streamlit.rerun()
 
-    if col_delete.form_submit_button("Remove", icon=":material/delete:", use_container_width=True):
-        routine_editor_data["exercises"] = [ex for ex in routine_editor_exercises if not ex.get("remove", False)]
+    if c_del.form_submit_button("Remove", icon=":material/delete:", use_container_width=True):
+        routine_editor.remove_flagged()
         streamlit.rerun()
 
-    if col_save.form_submit_button("Save", icon=":material/save:", use_container_width=True):
-
-        names = [ex["name"] for ex in routine_editor_data["exercises"]]
+    if c_save.form_submit_button("Save", icon=":material/save:", use_container_width=True):
+        # Re-fetch ID
+        r_index = routine_names.index(selected_name)
+        r_id = user_routines[r_index - 1].id
+        
+        names = [ex.name for ex in routine_editor.exercises]
         ids = getExerciseIDs(names)
-
-        updated_exercises: list[RoutineExercise] = []
-
-        for idx, ex in enumerate(routine_editor_data["exercises"]):
-            updated_exercises.append(
-                RoutineExercise(
-                    exercise_id=ids[idx],
-                    name=ex["name"],
-                    target_sets=ex["sets"],
-                    target_reps=ex["reps"]
-                )
-            )
-
-        updated_routine = FullRoutine(
-            id=full_user_routine.id,
-            user_id=user_data.id,                                                                                         #type: ignore
-            name=full_user_routine.name,
-            exercises=updated_exercises,
-        )
-
-        result = updateUserRoutine(user_data, updated_routine)
-        if result:
-            streamlit.success("Routine saved!")
-            del streamlit.session_state["routine_editor_data"], routine_editor_data, routine_editor_exercises
+        
+        updated_exercises = [
+            RoutineExercise(exercise_id=ids[i], name=ex.name, target_sets=ex.sets, target_reps=ex.reps)
+            for i, ex in enumerate(routine_editor.exercises)
+        ]
+        
+        updated_routine = FullRoutine(id=r_id, user_id=user_data.id, name=routine_editor.name, exercises=updated_exercises)
+        
+        if updateUserRoutine(user_data, updated_routine):
+            streamlit.success("Saved!")
+            state.clear_keys([state.KEY_ROUTINE_EDITOR])
+            streamlit.rerun()
         else:
-            streamlit.error("That didn't work.")
+            streamlit.error("Save failed.")
 
+# --- Deletion Section ---
 with streamlit.expander("Delete This Routine", expanded=False, icon=":material/delete:"):
     streamlit.warning("This action is technically reversible, but it is a hassle to re-create a whole new routine.")
 
-    confirm_delete = streamlit.checkbox("I understand and want to delete this routine")
-
-    if confirm_delete:
+    if streamlit.checkbox("I understand and want to delete this routine"):
         if streamlit.button("Delete Routine", type="primary"):
-            result = deleteRoutine(user_data.id, selected_routine.id)
-
-            if result:
+            # Fetch ID (must calculate again as it's outside the form scope)
+            r_index = routine_names.index(selected_name)
+            r_id = user_routines[r_index - 1].id
+            
+            if deleteRoutine(user_data.id, r_id):
                 streamlit.success("Deleted Routine")
-                clearSessionVariable(["routine_editor_data"])
-                routine_editor_data, routine_editor_exercises = [], []
+                # Clear the editor state so it doesn't try to load the deleted routine
+                state.clear_keys([state.KEY_ROUTINE_EDITOR])
                 streamlit.rerun()
             else:
                 streamlit.error("That didn't work.")

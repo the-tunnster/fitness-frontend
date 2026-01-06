@@ -1,147 +1,112 @@
 import streamlit
-
-from helpers.cache_manager import *
+from helpers.state_manager import AppState
 from helpers.user_interface import *
-
 from database.read import getBasicUser, getExerciseList, getExerciseIDs
 from database.create import createUserRoutine
-
-from models.user import BasicUser
 from models.routines import RoutineExercise, FullRoutine
-
 
 if not streamlit.user.is_logged_in:
     streamlit.switch_page("home.py")
 
 uiSetup()
-initSessionState(["user_data", "routine_creator_data"])
+state = AppState()
 
-streamlit.title("Routine Creation", anchor=False)
-streamlit.write("Design your workout routines from scratch.")
-
-streamlit.divider()
-
-user_data: BasicUser
-if streamlit.session_state["user_data"] is None:
-    streamlit.session_state["user_data"] = getBasicUser(str(streamlit.user.email))
-user_data = streamlit.session_state["user_data"]
-
-if user_data.clearance_level < 1:
+# --- Auth Check ---
+if state.user is None:
+    state.user = getBasicUser(str(streamlit.user.email))
+if state.user is None or state.user.clearance_level < 1:
     accessControlWarning()
     getInTouch()
     streamlit.stop()
+user_data = state.user
 
-if streamlit.session_state["routine_creator_data"] is None:
-    streamlit.session_state["routine_creator_data"] = {
-        "exercises": [],
-        "name": "",
-        "description": ""
-    }
+streamlit.title("Routine Creation", anchor=False)
+streamlit.divider()
 
-routine_creator_data = streamlit.session_state["routine_creator_data"]
-routine_creator_exercises = routine_creator_data["exercises"]
+# --- Load State (Rich Object) ---
+# Use the helper to ensure we get a valid RoutineBuilder object
+routine = state.get_or_create_routine_creator()
 
-routine_creator_data["name"] = streamlit.text_input(
+# --- UI Logic ---
+routine.name = streamlit.text_input(
     label="Routine Name",
-    value=routine_creator_data.get("name", ""),
-    label_visibility="collapsed",
-    placeholder="Routine Name"
+    value=routine.name,
+    placeholder="Routine Name",
+    label_visibility="collapsed"
 )
 
-global_exercise_names: list[str] | None = None
-global_exercise_list = getExerciseList()
+# Fetch global list for the dropdowns
+global_exercise_list = getExerciseList() or []
+global_exercise_names = [ex.name for ex in global_exercise_list] or ["None"]
 
-if global_exercise_list is not None:
-    global_exercise_names = [exercise.name for exercise in global_exercise_list]
-else:
-    global_exercise_list = []
-    global_exercise_names = []
+with streamlit.form("routine_creator_form", clear_on_submit=False, enter_to_submit=False, border=False):
+    # Header
+    cols = streamlit.columns([2, 1, 1, 1], vertical_alignment="bottom")
+    cols[0].write("Exercise Name")
+    cols[1].write("Sets")
+    cols[2].write("Reps")
 
-with streamlit.form("routine_creator_form", clear_on_submit=False, border=False, enter_to_submit=False):
-    for i, exercise in enumerate(routine_creator_exercises):
-        col1, col2 = streamlit.columns([2, 1], vertical_alignment="bottom")
-        col3, col4, col5 = col2.columns([1, 1, 1], vertical_alignment="bottom")
-
-        if i == 0:
-            col1.write("Exercise Name")
-            col3.write("Sets")
-            col4.write("Reps")
-
-        exercise["name"] = col1.selectbox(
-            label="Exercise", options=global_exercise_names,
-            index=global_exercise_names.index(exercise["name"]) if exercise["name"] in global_exercise_names else 0,
-            key=f"name_creator_{i}", label_visibility="collapsed"
+    # Render Rows
+    for i, exercise in enumerate(routine.exercises):
+        c1, c2, c3, c4 = streamlit.columns([2, 1, 1, 1], vertical_alignment="bottom")
+        
+        # Object-Oriented Access (No dictionary keys!)
+        exercise.name = c1.selectbox(
+            "Exercise", options=global_exercise_names,
+            index=global_exercise_names.index(exercise.name) if exercise.name in global_exercise_names else 0,
+            key=f"c_name_{i}", label_visibility="collapsed"
+        )
+        exercise.sets = c2.number_input(
+            "Sets", min_value=1, value=exercise.sets, key=f"c_sets_{i}", label_visibility="collapsed"
+        )
+        exercise.reps = c3.number_input(
+            "Reps", min_value=1, value=exercise.reps, key=f"c_reps_{i}", label_visibility="collapsed"
+        )
+        exercise.remove = c4.checkbox(
+            "Remove", value=exercise.remove, key=f"c_rem_{i}", label_visibility="collapsed"
         )
 
-        exercise["sets"] = col3.number_input(
-            "Sets", min_value=1, value=exercise["sets"], step=1,
-            key=f"sets_creator_{i}", label_visibility="collapsed"
-        )
-
-        exercise["reps"] = col4.number_input(
-            "Reps", min_value=1, value=exercise["reps"], step=1,
-            key=f"reps_creator_{i}", label_visibility="collapsed"
-        )
-
-        exercise["remove"] = col5.checkbox(
-            "Remove", value=exercise.get("remove", False),
-            key=f"remove_creator_{i}", label_visibility="collapsed",
-            width="stretch"
-        )
-
-    col_add, col_delete, col_save = streamlit.columns([1, 1, 1])
+    # Actions
+    col_add, col_del, col_save = streamlit.columns(3)
 
     if col_add.form_submit_button("Add", icon=":material/add:", use_container_width=True):
-        routine_creator_exercises.append({
-            "name": global_exercise_names[0],
-            "sets": 3,
-            "reps": 10,
-            "remove": False,
-        })
+        # Method call instead of manual append
+        routine.add_exercise(default_name=global_exercise_names[0])
         streamlit.rerun()
 
-    if col_delete.form_submit_button("Remove", icon=":material/delete:", use_container_width=True):
-        routine_creator_data["exercises"] = [ex for ex in routine_creator_exercises if not ex.get("remove", False)]
+    if col_del.form_submit_button("Remove", icon=":material/delete:", use_container_width=True):
+        # Method call instead of list comprehension
+        routine.remove_flagged()
         streamlit.rerun()
 
     if col_save.form_submit_button("Save", icon=":material/save:", use_container_width=True):
-        if not routine_creator_data["name"]:
+        if not routine.name:
             streamlit.error("Routine name is required.")
-        elif len(routine_creator_data["exercises"]) == 0:
-            streamlit.error("Please add at least one exercise.")
+        elif not routine.exercises:
+            streamlit.error("Add at least one exercise.")
         else:
-            names = [ex["name"] for ex in routine_creator_data["exercises"]]
+            # Conversion logic
+            names = [ex.name for ex in routine.exercises]
             ids = getExerciseIDs(names)
-
-            new_exercises: List[RoutineExercise] = []
-
-            for idx, ex in enumerate(routine_creator_data["exercises"]):
-                new_exercises.append(
-                    RoutineExercise(
-                        exercise_id=ids[idx],
-                        name=ex["name"],
-                        target_sets=ex["sets"],
-                        target_reps=ex["reps"]
-                    )
-                )
-
+            new_exercises = [
+                RoutineExercise(
+                    exercise_id=ids[idx], name=ex.name, 
+                    target_sets=ex.sets, target_reps=ex.reps
+                ) for idx, ex in enumerate(routine.exercises)
+            ]
+            
             new_routine = FullRoutine(
-                id="",
-                user_id=user_data.id, #type: ignore
-                name=routine_creator_data["name"],
-                exercises=new_exercises
+                id="", user_id=user_data.id, name=routine.name, exercises=new_exercises
             )
 
-            result = createUserRoutine(user_data, new_routine)
-            if result:
-                streamlit.success("Routine created successfully!")
-                del streamlit.session_state["routine_creator_data"]
+            if createUserRoutine(user_data, new_routine):
+                streamlit.success("Routine Created!")
+                state.clear_keys([state.KEY_ROUTINE_CREATOR])
                 streamlit.switch_page("pages/routine/manager.py")
             else:
-                streamlit.error("That didn't work.")
+                streamlit.error("Creation failed.")
 
 streamlit.divider()
-
 if streamlit.button("Clear All", type="secondary"):
-    del streamlit.session_state["routine_creator_data"]
+    state.clear_keys([state.KEY_ROUTINE_CREATOR])
     streamlit.rerun()
