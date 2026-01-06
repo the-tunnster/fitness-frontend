@@ -124,22 +124,6 @@ def getRoutinesList(user_id: str | None) -> list[Routine] | None :
         print(f"Exception: {e}")
         return None
 
-def getRoutinesList(user_id: str | None) -> list[Routine] | None :
-    try:
-        response = requests.get(
-            url=ROUTINE_URLS["list"],
-            params={"user_id": user_id}
-        )
-
-        response.raise_for_status()
-
-        routines = [Routine(**item) for item in response.json()]
-        return routines
-
-    except Exception as e:
-        print(f"Exception: {e}")
-        return None
-
 def getRoutineData(user_id:str | None, routine_id: str | None) -> FullRoutine | None :
     try:
         response = requests.get(
@@ -219,21 +203,6 @@ def getExerciseHistoryData(user_id: str | None, exercise_id: str) -> list[dict[A
         
     except Exception as e:
         print(f"Exception while checking for history: {e}")
-        return None
-
-def getWorkoutComparison(user_id: str | None, routine_id: str) :
-    try:
-        response = requests.get(
-            url=WORKOUT_URLS["comparison"],
-            params={"user_id": user_id, "routine_id": routine_id}
-        )
-
-        response.raise_for_status()
-
-        return response.json()
-        
-    except Exception as e:
-        print(f"Exception while checking for workout comparison: {e}")
         return None
     
 def getWorkoutComparison(user_id: str | None, routine_id: str) :
