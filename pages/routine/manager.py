@@ -62,27 +62,31 @@ if routine_editor.name != selected_name:
 global_exercise_list = getExerciseList() or []
 global_names = [ex.name for ex in global_exercise_list] or ["None"]
 
-streamlit.caption("☑️ Select exercises to delete, then press '🗑️ Delete Selected' to remove them.")
+streamlit.caption("☑️ Select exercises to delete, then press 'Remove' to drop them.")
 streamlit.divider()
 
 with streamlit.form("routine_viewer", border=False, enter_to_submit=False):
+
     # Header
-    cols = streamlit.columns([2, 1, 1, 1], vertical_alignment="bottom")
-    cols[0].write("Exercise Name")
-    cols[1].write("Sets")
-    cols[2].write("Reps")
+    h1, h2 = streamlit.columns([1, 1], vertical_alignment="bottom")
+    h3, h4, h5 = h2.columns([1, 1, 1], vertical_alignment="bottom")
+    h1.write("Exercise Name")
+    h3.write("Sets")
+    h4.write("Reps")
+
 
     for i, exercise in enumerate(routine_editor.exercises):
-        c1, c2, c3, c4 = streamlit.columns([2, 1, 1, 1], vertical_alignment="bottom")
+        c1, c2 = streamlit.columns([1, 1], vertical_alignment="bottom")
+        c3, c4, c5 = c2.columns([1, 1, 1], vertical_alignment="bottom")
         
         exercise.name = c1.selectbox(
             "Exercise", options=global_names,
             index=global_names.index(exercise.name) if exercise.name in global_names else 0,
             key=f"e_name_{i}", label_visibility="collapsed"
         )
-        exercise.sets = c2.number_input("Sets", min_value=1, value=exercise.sets, key=f"e_sets_{i}", label_visibility="collapsed")
-        exercise.reps = c3.number_input("Reps", min_value=1, value=exercise.reps, key=f"e_reps_{i}", label_visibility="collapsed")
-        exercise.remove = c4.checkbox("Remove", value=exercise.remove, key=f"e_rem_{i}", label_visibility="collapsed")
+        exercise.sets = c3.number_input("Sets", min_value=1, value=exercise.sets, key=f"e_sets_{i}", label_visibility="collapsed")
+        exercise.reps = c4.number_input("Reps", min_value=1, value=exercise.reps, key=f"e_reps_{i}", label_visibility="collapsed")
+        exercise.remove = c5.checkbox("Remove", value=exercise.remove, key=f"e_rem_{i}", label_visibility="collapsed")
     
     streamlit.divider()
     c_add, c_del, c_save = streamlit.columns(3)

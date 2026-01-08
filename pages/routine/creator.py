@@ -41,28 +41,29 @@ global_exercise_names = [ex.name for ex in global_exercise_list] or ["None"]
 
 with streamlit.form("routine_creator_form", clear_on_submit=False, enter_to_submit=False, border=False):
     # Header
-    cols = streamlit.columns([2, 1, 1, 1], vertical_alignment="bottom")
-    cols[0].write("Exercise Name")
-    cols[1].write("Sets")
-    cols[2].write("Reps")
+    h1, h2 = streamlit.columns([1, 1], vertical_alignment="bottom")
+    h3, h4, h5 = h2.columns([1, 1, 1], vertical_alignment="bottom")
+    h1.write("Exercise Name")
+    h3.write("Sets")
+    h4.write("Reps")
 
     # Render Rows
     for i, exercise in enumerate(routine.exercises):
-        c1, c2, c3, c4 = streamlit.columns([2, 1, 1, 1], vertical_alignment="bottom")
+        c1, c2 = streamlit.columns([1, 1], vertical_alignment="bottom")
+        c3, c4, c5 = c2.columns([1, 1, 1], vertical_alignment="bottom")
         
-        # Object-Oriented Access (No dictionary keys!)
         exercise.name = c1.selectbox(
             "Exercise", options=global_exercise_names,
             index=global_exercise_names.index(exercise.name) if exercise.name in global_exercise_names else 0,
             key=f"c_name_{i}", label_visibility="collapsed"
         )
-        exercise.sets = c2.number_input(
+        exercise.sets = c3.number_input(
             "Sets", min_value=1, value=exercise.sets, key=f"c_sets_{i}", label_visibility="collapsed"
         )
-        exercise.reps = c3.number_input(
+        exercise.reps = c4.number_input(
             "Reps", min_value=1, value=exercise.reps, key=f"c_reps_{i}", label_visibility="collapsed"
         )
-        exercise.remove = c4.checkbox(
+        exercise.remove = c5.checkbox(
             "Remove", value=exercise.remove, key=f"c_rem_{i}", label_visibility="collapsed"
         )
 
