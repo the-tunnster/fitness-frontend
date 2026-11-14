@@ -1,6 +1,6 @@
 import os
 
-BASE_URL = os.environ.get("BACKEND_URL", "http://localhost:8080").rstrip("/")
+BASE_URL = os.environ.get("BACKEND_URL", "http://localhost:8090").rstrip("/")
 
 USER_URLS = {
 	"me": BASE_URL + "/me",

@@ -39,9 +39,9 @@ home.py         # Home page logic
    ```bash
    pip install -r requirements.txt
    ```
-4. Point the app at the backend (defaults to `http://localhost:8080`):
+4. Point the app at the backend (defaults to `http://localhost:8090`):
    ```bash
-   export BACKEND_URL=http://<backend-tailscale-ip>:8080
+   export BACKEND_URL=http://<backend-tailscale-ip>:8090
    ```
    There is no login. Access control is provided by your Tailscale network, so don't expose the app publicly.
 
