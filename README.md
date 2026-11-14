@@ -18,10 +18,10 @@ database/       # CRUD operations for database management
 helpers/        # Utility functions (e.g., cache management, UI helpers)
 models/         # Data models for exercises, routines, sessions, users, and workouts
 pages/          # Web pages grouped by functionality
-  analytics/    # Pages for viewing analytics
-  recorder/     # Pages for recording workouts
-  routine/      # Pages for managing routines
-  user/         # Pages for user profile management
+  exercise/         # Exercise creation and editing
+  routine/          # Pages for managing routines
+  strength-training/  # Workout recording and analytics
+  user/             # Pages for user profile management
 app.py          # Main application entry point
 home.py         # Home page logic
 ```
@@ -39,18 +39,18 @@ home.py         # Home page logic
    ```bash
    pip install -r requirements.txt
    ```
-4. Set up configuration files:
-   - Create a `.streamlit` folder and add a `config.toml` and `secrets.toml` file.
-   - The config file allows you to modify app behaviour from a UI perspective.
-   - The secrets file is required if you're using OIDC login. The app will crash without these details.
-
+4. Point the app at the backend (defaults to `http://localhost:8080`):
+   ```bash
+   export BACKEND_URL=http://<backend-tailscale-ip>:8080
+   ```
+   There is no login. Access control is provided by your Tailscale network, so don't expose the app publicly.
 
 ## Usage
 1. Run the application:
    ```bash
-   streamlit run app.py
+   streamlit run app.py --server.address 0.0.0.0
    ```
-2. Open your browser and navigate to `http://localhost:8501`.
+2. Open your browser and navigate to `http://<tailscale-ip>:8501`.
 3. Explore the features of the application.
 
 ## Contributing

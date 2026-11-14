@@ -2,19 +2,6 @@ import streamlit
 
 def uiSetup():
 	columnWidthHack()
-	loginLogoutStuff()
-
-
-def loginLogoutStuff():
-	with streamlit.sidebar:
-
-		if not streamlit.user.is_logged_in:
-			streamlit.warning("You'll need to log in to continue")
-			if streamlit.button("Login with Google", icon=":material/login:", use_container_width=True):
-				streamlit.login()
-		else:
-			if streamlit.button("Logout", icon=":material/logout:", use_container_width=True):
-				streamlit.logout()
 
 
 # There is a known issue with streamlit columns on mobile devices.
@@ -65,15 +52,3 @@ def setupNavigation():
 	)
 
 	nav_bar.run()
-
-def accessControlWarning():
-	streamlit.write("""
-	I've started to implement an access control system. <br>
-	If you're seeing this page, it might be a bug I need to fix.<br> 
-	Reach out and let me know. <br>
-	""", unsafe_allow_html=True)
-
-def getInTouch():
-	col1, col2 = streamlit.columns([1, 1])
-	col1.link_button(label="Instagram DM", url="https://www.instagram.com/the_tunnster/", icon=":material/chat:")
-	col2.link_button(label="Call", url="tel:+918767236939", icon=":material/add_call:")

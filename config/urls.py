@@ -1,11 +1,9 @@
-HOST = "http://localhost"
-PORT = ":8080"
+import os
 
-BASE_URL = HOST+PORT
+BASE_URL = os.environ.get("BACKEND_URL", "http://localhost:8080").rstrip("/")
 
 USER_URLS = {
 	"me": BASE_URL + "/me",
-	"create": BASE_URL + "/user/create",
 	"update": BASE_URL + "/user/update",
 }
 

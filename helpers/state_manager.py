@@ -61,7 +61,8 @@ class AppState:
         self._ensure_key(self.KEY_WORKOUT_SESSION, None)
         self._ensure_key(self.KEY_EXERCISE_IDX, 0)
         self._ensure_key(self.KEY_ADD_DIALOG, False)
-        self._ensure_key(self.KEY_EXERCISE_SELECTION, None)
+        # KEY_EXERCISE_SELECTION is a widget key: pre-seeding it (e.g. with None)
+        # overrides the selectbox's `index` and leaves it blank.
 
     def _ensure_key(self, key: str, default: Any):
         if key not in st.session_state:
@@ -127,7 +128,7 @@ class AppState:
 
     @property
     def workout_exercise_selection(self) -> Any:
-        return st.session_state[self.KEY_EXERCISE_SELECTION]
+        return st.session_state.get(self.KEY_EXERCISE_SELECTION)
 
     @workout_exercise_selection.setter
     def workout_exercise_selection(self, value: Any):
@@ -140,6 +141,7 @@ class AppState:
         self.workout_session = None
         self.current_exercise_index = 0
         self.is_add_dialog_open = False
+        st.session_state.pop(self.KEY_EXERCISE_SELECTION, None)
 
     # --- Helper Actions ---
 

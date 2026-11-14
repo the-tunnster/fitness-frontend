@@ -6,18 +6,14 @@ from database.update import updateUserRoutine
 from database.delete import deleteRoutine
 from models.routines import RoutineExercise, FullRoutine
 
-if not streamlit.user.is_logged_in:
-    streamlit.switch_page("home.py")
-
 uiSetup()
 state = AppState()
 streamlit.title("Routine Management", anchor=False)
 
-# --- Auth ---
 if state.user is None:
-    state.user = getBasicUser(str(streamlit.user.email))
-if state.user is None or state.user.clearance_level < 1:
-    accessControlWarning()
+    state.user = getBasicUser()
+if state.user is None:
+    streamlit.error("Couldn't reach the backend.")
     streamlit.stop()
 user_data = state.user
 

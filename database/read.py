@@ -9,12 +9,9 @@ from models.user import FullUser, BasicUser
 from models.session import WorkoutExercise, WorkoutSet, WorkoutSession
 from models.routines import RoutineExercise, Routine, FullRoutine
 
-def getFullUser(emailID: str) -> FullUser | None :
+def getFullUser() -> FullUser | None :
     try:
-        response = requests.get(
-            url=USER_URLS["me"],
-            params={"email": emailID}
-        )
+        response = requests.get(url=USER_URLS["me"])
 
         response.raise_for_status()
         
@@ -25,20 +22,16 @@ def getFullUser(emailID: str) -> FullUser | None :
         return None
 
 @streamlit.cache_data
-def getBasicUser(emailID: str) -> BasicUser | None :
+def getBasicUser() -> BasicUser | None :
     try:
-        response = requests.get(
-            url=USER_URLS["me"],
-            params={"email": emailID}
-        )
+        response = requests.get(url=USER_URLS["me"])
 
         response.raise_for_status()
         
         response_data = response.json()
         user = BasicUser(
             id=response_data["id"],
-            username=response_data["username"],
-            clearance_level=response_data["clearance_level"]
+            username=response_data["username"]
         )
 
         return user

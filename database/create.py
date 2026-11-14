@@ -4,44 +4,9 @@ from dataclasses import asdict
 
 from config.urls import *
 
-from models.user import FullUser, BasicUser
+from models.user import BasicUser
 from models.exercise import Exercise
 from models.routines import FullRoutine
-
-def createDummyUserProfile(emailID: str, username: str) -> bool:
-    new_user = FullUser(
-        username=username,
-        email=emailID,
-        gender="male",
-        date_of_birth="2000-05-21T00:00:00Z",
-        height=175.0,
-        weight=78.5,
-        unit_preference="metric",
-        clearance_level=1,
-        strava_access_token="",
-        strava_refresh_token="",
-        id=""
-    )
-
-    try:
-        payload = asdict(new_user)
-        payload.pop("id")
-
-        response = requests.post(
-            url=USER_URLS["create"],
-            json=payload
-        )
-
-        if response.status_code == 201:
-            return True
-        
-        else:
-            print(f"Error: {response.status_code}, {response.text}")
-            return False
-
-    except Exception as e:
-        print(f"Exception: {e}")
-        return False
 
 def createUserRoutine(user: BasicUser, routine: FullRoutine) -> bool:
     try:

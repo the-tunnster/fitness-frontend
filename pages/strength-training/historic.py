@@ -9,9 +9,6 @@ from database.read import getBasicUser, checkWorkoutCount, getExerciseList, getE
 from models.user import BasicUser
 
 
-if not streamlit.user.is_logged_in:
-    streamlit.switch_page("home.py")
-
 uiSetup()
 state = AppState()
 
@@ -20,10 +17,9 @@ streamlit.write("Select an exercise to view your progress.")
 
 user_data: BasicUser
 if state.user is None:
-    state.user = getBasicUser(str(streamlit.user.email))
-    if state.user is None or state.user.clearance_level < 1:
-        accessControlWarning()
-        getInTouch()
+    state.user = getBasicUser()
+    if state.user is None:
+        streamlit.error("Couldn't reach the backend.")
         streamlit.stop()
 user_data = state.user
 
@@ -34,11 +30,6 @@ if workout_count < 10:
         value=(1/10)*workout_count
         )
     streamlit.info("You don't have enough workouts to display any useful data. Here's mine instead.")
-
-if workout_count > 10 and user_data.clearance_level < 2:
-    streamlit.info("You're eligible for this clearance level now. DM or call me for an upgrade!")
-    getInTouch()
-    streamlit.stop()
 
 # --- Load exercises ---
 global_exercise_list = getExerciseList()

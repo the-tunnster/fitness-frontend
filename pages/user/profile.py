@@ -10,25 +10,21 @@ from helpers.state_manager import AppState
 from helpers.user_interface import *
 
 
-if not streamlit.user.is_logged_in:
-    streamlit.switch_page("home.py")
-
 uiSetup()
 state = AppState()
 
 streamlit.title("Profile Management.", anchor=False)
 streamlit.markdown("""
 This is your user profile page. </br>
-Feel free to leave these values as they are, I chose dummy values. </br>
+Feel free to leave these values as they are, they're just defaults. </br>
 However, if you wish to update these, try to have them as accurate as possible. </br>
 """, unsafe_allow_html=True)
 
 user_data: FullUser
 if state.full_user is None:
-    state.full_user = getFullUser(str(streamlit.user.email))
-    if state.full_user is None or state.full_user.clearance_level < 1:
-        accessControlWarning()
-        getInTouch()
+    state.full_user = getFullUser()
+    if state.full_user is None:
+        streamlit.error("Couldn't reach the backend.")
         streamlit.stop()
 user_data = state.full_user
 
@@ -38,7 +34,6 @@ with streamlit.form("user_profile", enter_to_submit=False):
     unit_preference_index = 0 if user_data.unit_preference == "metric" else 1
 
     user_name = streamlit.text_input(label="user_name", value=user_data.username)
-    email_id = streamlit.text_input(label="email_id", value=user_data.email, disabled=True)
     gender = streamlit.selectbox(label="gender", options=["male", "female"], index=gender_index)
     raw_dob = user_data.date_of_birth
     try:
@@ -58,21 +53,17 @@ with streamlit.form("user_profile", enter_to_submit=False):
     if submitted:
         updated_user = FullUser(
             username=str(user_name),
-            email=str(email_id),
             gender=gender,
             date_of_birth=date_of_birth.isoformat(),
             height=height,
             weight=weight,
             unit_preference=unit_preference,
-            clearance_level=user_data.clearance_level,
-            strava_access_token="",
-            strava_refresh_token="",
             id=""
         )
         result = updateUserProfile(updated_user, user_data.id)
         if result == True:
             streamlit.success("Updated user profile!")
             streamlit.cache_data.clear()
-            state.user = getBasicUser(str(streamlit.user.email))
+            state.user = getBasicUser()
         else:
             streamlit.error("Couldn't update profile...")

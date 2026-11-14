@@ -5,18 +5,13 @@ from database.read import getBasicUser, getExerciseList, getExerciseIDs
 from database.create import createUserRoutine
 from models.routines import RoutineExercise, FullRoutine
 
-if not streamlit.user.is_logged_in:
-    streamlit.switch_page("home.py")
-
 uiSetup()
 state = AppState()
 
-# --- Auth Check ---
 if state.user is None:
-    state.user = getBasicUser(str(streamlit.user.email))
-if state.user is None or state.user.clearance_level < 1:
-    accessControlWarning()
-    getInTouch()
+    state.user = getBasicUser()
+if state.user is None:
+    streamlit.error("Couldn't reach the backend.")
     streamlit.stop()
 user_data = state.user
 

@@ -10,9 +10,6 @@ from models.user import BasicUser
 from models.exercise import Exercise
 
 
-if not streamlit.user.is_logged_in:
-    streamlit.switch_page("home.py")
-
 uiSetup()
 state = AppState()
 
@@ -24,8 +21,9 @@ streamlit.write("""
 
 user_data: BasicUser
 if state.user is None:
-    state.user = getBasicUser(str(streamlit.user.email))
+    state.user = getBasicUser()
     if state.user is None:
+        streamlit.error("Couldn't reach the backend.")
         streamlit.stop()
 user_data = state.user
     
@@ -88,8 +86,7 @@ with streamlit.form(key="exercise_editor_form", enter_to_submit=False, border=Fa
     submit_button = streamlit.form_submit_button(
         label="Update",
         icon=":material/save:",
-        use_container_width=True,
-        disabled=user_data.clearance_level < 3
+        use_container_width=True
     )
     
     if submit_button:
