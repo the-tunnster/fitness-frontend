@@ -16,6 +16,10 @@ def columnWidthHack():
 			[data-testid="stHorizontalBlock"] {
                 gap: 0.2rem !important;
             }
+			/* iOS Safari zooms into inputs with a font size below 16px */
+			input, textarea, select {
+				font-size: 16px !important;
+			}
 		</style>
 						""", unsafe_allow_html=True)
 	
