@@ -1,2 +1,2 @@
 plotly
-streamlit
+streamlit>=1.67

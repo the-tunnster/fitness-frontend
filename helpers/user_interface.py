@@ -7,6 +7,24 @@ def uiSetup():
 	columnWidthHack()
 
 
+# iOS reads these tags from the page head when adding a shortcut to the home screen.
+# Streamlit has no setting for them, so they are injected from a tiny iframe.
+def homeScreenIconSetup():
+	streamlit.iframe(f"""
+		<script>
+			const doc = window.parent.document;
+			const add = (tag, attrs) => {{
+				const el = doc.createElement(tag);
+				Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+				doc.head.appendChild(el);
+			}};
+			doc.head.querySelectorAll('link[rel="apple-touch-icon"], meta[name="apple-mobile-web-app-title"]').forEach(el => el.remove());
+			add("link", {{rel: "apple-touch-icon", href: window.parent.location.origin + "/app/static/apple-touch-icon.png"}});
+			add("meta", {{name: "apple-mobile-web-app-title", content: "{APP_TITLE}"}});
+		</script>
+	""", height=1)
+
+
 # There is a known issue with streamlit columns on mobile devices.
 def columnWidthHack():
 	streamlit.markdown("""

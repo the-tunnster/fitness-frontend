@@ -48,8 +48,9 @@ home.py         # Home page logic
 ## Usage
 1. Run the application:
    ```bash
-   streamlit run app.py --server.address 0.0.0.0 --server.headless true
+   streamlit run app.py --server.address 0.0.0.0 --server.headless true --server.enableStaticServing true
    ```
+   Static serving is needed for the home-screen icon in `static/`. After changing the icon, remove and re-add the shortcut on iOS, which caches it.
 2. Open your browser and navigate to `http://<tailscale-ip>:8501`.
 3. Explore the features of the application.
 
