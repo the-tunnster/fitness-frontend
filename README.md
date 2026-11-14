@@ -48,7 +48,7 @@ home.py         # Home page logic
 ## Usage
 1. Run the application:
    ```bash
-   streamlit run app.py --server.address 0.0.0.0
+   streamlit run app.py --server.address 0.0.0.0 --server.headless true
    ```
 2. Open your browser and navigate to `http://<tailscale-ip>:8501`.
 3. Explore the features of the application.
