@@ -4,7 +4,7 @@ import plotly.graph_objects as go                                               
 from helpers.state_manager import AppState
 from helpers.user_interface import *
 
-from database.read import getBasicUser, checkWorkoutCount, getExerciseList, getExerciseHistoryData
+from database.read import getBasicUser, getExerciseList, getExerciseHistoryData
 
 from models.user import BasicUser
 
@@ -23,13 +23,6 @@ if state.user is None:
         streamlit.stop()
 user_data = state.user
 
-workout_count = checkWorkoutCount(user_data.id)
-if workout_count < 10:
-    streamlit.progress(
-        text="You need at least 10 workouts recorded.",
-        value=(1/10)*workout_count
-        )
-    streamlit.info("You don't have enough workouts to display any useful data. Here's mine instead.")
 
 # --- Load exercises ---
 global_exercise_list = getExerciseList()
@@ -51,14 +44,7 @@ if selected_exercise_name == "None":
 selected_exercise_data = global_exercise_list[global_exercise_names.index(selected_exercise_name) - 1]
 
 # --- Fetch processed history data ---
-if workout_count < 10 :
-    demo_user_id = str(streamlit.secrets.get("demo_user_id", "")).strip()
-    if not demo_user_id:
-        streamlit.info("Demo user id is not configured. Set demo_user_id in .streamlit/secrets.toml.")
-        streamlit.stop()
-    historic_data = getExerciseHistoryData(demo_user_id, selected_exercise_data.id)
-else:
-    historic_data = getExerciseHistoryData(user_data.id, selected_exercise_data.id)
+historic_data = getExerciseHistoryData(user_data.id, selected_exercise_data.id)
 
 if not historic_data:
     streamlit.info(f"No workout history found for '{selected_exercise_name}'.")
